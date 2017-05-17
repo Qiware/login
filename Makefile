@@ -28,11 +28,11 @@ export GCC_LOG = ${PROJ_LOG}/gcc.log
 CLANG_LIB_DIR = "src/clang/lib"
 DIR += "$(CLANG_LIB_DIR)/sdk"
 DIR += "$(CLANG_LIB_DIR)/core"
-DIR += "$(CLANG_LIB_DIR)/chat"
 DIR += "$(CLANG_LIB_DIR)/mesg"
 DIR += "$(CLANG_LIB_DIR)/rtmq"
 DIR += "$(CLANG_LIB_DIR)/utils"
 DIR += "$(CLANG_LIB_DIR)/access"
+DIR += "$(CLANG_LIB_DIR)/session"
 
 CLANG_EXEC_DIR = "src/clang/exec"
 DIR += "$(CLANG_EXEC_DIR)/client"
