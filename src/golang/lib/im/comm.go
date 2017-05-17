@@ -181,3 +181,26 @@ func UpdateSessionData(pool *redis.Pool, sid uint64, cid uint64, nid uint32) (co
 
 	return 0, nil
 }
+
+/******************************************************************************
+ **函数名称: AllocSid
+ **功    能: 申请会话ID
+ **输入参数:
+ **     pool: REDIS连接池
+ **输出参数: NONE
+ **返    回: 会话ID
+ **实现描述:
+ **注意事项:
+ **作    者: # Qifeng.zou # 2017.05.17 19:05:55 #
+ ******************************************************************************/
+func AllocSid(pool *redis.Pool) (sid uint64, err error) {
+	rds := pool.Get()
+	defer rds.Close()
+
+	sid, err = redis.Uint64(rds.Do("INCRBY", comm.IM_KEY_SID_INCR, 1))
+	if nil != err {
+		return 0, err
+	}
+
+	return sid, nil
+}

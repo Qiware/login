@@ -21,8 +21,8 @@ import (
 // 上线请求
 
 type OnlineToken struct {
-	ttl int64  /* TTL */
 	sid uint64 /* 会话SID */
+	ttl int64  /* TTL */
 }
 
 /******************************************************************************
@@ -34,9 +34,9 @@ type OnlineToken struct {
  **返    回: TOKEN字段
  **实现描述: 解析token, 并提取有效数据.
  **注意事项:
- **     TOKEN的格式"ttl:${ttl}:sid:${sid}:end"
- **     ttl: 该token的最大生命时间
+ **     TOKEN的格式"sid:${sid}:ttl:${ttl}:end"
  **     sid: 会话SID
+ **     ttl: 该token的最大生命时间
  **作    者: # Qifeng.zou # 2016.11.20 09:28:06 #
  ******************************************************************************/
 func (ctx *UsrSvrCntx) online_token_decode(token string) *OnlineToken {
@@ -44,7 +44,9 @@ func (ctx *UsrSvrCntx) online_token_decode(token string) *OnlineToken {
 
 	/* > TOKEN解码 */
 	cry := crypt.CreateEncodeCtx(ctx.conf.Cipher)
+
 	orig_token := crypt.Decode(cry, token)
+
 	words := strings.Split(orig_token, ":")
 	if 5 != len(words) {
 		ctx.log.Error("Token format not right! token:%s orig:%s", token, orig_token)
@@ -54,13 +56,13 @@ func (ctx *UsrSvrCntx) online_token_decode(token string) *OnlineToken {
 	ctx.log.Debug("token:%s orig:%s", token, orig_token)
 
 	/* > 验证TOKEN合法性 */
-	ttl, _ := strconv.ParseInt(words[1], 10, 64)
-	tk.ttl = int64(ttl)
-	ctx.log.Debug("words[1]:%s ttl:%d", words[1], tk.ttl)
-
-	sid, _ := strconv.ParseInt(words[3], 10, 64)
+	sid, _ := strconv.ParseInt(words[1], 10, 64)
 	tk.sid = uint64(sid)
-	ctx.log.Debug("words[3]:%s sid:%d sid:%d", words[3], sid, tk.sid)
+
+	ttl, _ := strconv.ParseInt(words[3], 10, 64)
+	tk.ttl = int64(ttl)
+
+	ctx.log.Debug("Parse token success! sid:%d ttl:%d", tk.sid, tk.ttl)
 
 	return tk
 }
@@ -118,15 +120,14 @@ func (ctx *UsrSvrCntx) online_parse(data []byte) (
 	head = comm.MesgHeadNtoh(data)
 	if !head.IsValid(1) {
 		errmsg := "Header of online is invalid!"
-		ctx.log.Error("Header is invalid! cmd:0x%04X nid:%d chksum:0x%08X",
-			head.GetCmd(), head.GetNid(), head.GetChkSum())
+		ctx.log.Error("Header is invalid! cmd:0x%04X nid:%d",
+			head.GetCmd(), head.GetNid())
 		return nil, nil, comm.ERR_SVR_HEAD_INVALID, errors.New(errmsg)
 	}
 
-	ctx.log.Debug("Online request header! cmd:0x%04X length:%d chksum:0x%08X cid:%d nid:%d seq:%d head:%d",
+	ctx.log.Debug("Online request header! cmd:0x%04X length:%d cid:%d nid:%d seq:%d head:%d",
 		head.GetCmd(), head.GetLength(),
-		head.GetChkSum(), head.GetSid(), head.GetNid(),
-		head.GetSeq(), comm.MESG_HEAD_SIZE)
+		head.GetSid(), head.GetNid(), head.GetSeq(), comm.MESG_HEAD_SIZE)
 
 	/* > 解析PB协议 */
 	req = &mesg.MesgOnline{}
@@ -392,8 +393,8 @@ func (ctx *UsrSvrCntx) offline_parse(data []byte) (head *comm.MesgHeader) {
 	/* > 字节序转换 */
 	head = comm.MesgHeadNtoh(data)
 	if !head.IsValid(1) {
-		ctx.log.Error("Header is invalid! cmd:0x%04X nid:%d chksum:0x%08X",
-			head.GetCmd(), head.GetNid(), head.GetChkSum())
+		ctx.log.Error("Header is invalid! cmd:0x%04X nid:%d",
+			head.GetCmd(), head.GetNid())
 		return nil
 	}
 
@@ -475,8 +476,8 @@ func (ctx *UsrSvrCntx) ping_parse(data []byte) (head *comm.MesgHeader) {
 	/* > 字节序转换 */
 	head = comm.MesgHeadNtoh(data)
 	if !head.IsValid(1) {
-		ctx.log.Error("Header is invalid! cmd:0x%04X nid:%d chksum:0x%08X",
-			head.GetCmd(), head.GetNid(), head.GetChkSum())
+		ctx.log.Error("Header is invalid! cmd:0x%04X nid:%d",
+			head.GetCmd(), head.GetNid())
 		return nil
 	}
 
@@ -588,7 +589,6 @@ func (ctx *UsrSvrCntx) send_kick(sid uint64, cid uint64, nid uint32, code uint32
 	head.Cid = cid
 	head.Nid = nid
 	head.Length = uint32(length)
-	head.ChkSum = comm.MSG_CHKSUM_VAL
 
 	comm.MesgHeadHton(&head, p)
 	copy(p.Buff[comm.MESG_HEAD_SIZE:], body)

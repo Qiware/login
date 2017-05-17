@@ -8,6 +8,7 @@ import (
 
 	"ai-eye/src/golang/lib/comm"
 	"ai-eye/src/golang/lib/crypt"
+	"ai-eye/src/golang/lib/im"
 )
 
 type UsrSvrIplistCtrl struct {
@@ -25,14 +26,11 @@ func (this *UsrSvrIplistCtrl) Iplist() {
 /* 注册参数 */
 type IpListParam struct {
 	typ      int    // 网络类型(0:Unknown 1:TCP 2:WS)
-	uid      uint64 // 用户ID
-	sid      uint64 // 会话ID
 	clientip string // 客户端IP
 }
 
 /* IP列表应答 */
 type IpListRsp struct {
-	Uid    uint64   `json:"uid"`    // 用户ID
 	Sid    uint64   `json:"sid"`    // 会话ID
 	Type   int      `json:"type"`   // 网络类型(0:Unknown 1:TCP 2:WS)
 	Token  string   `json:"token"`  // 鉴权TOKEN
@@ -47,16 +45,23 @@ func (this *UsrSvrIplistCtrl) iplist_query(ctx *UsrSvrCntx) {
 	/* > 提取注册参数 */
 	param, err := this.iplist_param_parse(ctx)
 	if nil != err {
-		ctx.log.Error("Parse param failed! uid:%d sid:%d clientip:%s",
-			param.uid, param.sid, param.clientip)
+		ctx.log.Error("Parse param failed! clientip:%s", param.clientip)
 		this.Error(comm.ERR_SVR_PARSE_PARAM, err.Error())
 		return
 	}
 
-	ctx.log.Debug("Param list. uid:%d sid:%d clientip:%s", param.uid, param.sid, param.clientip)
+	/* > 申请会话SID */
+	sid, err := im.AllocSid(ctx.redis)
+	if nil != err {
+		ctx.log.Error("Alloc sid failed! clientip:%s", param.clientip)
+		this.Error(comm.ERR_SVR_PARSE_PARAM, err.Error())
+		return
+	}
+
+	ctx.log.Debug("Param list. type:%d sid:%d clientip:%s", param.typ, sid, param.clientip)
 
 	/* > 获取IP列表 */
-	this.iplist_handler(ctx, param)
+	this.iplist_handler(ctx, sid, param)
 
 	return
 }
@@ -84,28 +89,14 @@ func (this *UsrSvrIplistCtrl) iplist_param_parse(ctx *UsrSvrCntx) (*IpListParam,
 		return param, errors.New("Type is invalid!")
 	}
 
-	id, _ := this.GetInt64("uid")
-	param.uid = uint64(id)
-	if 0 == param.uid {
-		ctx.log.Error("Uid is invalid.")
-		return param, errors.New("Uid is invalid!")
-	}
-
-	id, _ = this.GetInt64("sid")
-	param.sid = uint64(id)
-	if 0 == param.sid {
-		ctx.log.Error("Sid is invalid.")
-		return param, errors.New("Sid is invalid!")
-	}
-
 	param.clientip = this.GetString("clientip")
 	if "" == param.clientip {
 		ctx.log.Error("Client ip is invalid.")
 		return param, errors.New("Client ip is invalid!")
 	}
 
-	ctx.log.Debug("Get ip list param. type:%d uid:%d sid:%d clientip:%s",
-		param.typ, param.uid, param.sid, param.clientip)
+	ctx.log.Debug("Get ip list param. type:%d clientip:%s",
+		param.typ, param.clientip)
 
 	return param, nil
 }
@@ -122,7 +113,7 @@ func (this *UsrSvrIplistCtrl) iplist_param_parse(ctx *UsrSvrCntx) (*IpListParam,
  **注意事项:
  **作    者: # Qifeng.zou # 2016.11.24 17:00:07 #
  ******************************************************************************/
-func (this *UsrSvrIplistCtrl) iplist_handler(ctx *UsrSvrCntx, param *IpListParam) {
+func (this *UsrSvrIplistCtrl) iplist_handler(ctx *UsrSvrCntx, sid uint64, param *IpListParam) {
 	iplist := this.iplist_get(ctx, param.typ, param.clientip)
 	if nil == iplist {
 		ctx.log.Error("Get ip list failed!")
@@ -130,7 +121,7 @@ func (this *UsrSvrIplistCtrl) iplist_handler(ctx *UsrSvrCntx, param *IpListParam
 		return
 	}
 
-	this.success(param, iplist)
+	this.success(sid, param, iplist)
 
 	return
 }
@@ -147,13 +138,12 @@ func (this *UsrSvrIplistCtrl) iplist_handler(ctx *UsrSvrCntx, param *IpListParam
  **注意事项:
  **作    者: # Qifeng.zou # 2016.11.25 23:13:02 #
  ******************************************************************************/
-func (this *UsrSvrIplistCtrl) success(param *IpListParam, iplist []string) {
+func (this *UsrSvrIplistCtrl) success(sid uint64, param *IpListParam, iplist []string) {
 	var resp IpListRsp
 
-	resp.Uid = param.uid
-	resp.Sid = param.sid
+	resp.Sid = sid
 	resp.Type = param.typ
-	resp.Token = this.iplist_token(param)
+	resp.Token = this.iplist_token(sid)
 	resp.Expire = comm.TIME_DAY
 	resp.Len = len(iplist)
 	resp.List = iplist
@@ -174,18 +164,17 @@ func (this *UsrSvrIplistCtrl) success(param *IpListParam, iplist []string) {
  **     expire: 过期时间
  **实现描述:
  **注意事项:
- **     TOKEN的格式"uid:${uid}:ttl:${ttl}:sid:${sid}:end"
- **     uid: 用户ID
+ **     TOKEN的格式"sid:${sid}:ttl:${ttl}:end"
+ **     sid: 会话SID
  **     ttl: 该token的最大生命时间
- **     sid: 会话UID
  **作    者: # Qifeng.zou # 2016.11.25 23:54:27 #
  ******************************************************************************/
-func (this *UsrSvrIplistCtrl) iplist_token(param *IpListParam) string {
+func (this *UsrSvrIplistCtrl) iplist_token(sid uint64) string {
 	ctx := GetUsrSvrCtx()
 	ttl := time.Now().Unix() + comm.TIME_YEAR
 
 	/* > 原始TOKEN */
-	token := fmt.Sprintf("uid:%d:ttl:%d:sid:%d:end", param.uid, ttl, param.sid)
+	token := fmt.Sprintf("sid:%d:ttl:%d:end", sid, ttl)
 
 	/* > 加密TOKEN */
 	cry := crypt.CreateEncodeCtx(ctx.conf.Cipher)

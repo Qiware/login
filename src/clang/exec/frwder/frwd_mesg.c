@@ -71,9 +71,8 @@ static int frwd_mesg_from_fw_def_hdl(int type, int orig, char *data, size_t len,
     /* > 字节序转化 */
     MESG_HEAD_NTOH(head, &hhead);
 
-    log_trace(ctx->log, "type:0x%04X sid:%lu seq:%lu len:%d chksum:[0x%X/0x%X]",
-            hhead.type, hhead.sid, hhead.seq,
-            hhead.length, hhead.chksum, MSG_CHKSUM_VAL);
+    log_trace(ctx->log, "type:0x%04X sid:%lu seq:%lu len:%d",
+            hhead.type, hhead.sid, hhead.seq, hhead.length);
 
     /* > 发送数据 */
     nid = rtmq_sub_query(ctx->backend, type);
@@ -108,9 +107,8 @@ static int frwd_mesg_from_bc_def_hdl(int type, int orig, char *data, size_t len,
     /* > 字节序转化 */
     MESG_HEAD_NTOH(head, &hhead);
 
-    log_trace(ctx->log, "type:0x%04X sid:%lu seq:%lu nid:%d len:%d chksum:[0x%X/0x%X]",
-            hhead.type, hhead.sid, hhead.seq, hhead.nid,
-            hhead.length,  hhead.chksum, MSG_CHKSUM_VAL);
+    log_trace(ctx->log, "type:0x%04X sid:%lu seq:%lu nid:%d len:%d",
+            hhead.type, hhead.sid, hhead.seq, hhead.nid, hhead.length);
 
     /* > 发送数据 */
     return rtmq_async_send(ctx->forward, type, hhead.nid, data, len);

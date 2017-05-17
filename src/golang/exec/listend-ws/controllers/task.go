@@ -118,10 +118,9 @@ func (ctx *LsndCntx) gather_base_info() {
 	p.Buff = make([]byte, comm.MESG_HEAD_SIZE+length)
 
 	head := &comm.MesgHeader{
-		Cmd:    comm.CMD_LSND_INFO,  // 消息类型
-		Nid:    ctx.conf.GetNid(),   // 结点ID
-		Length: uint32(length),      // 消息长度
-		ChkSum: comm.MSG_CHKSUM_VAL, // 校验值
+		Cmd:    comm.CMD_LSND_INFO, // 消息类型
+		Nid:    ctx.conf.GetNid(),  // 结点ID
+		Length: uint32(length),     // 消息长度
 	}
 
 	comm.MesgHeadHton(head, p)

@@ -55,7 +55,6 @@ int sdk_mesg_send_ping_req(sdk_cntx_t *ctx, sdk_ssvr_t *ssvr)
     head->length = 0;
     head->sid = ctx->sid;
     head->seq = sdk_gen_seq(ctx);
-    head->chksum = MSG_CHKSUM_VAL;
 
     /* 3. 加入发送列表 */
     if (list_rpush(sck->mesg_list, addr)) {
@@ -118,7 +117,6 @@ int sdk_mesg_send_online_req(sdk_cntx_t *ctx, sdk_ssvr_t *ssvr)
     head->length = size - sizeof(mesg_header_t);
     head->sid = info->sid;
     head->seq = sdk_gen_seq(ctx);
-    head->chksum = MSG_CHKSUM_VAL;
 
     mesg_online__pack(&online, addr+sizeof(mesg_header_t));
 

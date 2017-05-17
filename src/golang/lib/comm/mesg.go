@@ -35,10 +35,6 @@ const (
 	CMD_FRWD_INFO_ACK = 0x0304 /* 转发层信息上报应答 */
 )
 
-const (
-	MSG_CHKSUM_VAL = 0x1ED23CB4 /* 校验码 */
-)
-
 var (
 	MESG_HEAD_SIZE = binary.Size(MesgHeader{})
 )
@@ -47,7 +43,6 @@ var (
 type MesgHeader struct {
 	Cmd    uint32 /* 消息类型 */
 	Length uint32 /* 报体长度 */
-	ChkSum uint32 /* 校验值 */
 	Sid    uint64 /* 会话ID */
 	Cid    uint64 /* 连接ID */
 	Nid    uint32 /* 结点ID */
@@ -64,10 +59,6 @@ func (head *MesgHeader) GetCmd() uint32 {
 
 func (head *MesgHeader) GetLength() uint32 {
 	return head.Length
-}
-
-func (head *MesgHeader) GetChkSum() uint32 {
-	return head.ChkSum
 }
 
 func (head *MesgHeader) SetSid(sid uint64) {
@@ -104,13 +95,12 @@ type MesgPacket struct {
 
 /* "主机->网络"字节序 */
 func MesgHeadHton(head *MesgHeader, p *MesgPacket) {
-	binary.BigEndian.PutUint32(p.Buff[0:4], head.Cmd)     /* CMD */
-	binary.BigEndian.PutUint32(p.Buff[4:8], head.Length)  /* LENGTH */
-	binary.BigEndian.PutUint32(p.Buff[8:12], head.ChkSum) /* CHKSUM */
-	binary.BigEndian.PutUint64(p.Buff[12:20], head.Sid)   /* SID */
-	binary.BigEndian.PutUint64(p.Buff[20:28], head.Cid)   /* CID */
-	binary.BigEndian.PutUint32(p.Buff[28:32], head.Nid)   /* NID */
-	binary.BigEndian.PutUint64(p.Buff[32:40], head.Seq)   /* SEQ */
+	binary.BigEndian.PutUint32(p.Buff[0:4], head.Cmd)    /* CMD */
+	binary.BigEndian.PutUint32(p.Buff[4:8], head.Length) /* LENGTH */
+	binary.BigEndian.PutUint64(p.Buff[8:16], head.Sid)   /* SID */
+	binary.BigEndian.PutUint64(p.Buff[16:24], head.Cid)  /* CID */
+	binary.BigEndian.PutUint32(p.Buff[24:28], head.Nid)  /* NID */
+	binary.BigEndian.PutUint64(p.Buff[28:36], head.Seq)  /* SEQ */
 }
 
 /* "网络->主机"字节序 */
@@ -119,18 +109,17 @@ func MesgHeadNtoh(data []byte) *MesgHeader {
 
 	head.Cmd = binary.BigEndian.Uint32(data[0:4])
 	head.Length = binary.BigEndian.Uint32(data[4:8])
-	head.ChkSum = binary.BigEndian.Uint32(data[8:12])
-	head.Sid = binary.BigEndian.Uint64(data[12:20])
-	head.Cid = binary.BigEndian.Uint64(data[20:28])
-	head.Nid = binary.BigEndian.Uint32(data[28:32])
-	head.Seq = binary.BigEndian.Uint64(data[32:40])
+	head.Sid = binary.BigEndian.Uint64(data[8:16])
+	head.Cid = binary.BigEndian.Uint64(data[16:24])
+	head.Nid = binary.BigEndian.Uint32(data[24:28])
+	head.Seq = binary.BigEndian.Uint64(data[28:36])
 
 	return head
 }
 
 /* 校验头部数据的合法性 */
 func (head *MesgHeader) IsValid(flag uint32) bool {
-	if 0 == head.Nid || MSG_CHKSUM_VAL != head.ChkSum {
+	if 0 == head.Nid {
 		return false
 	} else if 0 != flag && 0 == head.Sid {
 		return false
