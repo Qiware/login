@@ -7,10 +7,10 @@
  ** 作  者: # Qifeng.zou # Thu 16 Jul 2015 01:08:20 AM CST #
  ******************************************************************************/
 
-#include "chat.h"
 #include "mesg.h"
 #include "access.h"
 #include "listend.h"
+#include "session.h"
 #include "cmd_list.h"
 #include "lsnd_mesg.h"
 
@@ -168,7 +168,7 @@ static int lsnd_mesg_online_ack_logic(lsnd_cntx_t *lsnd, MesgOnlineAck *ack, uin
     hash_tab_unlock(lsnd->conn_list, &key, WRLOCK);
 
     /* > 踢除老连接 */
-    old_cid = chat_get_cid_by_sid(lsnd->chat_tab, key.sid);
+    old_cid = session_dict_get(lsnd->session, key.sid);
     if ((0 != old_cid) && (old_cid != cid)) {
         key.sid = key.sid;
         key.cid = old_cid;
@@ -179,7 +179,7 @@ static int lsnd_mesg_online_ack_logic(lsnd_cntx_t *lsnd, MesgOnlineAck *ack, uin
         }
     }
 
-    chat_set_sid_to_cid(lsnd->chat_tab, key.sid, cid);
+    session_dict_add(lsnd->session, key.sid, cid);
 
     return 0;
 }
@@ -388,7 +388,7 @@ int lsnd_mesg_kick_handler(int type, int orig, void *data, size_t len, void *arg
 
     /* > 查找对应的连接 */
     key.sid = hhead.sid;
-    key.cid = (0 == hhead.cid)? chat_get_cid_by_sid(lsnd->chat_tab, hhead.sid) : hhead.cid;
+    key.cid = (0 == hhead.cid)? session_dict_get(lsnd->session, hhead.sid) : hhead.cid;
 
     conn = hash_tab_delete(lsnd->conn_list, &key, WRLOCK);
     if (NULL == conn) {
@@ -524,7 +524,7 @@ static int lsnd_callback_destroy_handler(lsnd_cntx_t *lsnd, socket_t *sck, lsnd_
     pthread_rwlock_destroy(&extra->lock);
 
     extra->stat = CHAT_CONN_STAT_CLOSED;
-    chat_del_session(lsnd->chat_tab, extra->sid, extra->cid);
+    session_del(lsnd->session, extra->sid, extra->cid);
 
     /* > 发送下线指令 */
     lsnd_offline_notify(lsnd, extra->sid, extra->cid, extra->nid);

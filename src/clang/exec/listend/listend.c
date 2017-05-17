@@ -263,9 +263,9 @@ static lsnd_cntx_t *lsnd_init(lsnd_conf_t *conf, log_cycle_t *log)
             break;
         }
 
-        /* > 初始化chat表 */
-        ctx->chat_tab = chat_tab_init(1024, log);
-        if (NULL == ctx->chat_tab) {
+        /* > 初始化会话表 */
+        ctx->session = session_tab_init(1024, log);
+        if (NULL == ctx->session) {
             log_error(log, "Initialize chat table failed!");
             break;
         }

@@ -4,8 +4,8 @@
 #include "log.h"
 #include "comm.h"
 #include "timer.h"
-#include "chat.h"
 #include "access.h"
+#include "session.h"
 #include "listend.h"
 #include "rb_tree.h"
 #include "avl_tree.h"
@@ -119,7 +119,7 @@ typedef struct _lsnd_cntx_t
     rtmq_proxy_t *frwder;           /* FRWDER服务 */
 
     timer_cntx_t *timer;            /* 定时任务表 */
-    chat_tab_t *chat_tab;           /* 聊天室组织表 */
+    session_tab_t *session;         /* 会话组织表 */
     hash_tab_t *uid_sid_tab;        /* 用户ID管理表(以UID为主键, 数据:lsnd_uid_item_t) */
 
     /* 定时任务 */

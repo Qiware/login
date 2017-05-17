@@ -10,7 +10,7 @@ include $(PROJ)/make/build.mak
 
 INCLUDE = -I. \
 		  -I$(PROJ)/src/clang/incl \
-		  -I$(PROJ)/src/clang/incl/chat \
+		  -I$(PROJ)/src/clang/incl/session \
 		  -I$(PROJ)/../cctrl/src/incl
 LIBS_PATH = -L$(PROJ)/lib -L$(PROJ)/../cctrl/lib
 
@@ -20,13 +20,12 @@ LIBS = $(call func_find_static_link_lib,$(STATIC_LIB_PATH),$(STATIC_LIB_LIST))
 LIBS += -lpthread -lm -dl
 LIBS += $(SHARED_LIB)
 
-SRC_LIST = chat.c \
-		   chat_tab.c
+SRC_LIST = session.c 
 
 OBJS = $(subst .c,.o, $(SRC_LIST))
 HEADS = $(call func_get_dep_head_list, $(SRC_LIST))
 
-TARGET = libchat.a
+TARGET = libsession.a
 
 .PHONY: all clean
 
