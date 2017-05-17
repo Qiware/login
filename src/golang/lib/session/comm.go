@@ -50,7 +50,7 @@ func (ctx *SessionTab) session_del(sid uint64, cid uint64) *SessionItem {
  **作    者: # Qifeng.zou # 2017.05.11 10:03:30 #
  ******************************************************************************/
 func (ctx *SessionTab) sid2cid_del(sid uint64, cid uint64) int {
-	sc := &ctx.sid2cids[sid%SESSION_MAX_LEN]
+	sc := &ctx.dict[sid%SESSION_MAX_LEN]
 
 	sc.Lock()
 	defer sc.Unlock()
@@ -104,7 +104,7 @@ func (sl *SessionList) trav_list(proc SessionTravProcCb, param interface{}) {
  **注意事项:
  **作    者: # Qifeng.zou # 2017.05.11 10:07:32 #
  ******************************************************************************/
-func (sc *SessionSid2CidList) trav_list(proc SessionTravSid2CidProcCb, param interface{}) {
+func (sc *SessionDict) trav_list(proc SessionTravSid2CidProcCb, param interface{}) {
 	sc.RLock()
 	defer sc.RUnlock()
 
@@ -124,12 +124,12 @@ func (sc *SessionSid2CidList) trav_list(proc SessionTravSid2CidProcCb, param int
  **注意事项:
  **作    者: # Qifeng.zou # 2017.05.11 10:32:16 #
  ******************************************************************************/
-func (sc *SessionSid2CidList) query_dirty(ctx *SessionTab, ls map[uint64]uint64) {
+func (sc *SessionDict) query_dirty(ctx *SessionTab, ls map[uint64]uint64) {
 	sc.RLock()
 	defer sc.RUnlock()
 
 	for sid, cid := range sc.sid2cid {
-		extra := ctx.SessionGetParam(sid, cid)
+		extra := ctx.GetParam(sid, cid)
 		if nil != extra {
 			continue
 		}
@@ -152,7 +152,7 @@ func (ctx *SessionTab) task_clean_sid2cid() {
 		list := make(map[uint64]uint64)
 
 		for idx := 0; idx < SESSION_MAX_LEN; idx += 1 {
-			sc := &ctx.sid2cids[idx]
+			sc := &ctx.dict[idx]
 
 			sc.query_dirty(ctx, list)
 		}

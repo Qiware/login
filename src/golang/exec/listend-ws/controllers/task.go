@@ -96,13 +96,13 @@ func (ctx *LsndCntx) task_timer_statistic() {
  ******************************************************************************/
 func (ctx *LsndCntx) gather_base_info() {
 	req := &mesg.MesgLsndInfo{
-		Type:        proto.Uint32(comm.LSND_TYPE_WS),          // 网络类型(0:UNKNOWN 1:TCP 2:WS)
-		Nid:         proto.Uint32(ctx.conf.GetNid()),          // 结点ID
-		Nation:      proto.String(ctx.conf.GetNation()),       // 所属国家
-		Opid:        proto.Uint32(ctx.conf.GetOpid()),         // 运营商ID
-		Ip:          proto.String(ctx.conf.GetIp()),           // IP地址
-		Port:        proto.Uint32(ctx.conf.GetPort()),         // 端口号
-		Connections: proto.Uint32(ctx.session.SessionCount()), // 会话总数
+		Type:        proto.Uint32(comm.LSND_TYPE_WS),    // 网络类型(0:UNKNOWN 1:TCP 2:WS)
+		Nid:         proto.Uint32(ctx.conf.GetNid()),    // 结点ID
+		Nation:      proto.String(ctx.conf.GetNation()), // 所属国家
+		Opid:        proto.Uint32(ctx.conf.GetOpid()),   // 运营商ID
+		Ip:          proto.String(ctx.conf.GetIp()),     // IP地址
+		Port:        proto.Uint32(ctx.conf.GetPort()),   // 端口号
+		Connections: proto.Uint32(ctx.session.Total()),  // 会话总数
 	}
 
 	/* 生成PB数据 */

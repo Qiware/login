@@ -112,7 +112,7 @@ func LsndMesgOnlineHandler(conn *LsndConnExtra, cmd uint32, data []byte, length 
 	/* > "网络->主机"字节序 */
 	head := comm.MesgHeadNtoh(data)
 
-	extra := ctx.session.SessionGetParam(head.GetSid(), conn.GetCid())
+	extra := ctx.session.GetParam(head.GetSid(), conn.GetCid())
 	if nil != extra {
 		ctx.log.Error("Recv online at before! cid:%d sid:%d status:%d",
 			conn.GetCid(), conn.GetSid(), conn.GetStatus())
@@ -120,7 +120,7 @@ func LsndMesgOnlineHandler(conn *LsndConnExtra, cmd uint32, data []byte, length 
 	}
 
 	conn.SetSid(head.GetSid())
-	ctx.session.SessionSetParam(head.GetSid(), conn.GetCid(), conn)
+	ctx.session.SetParam(head.GetSid(), conn.GetCid(), conn)
 
 	head.SetCid(conn.GetCid())
 	head.SetNid(ctx.conf.GetNid())

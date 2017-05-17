@@ -71,7 +71,7 @@ func LsndUpMesgCommHandler(cmd uint32, nid uint32, data []byte, length uint32, p
 		}
 	}
 
-	extra := ctx.session.SessionGetParam(head.GetSid(), cid)
+	extra := ctx.session.GetParam(head.GetSid(), cid)
 	if nil == extra {
 		ctx.log.Error("Didn't find conn data! sid:%d cid:%d", head.GetSid(), cid)
 		return -1
@@ -166,7 +166,7 @@ func LsndUpMesgOnlineAckHandler(cmd uint32, nid uint32, data []byte, length uint
 	}
 
 	/* > 获取&更新会话状态 */
-	extra := ctx.session.SessionGetParam(ack.GetSid(), cid)
+	extra := ctx.session.GetParam(ack.GetSid(), cid)
 	if nil == extra {
 		ctx.log.Error("Didn't find conn data! cid:%d sid:%d", head.GetCid(), ack.GetSid())
 		return ctx.lsnd_error_online_ack_handler(cid, head, data)
@@ -250,7 +250,7 @@ func LsndUpMesgKickHandler(cmd uint32, nid uint32, data []byte, length uint32, p
 		return -1
 	}
 
-	extra := ctx.session.SessionGetParam(head.GetSid(), cid)
+	extra := ctx.session.GetParam(head.GetSid(), cid)
 	if nil == extra {
 		ctx.log.Error("Didn't find conn data! sid:%d", head.GetSid())
 		return -1
