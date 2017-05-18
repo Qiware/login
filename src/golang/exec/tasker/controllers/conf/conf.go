@@ -15,8 +15,6 @@ type TaskerConf struct {
 	AppPath  string          // 程序路径(自动获取)
 	ConfPath string          // 配置路径(自动获取)
 	Redis    TaskerRedisConf // REDIS配置
-	Mysql    TaskerMysqlConf // MYSQL配置
-	Mongo    TaskerMongoConf // MONGO配置
 	Cipher   string          // 私密密钥
 	Log      log.Conf        // 日志配置
 	Frwder   rtmq.ProxyConf  // RTMQ配置
