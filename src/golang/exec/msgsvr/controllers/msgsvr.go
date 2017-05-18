@@ -6,6 +6,7 @@ import (
 	"github.com/astaxie/beego/logs"
 	"github.com/garyburd/redigo/redis"
 
+	"ai-eye/src/golang/lib/comm"
 	"ai-eye/src/golang/lib/log"
 	"ai-eye/src/golang/lib/rtmq"
 
@@ -90,6 +91,8 @@ func MsgSvrInit(conf *conf.MsgSvrConf) (ctx *MsgSvrCntx, err error) {
  **作    者: # Qifeng.zou # 2016.10.30 22:32:23 #
  ******************************************************************************/
 func (ctx *MsgSvrCntx) Register() {
+	ctx.frwder.Register(comm.CMD_BROWSER_ENV, MsgSvrBrowserEnvHandler, ctx)
+	ctx.frwder.Register(comm.CMD_EVENT_STATISTIC, MsgSvrEventStatisticHandler, ctx)
 }
 
 /******************************************************************************
