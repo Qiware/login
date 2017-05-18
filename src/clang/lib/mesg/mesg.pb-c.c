@@ -985,93 +985,54 @@ const ProtobufCMessageDescriptor browser_screen_info__descriptor =
   (ProtobufCMessageInit) browser_screen_info__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor mesg_browser_env__field_descriptors[6] =
+static const ProtobufCFieldDescriptor mesg_browser_env__field_descriptors[3] =
 {
   {
-    "orig",
+    "plugin",
     1,
-    PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_UINT64,
-    0,   /* quantifier_offset */
-    offsetof(MesgBrowserEnv, orig),
-    NULL,
-    NULL,
-    0,             /* flags */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
-    "dest",
-    2,
-    PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_UINT64,
-    0,   /* quantifier_offset */
-    offsetof(MesgBrowserEnv, dest),
-    NULL,
-    NULL,
-    0,             /* flags */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
-    "level",
-    3,
-    PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_UINT32,
-    0,   /* quantifier_offset */
-    offsetof(MesgBrowserEnv, level),
-    NULL,
-    NULL,
-    0,             /* flags */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
-    "time",
-    4,
-    PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_UINT64,
-    0,   /* quantifier_offset */
-    offsetof(MesgBrowserEnv, time),
-    NULL,
-    NULL,
-    0,             /* flags */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
-    "text",
-    5,
-    PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_STRING,
-    0,   /* quantifier_offset */
-    offsetof(MesgBrowserEnv, text),
-    NULL,
-    NULL,
-    0,             /* flags */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
-    "data",
-    6,
     PROTOBUF_C_LABEL_OPTIONAL,
-    PROTOBUF_C_TYPE_BYTES,
-    offsetof(MesgBrowserEnv, has_data),
-    offsetof(MesgBrowserEnv, data),
+    PROTOBUF_C_TYPE_MESSAGE,
+    0,   /* quantifier_offset */
+    offsetof(MesgBrowserEnv, plugin),
+    &browser_plugin_info__descriptor,
     NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "ua",
+    2,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_MESSAGE,
+    0,   /* quantifier_offset */
+    offsetof(MesgBrowserEnv, ua),
+    &browser_useragent_info__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "screen",
+    3,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_MESSAGE,
+    0,   /* quantifier_offset */
+    offsetof(MesgBrowserEnv, screen),
+    &browser_screen_info__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
 static const unsigned mesg_browser_env__field_indices_by_name[] = {
-  5,   /* field[5] = data */
-  1,   /* field[1] = dest */
-  2,   /* field[2] = level */
-  0,   /* field[0] = orig */
-  4,   /* field[4] = text */
-  3,   /* field[3] = time */
+  0,   /* field[0] = plugin */
+  2,   /* field[2] = screen */
+  1,   /* field[1] = ua */
 };
 static const ProtobufCIntRange mesg_browser_env__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 0, 6 }
+  { 0, 3 }
 };
 const ProtobufCMessageDescriptor mesg_browser_env__descriptor =
 {
@@ -1081,7 +1042,7 @@ const ProtobufCMessageDescriptor mesg_browser_env__descriptor =
   "MesgBrowserEnv",
   "",
   sizeof(MesgBrowserEnv),
-  6,
+  3,
   mesg_browser_env__field_descriptors,
   mesg_browser_env__field_indices_by_name,
   1,  mesg_browser_env__number_ranges,
@@ -1142,36 +1103,36 @@ const ProtobufCMessageDescriptor mesg_browser_env_ack__descriptor =
 static const ProtobufCFieldDescriptor mesg_event_statistic__field_descriptors[3] =
 {
   {
-    "orig",
+    "ctrl",
     1,
     PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_UINT64,
+    PROTOBUF_C_TYPE_ENUM,
     0,   /* quantifier_offset */
-    offsetof(MesgEventStatistic, orig),
-    NULL,
+    offsetof(MesgEventStatistic, ctrl),
+    &ctrl_type__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
   {
-    "dest",
+    "event",
     2,
     PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_UINT64,
+    PROTOBUF_C_TYPE_ENUM,
     0,   /* quantifier_offset */
-    offsetof(MesgEventStatistic, dest),
-    NULL,
+    offsetof(MesgEventStatistic, event),
+    &event_type__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
   {
-    "mark",
+    "count",
     3,
     PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_STRING,
+    PROTOBUF_C_TYPE_UINT32,
     0,   /* quantifier_offset */
-    offsetof(MesgEventStatistic, mark),
+    offsetof(MesgEventStatistic, count),
     NULL,
     NULL,
     0,             /* flags */
@@ -1179,9 +1140,9 @@ static const ProtobufCFieldDescriptor mesg_event_statistic__field_descriptors[3]
   },
 };
 static const unsigned mesg_event_statistic__field_indices_by_name[] = {
-  1,   /* field[1] = dest */
-  2,   /* field[2] = mark */
-  0,   /* field[0] = orig */
+  2,   /* field[2] = count */
+  0,   /* field[0] = ctrl */
+  1,   /* field[1] = event */
 };
 static const ProtobufCIntRange mesg_event_statistic__number_ranges[1 + 1] =
 {
@@ -1449,28 +1410,28 @@ const ProtobufCMessageDescriptor mesg_frwd_info__descriptor =
 };
 const ProtobufCEnumValue ctrl_type__enum_values_by_number[8] =
 {
-  { "CTRL_USR_NAME_INPUT_BOX", "CTRL_TYPE__CTRL_USR_NAME_INPUT_BOX", 0 },
-  { "CTRL_PASSWD_INPUT_BOX", "CTRL_TYPE__CTRL_PASSWD_INPUT_BOX", 1 },
-  { "CTRL_IMG_CODE_INPUT_BOX", "CTRL_TYPE__CTRL_IMG_CODE_INPUT_BOX", 2 },
-  { "CTRL_IMG_CODE_BTN", "CTRL_TYPE__CTRL_IMG_CODE_BTN", 3 },
-  { "CTRL_TEL_INPUT_BOX", "CTRL_TYPE__CTRL_TEL_INPUT_BOX", 4 },
-  { "CTRL_SMS_INPUT_BOX", "CTRL_TYPE__CTRL_SMS_INPUT_BOX", 5 },
-  { "CTRL_SMS_BTN", "CTRL_TYPE__CTRL_SMS_BTN", 6 },
-  { "CTRL_LOGIN_BTN", "CTRL_TYPE__CTRL_LOGIN_BTN", 7 },
+  { "CTL_IBX_USR", "CTRL_TYPE__CTL_IBX_USR", 0 },
+  { "CTL_IBX_PWD", "CTRL_TYPE__CTL_IBX_PWD", 1 },
+  { "CTL_IBX_IMG", "CTRL_TYPE__CTL_IBX_IMG", 2 },
+  { "CTL_BTN_IMG", "CTRL_TYPE__CTL_BTN_IMG", 3 },
+  { "CTL_IBX_TEL", "CTRL_TYPE__CTL_IBX_TEL", 4 },
+  { "CTL_IBX_SMS", "CTRL_TYPE__CTL_IBX_SMS", 5 },
+  { "CTL_BTN_SMS", "CTRL_TYPE__CTL_BTN_SMS", 6 },
+  { "CTL_BTN_LGN", "CTRL_TYPE__CTL_BTN_LGN", 7 },
 };
 static const ProtobufCIntRange ctrl_type__value_ranges[] = {
 {0, 0},{0, 8}
 };
 const ProtobufCEnumValueIndex ctrl_type__enum_values_by_name[8] =
 {
-  { "CTRL_IMG_CODE_BTN", 3 },
-  { "CTRL_IMG_CODE_INPUT_BOX", 2 },
-  { "CTRL_LOGIN_BTN", 7 },
-  { "CTRL_PASSWD_INPUT_BOX", 1 },
-  { "CTRL_SMS_BTN", 6 },
-  { "CTRL_SMS_INPUT_BOX", 5 },
-  { "CTRL_TEL_INPUT_BOX", 4 },
-  { "CTRL_USR_NAME_INPUT_BOX", 0 },
+  { "CTL_BTN_IMG", 3 },
+  { "CTL_BTN_LGN", 7 },
+  { "CTL_BTN_SMS", 6 },
+  { "CTL_IBX_IMG", 2 },
+  { "CTL_IBX_PWD", 1 },
+  { "CTL_IBX_SMS", 5 },
+  { "CTL_IBX_TEL", 4 },
+  { "CTL_IBX_USR", 0 },
 };
 const ProtobufCEnumDescriptor ctrl_type__descriptor =
 {

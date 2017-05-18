@@ -93,14 +93,10 @@ message browser_screen_info {
    命令ID: 0x0201
    命令描述: 上报浏览器环境信息(BROWSER-ENV)
    协议格式: */
-message mesg_browser_env
-{
-    required uint64 orig = 1;       // M|发送方UID
-    required uint64 dest = 2;       // M|接收方UID
-    required uint32 level = 3;      // M|消息级别
-    required uint64 time = 4;       // M|发送时间
-    required string text = 5;       // M|聊天内容
-    optional bytes data = 6;        // M|透传数据
+message mesg_browser_env {
+    optional browser_plugin_info plugin = 1; // 插件信息
+    optional browser_useragent_info ua = 2; // 用户代理
+    optional browser_screen_info screen = 3; // 屏幕信息
 }
 
 /*
@@ -115,14 +111,14 @@ message mesg_browser_env_ack
 
 /* 控件定义 */
 enum ctrl_type {
-    CTRL_USR_NAME_INPUT_BOX = 0; // 用户名输入框
-    CTRL_PASSWD_INPUT_BOX = 1; // 密码输入框
-    CTRL_IMG_CODE_INPUT_BOX = 2; // 图形验证码输入框
-    CTRL_IMG_CODE_BTN = 3; // 图形验证码刷新按钮
-    CTRL_TEL_INPUT_BOX = 4; // 手机号码输入框
-    CTRL_SMS_INPUT_BOX = 5; // 手机验证码输入框
-    CTRL_SMS_BTN = 6; // 手机验证码获取按钮
-    CTRL_LOGIN_BTN = 7; // 登录按钮
+    CTL_IBX_USR = 0; // 用户名输入框
+    CTL_IBX_PWD = 1; // 密码输入框
+    CTL_IBX_IMG = 2; // 图形验证码输入框
+    CTL_BTN_IMG = 3; // 图形验证码刷新按钮
+    CTL_IBX_TEL = 4; // 手机号码输入框
+    CTL_IBX_SMS = 5; // 手机验证码输入框
+    CTL_BTN_SMS = 6; // 手机验证码获取按钮
+    CTL_BTN_LGN = 7; // 登录按钮
 }
 
 /* 事件定义 */
@@ -151,9 +147,9 @@ enum event_type {
    协议格式: */
 message mesg_event_statistic
 {
-   required uint64 orig = 1;       // M|源用户ID|数字|
-   required uint64 dest = 2;       // M|目标用户ID|数字|
-   required string mark = 3;       // M|备注信息|字串|
+    required ctrl_type ctrl = 1; // 控件类型
+    required event_type event = 2; // 事件类型
+    required uint32 count = 3; // 事件触发次数
 }
 
 /*

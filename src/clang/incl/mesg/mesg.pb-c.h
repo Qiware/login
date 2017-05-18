@@ -32,14 +32,14 @@ typedef struct _MesgFrwdInfo MesgFrwdInfo;
 /* --- enums --- */
 
 typedef enum _CtrlType {
-  CTRL_TYPE__CTRL_USR_NAME_INPUT_BOX = 0,
-  CTRL_TYPE__CTRL_PASSWD_INPUT_BOX = 1,
-  CTRL_TYPE__CTRL_IMG_CODE_INPUT_BOX = 2,
-  CTRL_TYPE__CTRL_IMG_CODE_BTN = 3,
-  CTRL_TYPE__CTRL_TEL_INPUT_BOX = 4,
-  CTRL_TYPE__CTRL_SMS_INPUT_BOX = 5,
-  CTRL_TYPE__CTRL_SMS_BTN = 6,
-  CTRL_TYPE__CTRL_LOGIN_BTN = 7
+  CTRL_TYPE__CTL_IBX_USR = 0,
+  CTRL_TYPE__CTL_IBX_PWD = 1,
+  CTRL_TYPE__CTL_IBX_IMG = 2,
+  CTRL_TYPE__CTL_BTN_IMG = 3,
+  CTRL_TYPE__CTL_IBX_TEL = 4,
+  CTRL_TYPE__CTL_IBX_SMS = 5,
+  CTRL_TYPE__CTL_BTN_SMS = 6,
+  CTRL_TYPE__CTL_BTN_LGN = 7
     PROTOBUF_C__FORCE_ENUM_TO_BE_INT_SIZE(CTRL_TYPE)
 } CtrlType;
 typedef enum _EventType {
@@ -155,17 +155,13 @@ struct  _BrowserScreenInfo
 struct  _MesgBrowserEnv
 {
   ProtobufCMessage base;
-  uint64_t orig;
-  uint64_t dest;
-  uint32_t level;
-  uint64_t time;
-  char *text;
-  protobuf_c_boolean has_data;
-  ProtobufCBinaryData data;
+  BrowserPluginInfo *plugin;
+  BrowserUseragentInfo *ua;
+  BrowserScreenInfo *screen;
 };
 #define MESG_BROWSER_ENV__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&mesg_browser_env__descriptor) \
-    , 0, 0, 0, 0, NULL, 0,{0,NULL} }
+    , NULL, NULL, NULL }
 
 
 struct  _MesgBrowserEnvAck
@@ -182,13 +178,13 @@ struct  _MesgBrowserEnvAck
 struct  _MesgEventStatistic
 {
   ProtobufCMessage base;
-  uint64_t orig;
-  uint64_t dest;
-  char *mark;
+  CtrlType ctrl;
+  EventType event;
+  uint32_t count;
 };
 #define MESG_EVENT_STATISTIC__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&mesg_event_statistic__descriptor) \
-    , 0, 0, NULL }
+    , 0, 0, 0 }
 
 
 struct  _MesgEventStatisticAck
