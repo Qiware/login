@@ -58,6 +58,12 @@ func LsndMesgCommHandler(conn *LsndConnExtra, cmd uint32, data []byte, length ui
 
 	/* > 网络->主机字节序 */
 	head := comm.MesgHeadNtoh(data)
+	if 0 == head.GetSid() {
+		ctx.lws.Kick(conn.GetCid())
+		ctx.log.Error("Sid is invalid! cid:%d status:%d",
+			conn.GetCid(), conn.GetStatus())
+		return -1 // 非法SID
+	}
 
 	head.SetCid(conn.GetCid())
 	head.SetNid(ctx.conf.GetNid())
@@ -111,6 +117,12 @@ func LsndMesgOnlineHandler(conn *LsndConnExtra, cmd uint32, data []byte, length 
 
 	/* > "网络->主机"字节序 */
 	head := comm.MesgHeadNtoh(data)
+	if 0 == head.GetSid() {
+		ctx.lws.Kick(conn.GetCid())
+		ctx.log.Error("Sid is invalid! cid:%d status:%d",
+			conn.GetCid(), conn.GetStatus())
+		return -1 // 非法SID
+	}
 
 	extra := ctx.session.GetParam(head.GetSid(), conn.GetCid())
 	if nil != extra {
@@ -214,6 +226,11 @@ func LsndMesgPingHandler(conn *LsndConnExtra, cmd uint32, data []byte, length ui
 
 	/* > "网络->主机"字节序 */
 	head := comm.MesgHeadNtoh(data)
+	if 0 == head.GetSid() {
+		ctx.lws.Kick(conn.GetCid())
+		ctx.log.Error("Didn't set sid! cid:%d", conn.GetCid())
+		return -1
+	}
 
 	head.SetCid(conn.GetCid())
 	head.SetNid(ctx.conf.GetNid())

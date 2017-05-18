@@ -146,7 +146,7 @@ func LsndUpMesgOnlineAckHandler(cmd uint32, nid uint32, data []byte, length uint
 	/* > 字节序转换(网络 -> 主机) */
 	head := comm.MesgHeadNtoh(data)
 	if !head.IsValid(1) {
-		ctx.log.Error("Header of online-ack is invalid!")
+		ctx.log.Error("Online-ack header is invalid!")
 		return -1
 	}
 
@@ -194,7 +194,7 @@ func LsndUpMesgOnlineAckHandler(cmd uint32, nid uint32, data []byte, length uint
 
 	ctx.lws.AsyncSend(cid, data)
 
-	ctx.log.Debug("Send online ack success! cid:%d/%d sid:%d", conn.GetCid(), cid, ack.GetSid())
+	ctx.log.Debug("Send online ack success! cid:%d sid:%d", conn.GetCid(), ack.GetSid())
 
 	return 0
 }

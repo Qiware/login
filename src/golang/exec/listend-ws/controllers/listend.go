@@ -15,10 +15,6 @@ import (
 	"ai-eye/src/golang/exec/listend-ws/controllers/conf"
 )
 
-const (
-	LSND_SID2CID_LEN = 999
-)
-
 /* 连接状态定义 */
 const (
 	CONN_STATUS_READY  = 1 // 预备状态: 已建立好网络连接
