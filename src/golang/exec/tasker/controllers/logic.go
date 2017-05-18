@@ -70,7 +70,7 @@ func (ctx *TaskerCntx) clean_sid_zset(ctm int64) {
 	off := 0
 	for {
 		sid_list, err := redis.Strings(rds.Do("ZRANGEBYSCORE",
-			comm.IM_KEY_SID_ZSET, "-inf", ctm,
+			comm.AE_KEY_SID_ZSET, "-inf", ctm,
 			"LIMIT", off, comm.CHAT_BAT_NUM))
 		if nil != err {
 			ctx.log.Error("Get sid list failed! errmsg:%s", err.Error())
@@ -116,7 +116,7 @@ func (ctx *TaskerCntx) update_prec_statis() {
 	defer ctx.clean_prec_statis()
 
 	/* > 获取当前并发数 */
-	sid_num, err := redis.Int64(rds.Do("ZCARD", comm.IM_KEY_SID_ZSET))
+	sid_num, err := redis.Int64(rds.Do("ZCARD", comm.AE_KEY_SID_ZSET))
 	if nil != err {
 		ctx.log.Error("Get sid num failed! errmsg:%s", err.Error())
 		return
@@ -124,7 +124,7 @@ func (ctx *TaskerCntx) update_prec_statis() {
 
 	/* > 遍历统计精度列表 */
 	prec_rnum_list, err := redis.Strings(rds.Do("ZRANGEBYSCORE",
-		comm.IM_KEY_PREC_NUM_ZSET, 0, "+inf", "WITHSCORES"))
+		comm.AE_KEY_PREC_NUM_ZSET, 0, "+inf", "WITHSCORES"))
 	if nil != err {
 		ctx.log.Error("Get prec list failed! errmsg:%s", err.Error())
 		return
@@ -143,7 +143,7 @@ func (ctx *TaskerCntx) update_prec_statis() {
 		seg := (ctm / uint64(prec)) * uint64(prec)
 
 		/* > 更新最大峰值 */
-		key := fmt.Sprintf(comm.IM_KEY_PREC_USR_MAX_NUM, prec)
+		key := fmt.Sprintf(comm.AE_KEY_PREC_USR_MAX_NUM, prec)
 		has, err := redis.Bool(rds.Do("HEXISTS", key, seg))
 		if nil != err {
 			ctx.log.Error("Exec hexists failed! errmsg:%s", err.Error())
@@ -161,7 +161,7 @@ func (ctx *TaskerCntx) update_prec_statis() {
 		}
 
 		/* > 更新最低峰值 */
-		key = fmt.Sprintf(comm.IM_KEY_PREC_USR_MIN_NUM, prec)
+		key = fmt.Sprintf(comm.AE_KEY_PREC_USR_MIN_NUM, prec)
 		has, err = redis.Bool(rds.Do("HEXISTS", key, seg))
 		if nil != err {
 			ctx.log.Error("Exec hexists failed! errmsg:%s", err.Error())
@@ -204,7 +204,7 @@ func (ctx *TaskerCntx) clean_prec_statis() {
 
 	/* > 遍历统计精度列表 */
 	prec_rnum_list, err := redis.Strings(rds.Do("ZRANGEBYSCORE",
-		comm.IM_KEY_PREC_NUM_ZSET, 0, "+inf", "WITHSCORES"))
+		comm.AE_KEY_PREC_NUM_ZSET, 0, "+inf", "WITHSCORES"))
 	if nil != err {
 		ctx.log.Error("Get prec list failed! errmsg:%s", err.Error())
 		return
@@ -221,7 +221,7 @@ func (ctx *TaskerCntx) clean_prec_statis() {
 		seg := (ctm / prec) * prec
 
 		/* > 清理最大峰值 */
-		key := fmt.Sprintf(comm.IM_KEY_PREC_USR_MAX_NUM, prec)
+		key := fmt.Sprintf(comm.AE_KEY_PREC_USR_MAX_NUM, prec)
 		time_list, err := redis.Strings(rds.Do("HKEYS", key))
 		if nil == err {
 			time_num := len(time_list)
@@ -235,7 +235,7 @@ func (ctx *TaskerCntx) clean_prec_statis() {
 		}
 
 		/* > 清理最低峰值 */
-		key = fmt.Sprintf(comm.IM_KEY_PREC_USR_MIN_NUM, prec)
+		key = fmt.Sprintf(comm.AE_KEY_PREC_USR_MIN_NUM, prec)
 		time_list, err = redis.Strings(rds.Do("HKEYS", key))
 		if nil == err {
 			time_num := len(time_list)

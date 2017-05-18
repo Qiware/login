@@ -51,7 +51,7 @@ func (ctx *UsrSvrCntx) listend_update() {
 
 	/* > 获取"网络类型"列表 */
 	types, err := redis.Ints(rds.Do("ZRANGEBYSCORE",
-		comm.IM_KEY_LSND_TYPE_ZSET, ctm, "+inf"))
+		comm.AE_KEY_LSND_TYPE_ZSET, ctm, "+inf"))
 	if nil != err {
 		ctx.log.Error("Get listend type list failed! errmsg:%s", err.Error())
 		return
@@ -97,7 +97,7 @@ func (ctx *UsrSvrCntx) listend_fetch(typ int) *UsrSvrLsndList {
 	}
 
 	/* > 获取"国家/地区"列表 */
-	key := fmt.Sprintf(comm.IM_KEY_LSND_NATION_ZSET, typ)
+	key := fmt.Sprintf(comm.AE_KEY_LSND_NATION_ZSET, typ)
 
 	nations, err := redis.Strings(rds.Do("ZRANGEBYSCORE", key, ctm, "+inf"))
 	if nil != err {
@@ -109,7 +109,7 @@ func (ctx *UsrSvrCntx) listend_fetch(typ int) *UsrSvrLsndList {
 	for m := 0; m < nation_num; m += 1 {
 		ctx.log.Debug("Nation:%s", nations[m])
 		/* > 获取"国家/地区"对应的"运营商"列表 */
-		key := fmt.Sprintf(comm.IM_KEY_LSND_OP_ZSET, typ, nations[m])
+		key := fmt.Sprintf(comm.AE_KEY_LSND_OP_ZSET, typ, nations[m])
 
 		operators, err := redis.Strings(rds.Do("ZRANGEBYSCORE", key, ctm, "+inf"))
 		if nil != err {
@@ -125,7 +125,7 @@ func (ctx *UsrSvrCntx) listend_fetch(typ int) *UsrSvrLsndList {
 
 			ctx.log.Debug("    Operator:%d", uint32(opid))
 			/* > 获取"运营商"对应的"IP+PORT"列表 */
-			key := fmt.Sprintf(comm.IM_KEY_LSND_IP_ZSET, typ, nations[m], uint32(opid))
+			key := fmt.Sprintf(comm.AE_KEY_LSND_IP_ZSET, typ, nations[m], uint32(opid))
 
 			iplist, err := redis.Strings(rds.Do("ZRANGEBYSCORE", key, ctm, "+inf"))
 			if nil != err {

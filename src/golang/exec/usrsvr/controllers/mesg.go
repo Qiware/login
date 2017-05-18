@@ -309,10 +309,10 @@ func (ctx *UsrSvrCntx) online_handler(head *comm.MesgHeader, req *mesg.MesgOnlin
 	}
 
 	/* 记录SID集合 */
-	pl.Send("ZADD", comm.IM_KEY_SID_ZSET, ttl, req.GetSid())
+	pl.Send("ZADD", comm.AE_KEY_SID_ZSET, ttl, req.GetSid())
 
 	/* 记录SID->CID & NID */
-	key = fmt.Sprintf(comm.IM_KEY_SID_ATTR, req.GetSid())
+	key = fmt.Sprintf(comm.AE_KEY_SID_ATTR, req.GetSid())
 	pl.Send("HMSET", key, "CID", head.GetCid(), "NID", head.GetNid())
 
 	return err

@@ -91,13 +91,13 @@ func (ctx *MonSvrCntx) lsnd_info_has_conflict(req *mesg.MesgLsndInfo) (has bool,
 	rds := ctx.redis.Get()
 	defer rds.Close()
 
-	addr := fmt.Sprintf(comm.IM_FMT_IP_PORT_STR, req.GetIp(), req.GetPort())
-	ok, err := redis.Bool(rds.Do("HEXISTS", comm.IM_KEY_LSND_ADDR_TO_NID, addr))
+	addr := fmt.Sprintf(comm.AE_FMT_IP_PORT_STR, req.GetIp(), req.GetPort())
+	ok, err := redis.Bool(rds.Do("HEXISTS", comm.AE_KEY_LSND_ADDR_TO_NID, addr))
 	if nil != err {
 		ctx.log.Error("Exec hexists failed! err:%s", err.Error())
 		return false, err
 	} else if true == ok {
-		nid, err := redis.Int(rds.Do("HGET", comm.IM_KEY_LSND_ADDR_TO_NID, addr))
+		nid, err := redis.Int(rds.Do("HGET", comm.AE_KEY_LSND_ADDR_TO_NID, addr))
 		if nil != err {
 			ctx.log.Error("Exec hget failed! err:%s", err.Error())
 			return false, err
@@ -107,13 +107,13 @@ func (ctx *MonSvrCntx) lsnd_info_has_conflict(req *mesg.MesgLsndInfo) (has bool,
 		}
 	}
 
-	key := fmt.Sprintf(comm.IM_KEY_LSND_ATTR, req.GetNid())
-	ok, err = redis.Bool(rds.Do("HEXISTS", key, comm.IM_LSND_ATTR_ADDR))
+	key := fmt.Sprintf(comm.AE_KEY_LSND_ATTR, req.GetNid())
+	ok, err = redis.Bool(rds.Do("HEXISTS", key, comm.AE_LSND_ATTR_ADDR))
 	if nil != err {
 		ctx.log.Error("Exec hexists failed! err:%s", err.Error())
 		return
 	} else if true == ok {
-		_addr, err := redis.String(rds.Do("HGET", key, comm.IM_LSND_ATTR_ADDR))
+		_addr, err := redis.String(rds.Do("HGET", key, comm.AE_LSND_ATTR_ADDR))
 		if nil != err {
 			ctx.log.Error("Exec hget failed! err:%s", err.Error())
 			return false, err
@@ -159,36 +159,36 @@ func (ctx *MonSvrCntx) lsnd_info_handler(head *comm.MesgHeader, req *mesg.MesgLs
 	ttl := time.Now().Unix() + comm.CHAT_OP_TTL
 
 	/* 存储基本信息 */
-	key := fmt.Sprintf(comm.IM_KEY_LSND_ATTR, req.GetNid())
-	addr := fmt.Sprintf(comm.IM_FMT_IP_PORT_STR, req.GetIp(), req.GetPort())
+	key := fmt.Sprintf(comm.AE_KEY_LSND_ATTR, req.GetNid())
+	addr := fmt.Sprintf(comm.AE_FMT_IP_PORT_STR, req.GetIp(), req.GetPort())
 
-	pl.Send("HSETNX", key, comm.IM_LSND_ATTR_ADDR, addr)                     /* 记录NID->ADDR映射 */
-	pl.Send("HSET", key, comm.IM_LSND_ATTR_TYPE, req.GetType())              /* 侦听层类型 */
-	pl.Send("HSET", key, comm.IM_LSND_ATTR_CONNECTION, req.GetConnections()) /* 记录NID在线连接数 */
+	pl.Send("HSETNX", key, comm.AE_LSND_ATTR_ADDR, addr)                     /* 记录NID->ADDR映射 */
+	pl.Send("HSET", key, comm.AE_LSND_ATTR_TYPE, req.GetType())              /* 侦听层类型 */
+	pl.Send("HSET", key, comm.AE_LSND_ATTR_CONNECTION, req.GetConnections()) /* 记录NID在线连接数 */
 
-	pl.Send("HSETNX", comm.IM_KEY_LSND_ADDR_TO_NID, addr, req.GetNid()) /* 记录ADDR->NID映射 */
+	pl.Send("HSETNX", comm.AE_KEY_LSND_ADDR_TO_NID, addr, req.GetNid()) /* 记录ADDR->NID映射 */
 
 	/* 侦听层ID集合 */
-	pl.Send("ZADD", comm.IM_KEY_LSND_NID_ZSET, ttl, req.GetNid())
+	pl.Send("ZADD", comm.AE_KEY_LSND_NID_ZSET, ttl, req.GetNid())
 
 	/* 侦听层类型集合 */
-	pl.Send("ZADD", comm.IM_KEY_LSND_TYPE_ZSET, ttl, req.GetType())
+	pl.Send("ZADD", comm.AE_KEY_LSND_TYPE_ZSET, ttl, req.GetType())
 
 	/* 国家集合 */
-	key = fmt.Sprintf(comm.IM_KEY_LSND_NATION_ZSET, req.GetType())
+	key = fmt.Sprintf(comm.AE_KEY_LSND_NATION_ZSET, req.GetType())
 	pl.Send("ZADD", key, ttl, req.GetNation())
 
 	/* 国家 -> 运营商列表 */
-	key = fmt.Sprintf(comm.IM_KEY_LSND_OP_ZSET, req.GetType(), req.GetNation())
+	key = fmt.Sprintf(comm.AE_KEY_LSND_OP_ZSET, req.GetType(), req.GetNation())
 	pl.Send("ZADD", key, ttl, req.GetOpid())
 
 	/* 国家+运营商 -> 结点列表 */
-	key = fmt.Sprintf(comm.IM_KEY_LSND_OP_TO_NID_ZSET, req.GetType(), req.GetNation(), req.GetOpid())
+	key = fmt.Sprintf(comm.AE_KEY_LSND_OP_TO_NID_ZSET, req.GetType(), req.GetNation(), req.GetOpid())
 	pl.Send("ZADD", key, ttl, req.GetNid())
 
 	/* 国家+运营商 -> 侦听层IP列表 */
-	key = fmt.Sprintf(comm.IM_KEY_LSND_IP_ZSET, req.GetType(), req.GetNation(), req.GetOpid())
-	val := fmt.Sprintf(comm.IM_FMT_IP_PORT_STR, req.GetIp(), req.GetPort())
+	key = fmt.Sprintf(comm.AE_KEY_LSND_IP_ZSET, req.GetType(), req.GetNation(), req.GetOpid())
+	val := fmt.Sprintf(comm.AE_FMT_IP_PORT_STR, req.GetIp(), req.GetPort())
 	pl.Send("ZADD", key, ttl, val)
 
 	ctx.log.Debug("Handle listend information! type:%d nid:%d nation:%s opid:%d ip:%s port:%d user-num:%d",
@@ -318,10 +318,10 @@ func (ctx *MonSvrCntx) frwd_info_has_conflict(req *mesg.MesgFrwdInfo) (has bool,
 	rds := ctx.redis.Get()
 	defer rds.Close()
 
-	key := fmt.Sprintf(comm.IM_KEY_FRWD_ATTR, req.GetNid())
+	key := fmt.Sprintf(comm.AE_KEY_FRWD_ATTR, req.GetNid())
 
 	vals, err := redis.Strings(rds.Do("HMGET", key,
-		comm.IM_FRWD_ATTR_ADDR, comm.IM_FRWD_ATTR_BC_PORT, comm.IM_FRWD_ATTR_FWD_PORT))
+		comm.AE_FRWD_ATTR_ADDR, comm.AE_FRWD_ATTR_BC_PORT, comm.AE_FRWD_ATTR_FWD_PORT))
 	if nil != err {
 		return false, nil
 	}
@@ -378,13 +378,13 @@ func (ctx *MonSvrCntx) frwd_info_handler(head *comm.MesgHeader, req *mesg.MesgFr
 	ttl := time.Now().Unix() + comm.CHAT_NID_TTL
 
 	/* > 更新数据存储 */
-	key := fmt.Sprintf(comm.IM_KEY_FRWD_ATTR, req.GetNid())
+	key := fmt.Sprintf(comm.AE_KEY_FRWD_ATTR, req.GetNid())
 
-	pl.Send("HSETNX", key, comm.IM_FRWD_ATTR_ADDR, req.GetIp())
-	pl.Send("HSETNX", key, comm.IM_FRWD_ATTR_BC_PORT, req.GetBackendPort())
-	pl.Send("HSETNX", key, comm.IM_FRWD_ATTR_FWD_PORT, req.GetForwardPort())
+	pl.Send("HSETNX", key, comm.AE_FRWD_ATTR_ADDR, req.GetIp())
+	pl.Send("HSETNX", key, comm.AE_FRWD_ATTR_BC_PORT, req.GetBackendPort())
+	pl.Send("HSETNX", key, comm.AE_FRWD_ATTR_FWD_PORT, req.GetForwardPort())
 
-	pl.Send("ZADD", comm.IM_KEY_FRWD_NID_ZSET, ttl, req.GetNid())
+	pl.Send("ZADD", comm.AE_KEY_FRWD_NID_ZSET, ttl, req.GetNid())
 
 	return
 }

@@ -38,7 +38,7 @@ func GetSidAttr(pool *redis.Pool, sid uint64) (attr *SidAttr, err error) {
 	defer rds.Close()
 
 	/* 获取会话属性 */
-	key := fmt.Sprintf(comm.IM_KEY_SID_ATTR, sid)
+	key := fmt.Sprintf(comm.AE_KEY_SID_ATTR, sid)
 
 	vals, err := redis.Strings(rds.Do("HMGET", key, "CID", "NID"))
 	if nil != err {
@@ -89,17 +89,17 @@ func CleanSessionData(pool *redis.Pool, sid uint64, cid uint64, nid uint32) erro
 	}
 
 	/* > 删除SID对应的数据 */
-	key := fmt.Sprintf(comm.IM_KEY_SID_ATTR, sid)
+	key := fmt.Sprintf(comm.AE_KEY_SID_ATTR, sid)
 
 	num, err := redis.Int(rds.Do("DEL", key))
 	if nil != err {
 		return err
 	} else if 0 == num {
-		pl.Send("ZREM", comm.IM_KEY_SID_ZSET, sid)
+		pl.Send("ZREM", comm.AE_KEY_SID_ZSET, sid)
 		return nil
 	}
 
-	pl.Send("ZREM", comm.IM_KEY_SID_ZSET, sid)
+	pl.Send("ZREM", comm.AE_KEY_SID_ZSET, sid)
 
 	return nil
 }
@@ -127,17 +127,17 @@ func CleanSessionDataBySid(pool *redis.Pool, sid uint64) error {
 	}()
 
 	/* > 删除SID对应的数据 */
-	key := fmt.Sprintf(comm.IM_KEY_SID_ATTR, sid)
+	key := fmt.Sprintf(comm.AE_KEY_SID_ATTR, sid)
 
 	num, err := redis.Int(rds.Do("DEL", key))
 	if nil != err {
 		return err
 	} else if 0 == num {
-		pl.Send("ZREM", comm.IM_KEY_SID_ZSET, sid)
+		pl.Send("ZREM", comm.AE_KEY_SID_ZSET, sid)
 		return nil
 	}
 
-	pl.Send("ZREM", comm.IM_KEY_SID_ZSET, sid)
+	pl.Send("ZREM", comm.AE_KEY_SID_ZSET, sid)
 
 	return nil
 }
@@ -177,7 +177,7 @@ func UpdateSessionData(pool *redis.Pool, sid uint64, cid uint64, nid uint32) (co
 
 	/* 更新会话属性 */
 	ttl := time.Now().Unix() + comm.CHAT_SID_TTL
-	pl.Send("ZADD", comm.IM_KEY_SID_ZSET, ttl, sid)
+	pl.Send("ZADD", comm.AE_KEY_SID_ZSET, ttl, sid)
 
 	return 0, nil
 }
@@ -197,7 +197,7 @@ func AllocSid(pool *redis.Pool) (sid uint64, err error) {
 	rds := pool.Get()
 	defer rds.Close()
 
-	sid, err = redis.Uint64(rds.Do("INCRBY", comm.IM_KEY_SID_INCR, 1))
+	sid, err = redis.Uint64(rds.Do("INCRBY", comm.AE_KEY_SID_INCR, 1))
 	if nil != err {
 		return 0, err
 	}

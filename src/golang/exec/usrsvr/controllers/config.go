@@ -104,7 +104,7 @@ func (this *UsrSvrConfigCtrl) ListFrwder(ctx *UsrSvrCntx) {
 
 	/* > 获取转发层列表 */
 	nodes, err := redis.Strings(rds.Do(
-		"ZRANGEBYSCORE", comm.IM_KEY_FRWD_NID_ZSET, "-inf", "+inf", "WITHSCORES"))
+		"ZRANGEBYSCORE", comm.AE_KEY_FRWD_NID_ZSET, "-inf", "+inf", "WITHSCORES"))
 	if nil != err {
 		ctx.log.Error("Get frwder list failed! errmsg:%s", err.Error())
 		return
@@ -116,10 +116,10 @@ func (this *UsrSvrConfigCtrl) ListFrwder(ctx *UsrSvrCntx) {
 
 		nid, _ := strconv.ParseInt(nodes[idx], 10, 64)
 
-		key := fmt.Sprintf(comm.IM_KEY_FRWD_ATTR, nid)
+		key := fmt.Sprintf(comm.AE_KEY_FRWD_ATTR, nid)
 
 		vals, err := redis.Strings(rds.Do("HMGET", key,
-			comm.IM_FRWD_ATTR_ADDR, comm.IM_FRWD_ATTR_FWD_PORT, comm.IM_FRWD_ATTR_BC_PORT))
+			comm.AE_FRWD_ATTR_ADDR, comm.AE_FRWD_ATTR_FWD_PORT, comm.AE_FRWD_ATTR_BC_PORT))
 		if nil != err {
 			continue
 		}
@@ -225,7 +225,7 @@ func (this *UsrSvrConfigCtrl) ListListend(ctx *UsrSvrCntx) {
 
 	/* > 获取侦听层列表 */
 	nodes, err := redis.Strings(rds.Do(
-		"ZRANGEBYSCORE", comm.IM_KEY_LSND_NID_ZSET, "-inf", "+inf", "WITHSCORES"))
+		"ZRANGEBYSCORE", comm.AE_KEY_LSND_NID_ZSET, "-inf", "+inf", "WITHSCORES"))
 	if nil != err {
 		ctx.log.Error("Get listend list failed! errmsg:%s", err.Error())
 		return
@@ -237,11 +237,11 @@ func (this *UsrSvrConfigCtrl) ListListend(ctx *UsrSvrCntx) {
 
 		nid, _ := strconv.ParseInt(nodes[idx], 10, 64)
 
-		key := fmt.Sprintf(comm.IM_KEY_LSND_ATTR, nid)
+		key := fmt.Sprintf(comm.AE_KEY_LSND_ATTR, nid)
 
 		vals, err := redis.Strings(rds.Do("HMGET", key,
-			comm.IM_LSND_ATTR_TYPE, comm.IM_LSND_ATTR_ADDR,
-			comm.IM_LSND_ATTR_STATUS, comm.IM_LSND_ATTR_CONNECTION))
+			comm.AE_LSND_ATTR_TYPE, comm.AE_LSND_ATTR_ADDR,
+			comm.AE_LSND_ATTR_STATUS, comm.AE_LSND_ATTR_CONNECTION))
 		if nil != err {
 			continue
 		}
@@ -380,7 +380,7 @@ func (this *UsrSvrConfigCtrl) user_statis_add(ctx *UsrSvrCntx) {
 	}()
 
 	/* > 添加统计精度 */
-	key := fmt.Sprintf(comm.IM_KEY_PREC_NUM_ZSET)
+	key := fmt.Sprintf(comm.AE_KEY_PREC_NUM_ZSET)
 
 	pl.Send("ZADD", key, param.num, param.prec)
 
@@ -450,7 +450,7 @@ func (this *UsrSvrConfigCtrl) user_statis_del(ctx *UsrSvrCntx) {
 	}()
 
 	/* > 添加统计精度 */
-	key := fmt.Sprintf(comm.IM_KEY_PREC_NUM_ZSET)
+	key := fmt.Sprintf(comm.AE_KEY_PREC_NUM_ZSET)
 
 	pl.Send("ZREM", key, param.prec)
 
@@ -538,7 +538,7 @@ func (req *UserStatisGetReq) query(ctx *UsrSvrCntx, prec int, num int) (UserStat
 	defer rds.Close()
 
 	/* > 获取统计结果 */
-	key := fmt.Sprintf(comm.IM_KEY_PREC_USR_MAX_NUM, prec)
+	key := fmt.Sprintf(comm.AE_KEY_PREC_USR_MAX_NUM, prec)
 
 	data, err := redis.StringMap(rds.Do("HGETALL", key))
 	if nil != err {
@@ -661,7 +661,7 @@ func (req *UserStatisListReq) query(ctx *UsrSvrCntx) (UserStatisPrecList, error)
 	defer rds.Close()
 
 	/* > 获取统计精度 */
-	key := fmt.Sprintf(comm.IM_KEY_PREC_NUM_ZSET)
+	key := fmt.Sprintf(comm.AE_KEY_PREC_NUM_ZSET)
 
 	data, err := redis.Strings(rds.Do("ZRANGEBYSCORE", key, "-inf", "+inf", "WITHSCORES"))
 	if nil != err {
