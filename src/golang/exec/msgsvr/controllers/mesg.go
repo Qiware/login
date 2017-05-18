@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"ai-eye/src/golang/lib/comm"
@@ -166,6 +167,7 @@ func (ctx *MsgSvrCntx) browser_env_ack(head *comm.MesgHeader, req *mesg.MesgBrow
  **函数名称: browser_env_handler
  **功    能: 浏览器环境处理
  **输入参数:
+ **     head: 协议头
  **     req: 浏览器环境信息
  **输出参数: NONE
  **返    回: 异常信息
@@ -184,6 +186,43 @@ func (ctx *MsgSvrCntx) browser_env_handler(head *comm.MesgHeader, req *mesg.Mesg
 
 	/* 记录SID集合 */
 	pl.Send("ZADD", comm.AE_KEY_SID_ZSET, ttl, head.GetSid())
+
+	/* 记录浏览器环境 */
+	key := fmt.Sprintf(comm.AE_KEY_SID_STATISTIC, head.GetSid())
+	/* > 插件信息 */
+	plugin := req.GetPlugin()
+	if nil != plugin {
+		if len(plugin.GetName()) > 0 {
+			pl.Send("HSET", key, comm.COL_PLUGIN_HAS_NAME, 1)
+		}
+
+		if len(plugin.GetDesc()) > 0 {
+			pl.Send("HSET", key, comm.COL_PLUGIN_HAS_DESC, 1)
+		}
+	}
+
+	/* > 用户代理 */
+	ua := req.GetUa()
+	if nil != ua {
+		if len(ua.GetUa()) > 0 {
+			pl.Send("HSET", key, comm.COL_UA_EXISTS, 1)
+		}
+	}
+
+	/* > 屏幕信息 */
+	screen := req.GetScreen()
+	if nil != screen {
+		pl.Send("HMSET", key, comm.COL_SCREEN_WIDTH, screen.GetWidth(),
+			comm.COL_SCREEN_HEIGH, screen.GetHeight(),
+			comm.COL_SCREEN_AVAIL_WIDTH, screen.GetAvailWidth(),
+			comm.COL_SCREEN_AVAIL_HEIGH, screen.GetAvailHeight(),
+			comm.COL_SCREEN_AVAIL_LEFT, screen.GetAvailLeft(),
+			comm.COL_SCREEN_AVAIL_TOP, screen.GetAvailTop(),
+			comm.COL_SCREEN_OUTER_WIDTH, screen.GetOuterWidth(),
+			comm.COL_SCREEN_OUTER_HEIGH, screen.GetOuterHeight(),
+			comm.COL_SCREEN_INNER_WIDTH, screen.GetInnerWidth(),
+			comm.COL_SCREEN_INNER_HEIGH, screen.GetInnerHeight())
+	}
 
 	return err
 }
