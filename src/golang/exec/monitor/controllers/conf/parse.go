@@ -96,14 +96,7 @@ func (conf *MonConf) parse() (err error) {
 	}
 
 	conf.Redis.Usr = node.Redis.Usr
-	if 0 == len(conf.Redis.Usr) {
-		return errors.New("Get user name of redis failed!")
-	}
-
 	conf.Redis.Passwd = node.Redis.Passwd
-	if 0 == len(conf.Redis.Passwd) {
-		return errors.New("Get password of redis failed!")
-	}
 
 	/* 日志配置 */
 	conf.Log.Level = log.GetLevel(node.Log.Level)
