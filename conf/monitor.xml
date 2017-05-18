@@ -1,6 +1,6 @@
 <MONITOR ID="33000"> <!-- ID: 结点ID -->
   <LOG LEVEL="debug" PATH="../log" /> <!-- 日志配置 -->
-  <REDIS ADDR="127.0.0.1:6379" USR="beehive" PASSWD="111111" /> <!-- REDIS配置 -->
+  <REDIS ADDR="10.130.212.59:19001" USR="beehive" PASSWD="oSBGULlQnFG7Mf7K" /> <!-- REDIS配置 -->
   <FRWDER ADDR="127.0.0.1:28889"> <!-- RTMQ代理 -->
     <AUTH USR="qifeng" PASSWD="111111" />       <!-- 鉴权: 用户名 + 登录密码 -->
     <WORKER-NUM>10</WORKER-NUM>                 <!-- 工作协程数 -->
