@@ -176,7 +176,7 @@ func UpdateSessionData(pool *redis.Pool, sid uint64, cid uint64, nid uint32) (co
 	}
 
 	/* 更新会话属性 */
-	ttl := time.Now().Unix() + comm.CHAT_SID_TTL
+	ttl := time.Now().Unix() + comm.AE_SID_TTL
 	pl.Send("ZADD", comm.AE_KEY_SID_ZSET, ttl, sid)
 
 	return 0, nil

@@ -156,7 +156,7 @@ func (ctx *MonSvrCntx) lsnd_info_handler(head *comm.MesgHeader, req *mesg.MesgLs
 		return
 	}
 
-	ttl := time.Now().Unix() + comm.CHAT_OP_TTL
+	ttl := time.Now().Unix() + comm.AE_OP_TTL
 
 	/* 存储基本信息 */
 	key := fmt.Sprintf(comm.AE_KEY_LSND_ATTR, req.GetNid())
@@ -375,7 +375,7 @@ func (ctx *MonSvrCntx) frwd_info_handler(head *comm.MesgHeader, req *mesg.MesgFr
 		return
 	}
 
-	ttl := time.Now().Unix() + comm.CHAT_NID_TTL
+	ttl := time.Now().Unix() + comm.AE_NID_TTL
 
 	/* > 更新数据存储 */
 	key := fmt.Sprintf(comm.AE_KEY_FRWD_ATTR, req.GetNid())

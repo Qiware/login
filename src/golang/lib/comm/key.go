@@ -1,9 +1,7 @@
 package comm
 
 const (
-	AE_FMT_IP_PORT_STR     = "%s:%d"           //| IP+PORT
-	CHAT_FMT_UID_SID_STR   = "%d:%d"           // 格式:${UID}:${SID} 说明:主键CHAT_KEY_RID_TO_UID_SID_ZSET的成员
-	CHAT_FMT_UID_MSGID_STR = "uid:%d:msgid:%d" //| STRING | UID+MSGID
+	AE_FMT_IP_PORT_STR = "%s:%d" //| IP+PORT
 )
 
 /* 侦听层结点属性 */

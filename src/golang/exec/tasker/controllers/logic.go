@@ -71,7 +71,7 @@ func (ctx *TaskerCntx) clean_sid_zset(ctm int64) {
 	for {
 		sid_list, err := redis.Strings(rds.Do("ZRANGEBYSCORE",
 			comm.AE_KEY_SID_ZSET, "-inf", ctm,
-			"LIMIT", off, comm.CHAT_BAT_NUM))
+			"LIMIT", off, comm.AE_BAT_NUM))
 		if nil != err {
 			ctx.log.Error("Get sid list failed! errmsg:%s", err.Error())
 			return
@@ -83,10 +83,10 @@ func (ctx *TaskerCntx) clean_sid_zset(ctm int64) {
 			im.CleanSessionDataBySid(ctx.redis, uint64(sid))
 		}
 
-		if sid_num < comm.CHAT_BAT_NUM {
+		if sid_num < comm.AE_BAT_NUM {
 			break
 		}
-		off += comm.CHAT_BAT_NUM
+		off += comm.AE_BAT_NUM
 	}
 }
 

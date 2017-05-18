@@ -291,7 +291,7 @@ func (ctx *UsrSvrCntx) online_handler(head *comm.MesgHeader, req *mesg.MesgOnlin
 		pl.Close()
 	}()
 
-	ttl := time.Now().Unix() + comm.CHAT_SID_TTL
+	ttl := time.Now().Unix() + comm.AE_SID_TTL
 
 	/* 获取会话属性 */
 	attr, err := im.GetSidAttr(ctx.redis, req.GetSid())

@@ -180,7 +180,7 @@ func (ctx *MsgSvrCntx) browser_env_handler(head *comm.MesgHeader, req *mesg.Mesg
 		pl.Close()
 	}()
 
-	ttl := time.Now().Unix() + comm.CHAT_SID_TTL
+	ttl := time.Now().Unix() + comm.AE_SID_TTL
 
 	/* 记录SID集合 */
 	pl.Send("ZADD", comm.AE_KEY_SID_ZSET, ttl, head.GetSid())
