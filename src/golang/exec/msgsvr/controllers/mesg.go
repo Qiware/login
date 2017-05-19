@@ -490,8 +490,6 @@ func (ctx *MsgSvrCntx) event_statistic_handler(
 			pl.Send("HINCRBY", key, comm.COL_EVENT_IBX_USR_TOUCHMOVE, req.GetCount())
 		case comm.EV_TOUCHEND:
 			pl.Send("HINCRBY", key, comm.COL_EVENT_IBX_USR_TOUCHEND, req.GetCount())
-		case comm.EV_TOUCHCANCEL:
-			pl.Send("HINCRBY", key, comm.COL_EVENT_IBX_USR_TOUCHCANCEL, req.GetCount())
 		}
 	case comm.CTL_IBX_PWD: // 输入框: 密码
 		switch req.GetEvent() {
@@ -525,8 +523,6 @@ func (ctx *MsgSvrCntx) event_statistic_handler(
 			pl.Send("HINCRBY", key, comm.COL_EVENT_IBX_PWD_TOUCHMOVE, req.GetCount())
 		case comm.EV_TOUCHEND:
 			pl.Send("HINCRBY", key, comm.COL_EVENT_IBX_PWD_TOUCHEND, req.GetCount())
-		case comm.EV_TOUCHCANCEL:
-			pl.Send("HINCRBY", key, comm.COL_EVENT_IBX_PWD_TOUCHCANCEL, req.GetCount())
 		}
 	case comm.CTL_IBX_IMG: // 输入框: 图片验证码
 		switch req.GetEvent() {
@@ -560,8 +556,6 @@ func (ctx *MsgSvrCntx) event_statistic_handler(
 			pl.Send("HINCRBY", key, comm.COL_EVENT_IBX_IMG_TOUCHMOVE, req.GetCount())
 		case comm.EV_TOUCHEND:
 			pl.Send("HINCRBY", key, comm.COL_EVENT_IBX_IMG_TOUCHEND, req.GetCount())
-		case comm.EV_TOUCHCANCEL:
-			pl.Send("HINCRBY", key, comm.COL_EVENT_IBX_IMG_TOUCHCANCEL, req.GetCount())
 		}
 	case comm.CTL_BTN_IMG: // 按钮: 图片验证码
 		switch req.GetEvent() {
@@ -593,8 +587,6 @@ func (ctx *MsgSvrCntx) event_statistic_handler(
 			pl.Send("HINCRBY", key, comm.COL_EVENT_BTN_IMG_TOUCHMOVE, req.GetCount())
 		case comm.EV_TOUCHEND:
 			pl.Send("HINCRBY", key, comm.COL_EVENT_BTN_IMG_TOUCHEND, req.GetCount())
-		case comm.EV_TOUCHCANCEL:
-			pl.Send("HINCRBY", key, comm.COL_EVENT_BTN_IMG_TOUCHCANCEL, req.GetCount())
 		}
 	case comm.CTL_IBX_TEL: // 输入框: 手机号
 		switch req.GetEvent() {
@@ -628,8 +620,6 @@ func (ctx *MsgSvrCntx) event_statistic_handler(
 			pl.Send("HINCRBY", key, comm.COL_EVENT_IBX_TEL_TOUCHMOVE, req.GetCount())
 		case comm.EV_TOUCHEND:
 			pl.Send("HINCRBY", key, comm.COL_EVENT_IBX_TEL_TOUCHEND, req.GetCount())
-		case comm.EV_TOUCHCANCEL:
-			pl.Send("HINCRBY", key, comm.COL_EVENT_IBX_TEL_TOUCHCANCEL, req.GetCount())
 		}
 	case comm.CTL_IBX_SMS: // 输入框: 短信验证码
 		switch req.GetEvent() {
@@ -663,8 +653,6 @@ func (ctx *MsgSvrCntx) event_statistic_handler(
 			pl.Send("HINCRBY", key, comm.COL_EVENT_IBX_SMS_TOUCHMOVE, req.GetCount())
 		case comm.EV_TOUCHEND:
 			pl.Send("HINCRBY", key, comm.COL_EVENT_IBX_SMS_TOUCHEND, req.GetCount())
-		case comm.EV_TOUCHCANCEL:
-			pl.Send("HINCRBY", key, comm.COL_EVENT_IBX_SMS_TOUCHCANCEL, req.GetCount())
 		}
 	case comm.CTL_BTN_SMS: // 按钮: 短信验证码
 		switch req.GetEvent() {
@@ -696,8 +684,6 @@ func (ctx *MsgSvrCntx) event_statistic_handler(
 			pl.Send("HINCRBY", key, comm.COL_EVENT_BTN_SMS_TOUCHMOVE, req.GetCount())
 		case comm.EV_TOUCHEND:
 			pl.Send("HINCRBY", key, comm.COL_EVENT_BTN_SMS_TOUCHEND, req.GetCount())
-		case comm.EV_TOUCHCANCEL:
-			pl.Send("HINCRBY", key, comm.COL_EVENT_BTN_SMS_TOUCHCANCEL, req.GetCount())
 		}
 	case comm.CTL_BTN_LGN: // 按钮: 登录
 		switch req.GetEvent() {
@@ -729,8 +715,6 @@ func (ctx *MsgSvrCntx) event_statistic_handler(
 			pl.Send("HINCRBY", key, comm.COL_EVENT_BTN_LGN_TOUCHMOVE, req.GetCount())
 		case comm.EV_TOUCHEND:
 			pl.Send("HINCRBY", key, comm.COL_EVENT_BTN_LGN_TOUCHEND, req.GetCount())
-		case comm.EV_TOUCHCANCEL:
-			pl.Send("HINCRBY", key, comm.COL_EVENT_BTN_LGN_TOUCHCANCEL, req.GetCount())
 		}
 	}
 	pl.Send("HINCRBY", key, "UTM", time.Now().Unix()) // 更新时间

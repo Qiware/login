@@ -26,167 +26,149 @@ type = sys.getfilesystemencoding()
 
 COL_RESERVED = 1
 ################################################################################
-# 浏览器环境
+## 浏览器环境
 COL_PLUGIN_HAS_NAME = 0
 COL_PLUGIN_HAS_DESC = 1
-COL_UA_EXISTS = 2
-
-# 屏幕信息
-COL_SCREEN_WIDTH = 3
-COL_SCREEN_HEIGH = 4
+COL_UA_EXISTS       = 2
+## 屏幕信息
+COL_SCREEN_WIDTH       = 3
+COL_SCREEN_HEIGH       = 4
 COL_SCREEN_AVAIL_WIDTH = 5
 COL_SCREEN_AVAIL_HEIGH = 6
-COL_SCREEN_AVAIL_LEFT = 7
-COL_SCREEN_AVAIL_TOP = 8
+COL_SCREEN_AVAIL_LEFT  = 7
+COL_SCREEN_AVAIL_TOP   = 8
 COL_SCREEN_OUTER_WIDTH = 9
 COL_SCREEN_OUTER_HEIGH = 10
 COL_SCREEN_INNER_WIDTH = 11
 COL_SCREEN_INNER_HEIGH = 12
-
-# 事件信息
-# A - 用户名输入框
-COL_EVENT_IBX_USR_CHANGE = 13
-COL_EVENT_IBX_USR_CLICK = 14
-COL_EVENT_IBX_USR_DBLCLICK = 15
-COL_EVENT_IBX_USR_FOCUS = 16
-COL_EVENT_IBX_USR_KEYDOWN = 17
-COL_EVENT_IBX_USR_KEYPRESS = 18
-COL_EVENT_IBX_USR_KEYUP = 19
-COL_EVENT_IBX_USR_MOUSEDOWN = 20
-COL_EVENT_IBX_USR_MOUSEMOVE = 21
-COL_EVENT_IBX_USR_MOUSEOUT = 22
-COL_EVENT_IBX_USR_MOUSEOVER = 23
-COL_EVENT_IBX_USR_MOUSEUP = 24
+## 事件信息
+## A - 用户名输入框
+COL_EVENT_IBX_USR_CHANGE     = 13
+COL_EVENT_IBX_USR_CLICK      = 14
+COL_EVENT_IBX_USR_DBLCLICK   = 15
+COL_EVENT_IBX_USR_FOCUS      = 16
+COL_EVENT_IBX_USR_KEYDOWN    = 17
+COL_EVENT_IBX_USR_KEYPRESS   = 18
+COL_EVENT_IBX_USR_KEYUP      = 19
+COL_EVENT_IBX_USR_MOUSEDOWN  = 20
+COL_EVENT_IBX_USR_MOUSEMOVE  = 21
+COL_EVENT_IBX_USR_MOUSEOUT   = 22
+COL_EVENT_IBX_USR_MOUSEOVER  = 23
+COL_EVENT_IBX_USR_MOUSEUP    = 24
 COL_EVENT_IBX_USR_TOUCHSTART = 25
-COL_EVENT_IBX_USR_TOUCHMOVE = 26
-COL_EVENT_IBX_USR_TOUCHEND = 27
-COL_EVENT_IBX_USR_TOUCHCANCEL = 28
-
-# B - 密码输入框
-COL_EVENT_IBX_PWD_CHANGE = 29
-COL_EVENT_IBX_PWD_CLICK = 30
-COL_EVENT_IBX_PWD_DBLCLICK = 31
-COL_EVENT_IBX_PWD_FOCUS = 32
-COL_EVENT_IBX_PWD_KEYDOWN = 33
-COL_EVENT_IBX_PWD_KEYPRESS = 34
-COL_EVENT_IBX_PWD_KEYUP = 35
-COL_EVENT_IBX_PWD_MOUSEDOWN = 36
-COL_EVENT_IBX_PWD_MOUSEMOVE = 37
-COL_EVENT_IBX_PWD_MOUSEOUT = 38
-COL_EVENT_IBX_PWD_MOUSEOVER = 39
-COL_EVENT_IBX_PWD_MOUSEUP = 40
-COL_EVENT_IBX_PWD_TOUCHSTART = 41
-COL_EVENT_IBX_PWD_TOUCHMOVE = 42
-COL_EVENT_IBX_PWD_TOUCHEND = 43
-COL_EVENT_IBX_PWD_TOUCHCANCEL = 44
-
-# C - 图形验证码输入框
-COL_EVENT_IBX_IMG_CHANGE      = 45
-COL_EVENT_IBX_IMG_CLICK       = 46
-COL_EVENT_IBX_IMG_DBLCLICK    = 47
-COL_EVENT_IBX_IMG_FOCUS       = 48
-COL_EVENT_IBX_IMG_KEYDOWN     = 49
-COL_EVENT_IBX_IMG_KEYPRESS    = 50
-COL_EVENT_IBX_IMG_KEYUP       = 51
-COL_EVENT_IBX_IMG_MOUSEDOWN   = 52
-COL_EVENT_IBX_IMG_MOUSEMOVE   = 53
-COL_EVENT_IBX_IMG_MOUSEOUT    = 54
-COL_EVENT_IBX_IMG_MOUSEOVER   = 55
-COL_EVENT_IBX_IMG_MOUSEUP     = 56
-COL_EVENT_IBX_IMG_TOUCHSTART  = 57
-COL_EVENT_IBX_IMG_TOUCHMOVE   = 58
-COL_EVENT_IBX_IMG_TOUCHEND    = 59
-COL_EVENT_IBX_IMG_TOUCHCANCEL = 60
-
-# D - 图形验证码刷新按钮
-COL_EVENT_BTN_IMG_CLICK       = 61                                          
-COL_EVENT_BTN_IMG_DBLCLICK    = 62                                          
-COL_EVENT_BTN_IMG_FOCUS       = 63                                          
-COL_EVENT_BTN_IMG_KEYDOWN     = 64                                          
-COL_EVENT_BTN_IMG_KEYPRESS    = 65                                          
-COL_EVENT_BTN_IMG_KEYUP       = 66                                          
-COL_EVENT_BTN_IMG_MOUSEDOWN   = 67                                          
-COL_EVENT_BTN_IMG_MOUSEMOVE   = 68                                          
-COL_EVENT_BTN_IMG_MOUSEOUT    = 69                                          
-COL_EVENT_BTN_IMG_MOUSEOVER   = 70                                          
-COL_EVENT_BTN_IMG_MOUSEUP     = 71                                          
-COL_EVENT_BTN_IMG_TOUCHSTART  = 72                                          
-COL_EVENT_BTN_IMG_TOUCHMOVE   = 73                                          
-COL_EVENT_BTN_IMG_TOUCHEND    = 74                                          
-COL_EVENT_BTN_IMG_TOUCHCANCEL = 75
-
-# E - 手机号输入框
-COL_EVENT_IBX_TEL_CHANGE      = 76                                          
-COL_EVENT_IBX_TEL_CLICK       = 77                                          
-COL_EVENT_IBX_TEL_DBLCLICK    = 78                                          
-COL_EVENT_IBX_TEL_FOCUS       = 79                                          
-COL_EVENT_IBX_TEL_KEYDOWN     = 80                                          
-COL_EVENT_IBX_TEL_KEYPRESS    = 81                                          
-COL_EVENT_IBX_TEL_KEYUP       = 82                                          
-COL_EVENT_IBX_TEL_MOUSEDOWN   = 83                                          
-COL_EVENT_IBX_TEL_MOUSEMOVE   = 84                                          
-COL_EVENT_IBX_TEL_MOUSEOUT    = 85                                          
-COL_EVENT_IBX_TEL_MOUSEOVER   = 86                                          
-COL_EVENT_IBX_TEL_MOUSEUP     = 87                                          
-COL_EVENT_IBX_TEL_TOUCHSTART  = 88                                          
-COL_EVENT_IBX_TEL_TOUCHMOVE   = 89                                          
-COL_EVENT_IBX_TEL_TOUCHEND    = 90                                          
-COL_EVENT_IBX_TEL_TOUCHCANCEL = 91
-
-# H - 手机验证码输入框(FOR TEL)
-COL_EVENT_IBX_SMS_CHANGE      = 92                                          
-COL_EVENT_IBX_SMS_CLICK       = 93                                          
-COL_EVENT_IBX_SMS_DBLCLICK    = 94                                          
-COL_EVENT_IBX_SMS_FOCUS       = 95                                          
-COL_EVENT_IBX_SMS_KEYDOWN     = 96                                          
-COL_EVENT_IBX_SMS_KEYPRESS    = 97                                          
-COL_EVENT_IBX_SMS_KEYUP       = 98                                          
-COL_EVENT_IBX_SMS_MOUSEDOWN   = 99                                          
-COL_EVENT_IBX_SMS_MOUSEMOVE   = 100                                         
-COL_EVENT_IBX_SMS_MOUSEOUT    = 101                                         
-COL_EVENT_IBX_SMS_MOUSEOVER   = 102                                         
-COL_EVENT_IBX_SMS_MOUSEUP     = 103                                         
-COL_EVENT_IBX_SMS_TOUCHSTART  = 104                                         
-COL_EVENT_IBX_SMS_TOUCHMOVE   = 105                                         
-COL_EVENT_IBX_SMS_TOUCHEND    = 106                                         
-COL_EVENT_IBX_SMS_TOUCHCANCEL = 107
-
-# I - 手机验证码获取按钮(FOR TEL)
-COL_EVENT_BTN_SMS_CLICK       = 108                                         
-COL_EVENT_BTN_SMS_DBLCLICK    = 109                                         
-COL_EVENT_BTN_SMS_FOCUS       = 110                                         
-COL_EVENT_BTN_SMS_KEYDOWN     = 111                                         
-COL_EVENT_BTN_SMS_KEYPRESS    = 112                                         
-COL_EVENT_BTN_SMS_KEYUP       = 113                                         
-COL_EVENT_BTN_SMS_MOUSEDOWN   = 114                                         
-COL_EVENT_BTN_SMS_MOUSEMOVE   = 115                                         
-COL_EVENT_BTN_SMS_MOUSEOUT    = 116                                         
-COL_EVENT_BTN_SMS_MOUSEOVER   = 117                                         
-COL_EVENT_BTN_SMS_MOUSEUP     = 118                                         
-COL_EVENT_BTN_SMS_TOUCHSTART  = 119                                         
-COL_EVENT_BTN_SMS_TOUCHMOVE   = 120                                         
-COL_EVENT_BTN_SMS_TOUCHEND    = 121                                         
-COL_EVENT_BTN_SMS_TOUCHCANCEL = 122
-
-# J - 登录按钮
-COL_EVENT_BTN_LGN_CLICK       = 123                                         
-COL_EVENT_BTN_LGN_DBLCLICK    = 124                                         
-COL_EVENT_BTN_LGN_FOCUS       = 125                                         
-COL_EVENT_BTN_LGN_KEYDOWN     = 126                                         
-COL_EVENT_BTN_LGN_KEYPRESS    = 127                                         
-COL_EVENT_BTN_LGN_KEYUP       = 128                                         
-COL_EVENT_BTN_LGN_MOUSEDOWN   = 129                                         
-COL_EVENT_BTN_LGN_MOUSEMOVE   = 130                                         
-COL_EVENT_BTN_LGN_MOUSEOUT    = 131                                         
-COL_EVENT_BTN_LGN_MOUSEOVER   = 132                                         
-COL_EVENT_BTN_LGN_MOUSEUP     = 133                                         
-COL_EVENT_BTN_LGN_TOUCHSTART  = 134                                         
-COL_EVENT_BTN_LGN_TOUCHMOVE   = 135                                         
-COL_EVENT_BTN_LGN_TOUCHEND    = 136                                         
-COL_EVENT_BTN_LGN_TOUCHCANCEL = 137
-
-# 时间信息
-COL_TIME_DIFF_SEC = 138
+COL_EVENT_IBX_USR_TOUCHMOVE  = 26
+COL_EVENT_IBX_USR_TOUCHEND   = 27
+## B - 密码输入框
+COL_EVENT_IBX_PWD_CHANGE     = 28
+COL_EVENT_IBX_PWD_CLICK      = 29
+COL_EVENT_IBX_PWD_DBLCLICK   = 30
+COL_EVENT_IBX_PWD_FOCUS      = 31
+COL_EVENT_IBX_PWD_KEYDOWN    = 32
+COL_EVENT_IBX_PWD_KEYPRESS   = 33
+COL_EVENT_IBX_PWD_KEYUP      = 34
+COL_EVENT_IBX_PWD_MOUSEDOWN  = 35
+COL_EVENT_IBX_PWD_MOUSEMOVE  = 36
+COL_EVENT_IBX_PWD_MOUSEOUT   = 37
+COL_EVENT_IBX_PWD_MOUSEOVER  = 38
+COL_EVENT_IBX_PWD_MOUSEUP    = 39
+COL_EVENT_IBX_PWD_TOUCHSTART = 40
+COL_EVENT_IBX_PWD_TOUCHMOVE  = 41
+COL_EVENT_IBX_PWD_TOUCHEND   = 42
+## C - 验证码输入框
+COL_EVENT_IBX_IMG_CHANGE     = 43
+COL_EVENT_IBX_IMG_CLICK      = 44
+COL_EVENT_IBX_IMG_DBLCLICK   = 45
+COL_EVENT_IBX_IMG_FOCUS      = 46
+COL_EVENT_IBX_IMG_KEYDOWN    = 47
+COL_EVENT_IBX_IMG_KEYPRESS   = 48
+COL_EVENT_IBX_IMG_KEYUP      = 49
+COL_EVENT_IBX_IMG_MOUSEDOWN  = 50
+COL_EVENT_IBX_IMG_MOUSEMOVE  = 51
+COL_EVENT_IBX_IMG_MOUSEOUT   = 52
+COL_EVENT_IBX_IMG_MOUSEOVER  = 53
+COL_EVENT_IBX_IMG_MOUSEUP    = 54
+COL_EVENT_IBX_IMG_TOUCHSTART = 55
+COL_EVENT_IBX_IMG_TOUCHMOVE  = 56
+COL_EVENT_IBX_IMG_TOUCHEND   = 57
+## D - 验证码刷新按钮
+COL_EVENT_BTN_IMG_CLICK      = 58
+COL_EVENT_BTN_IMG_DBLCLICK   = 59
+COL_EVENT_BTN_IMG_FOCUS      = 60
+COL_EVENT_BTN_IMG_KEYDOWN    = 61
+COL_EVENT_BTN_IMG_KEYPRESS   = 62
+COL_EVENT_BTN_IMG_KEYUP      = 63
+COL_EVENT_BTN_IMG_MOUSEDOWN  = 64
+COL_EVENT_BTN_IMG_MOUSEMOVE  = 65
+COL_EVENT_BTN_IMG_MOUSEOUT   = 66
+COL_EVENT_BTN_IMG_MOUSEOVER  = 67
+COL_EVENT_BTN_IMG_MOUSEUP    = 68
+COL_EVENT_BTN_IMG_TOUCHSTART = 69
+COL_EVENT_BTN_IMG_TOUCHMOVE  = 70
+COL_EVENT_BTN_IMG_TOUCHEND   = 71
+## E - 手机号输入框
+COL_EVENT_IBX_TEL_CHANGE     = 72
+COL_EVENT_IBX_TEL_CLICK      = 73
+COL_EVENT_IBX_TEL_DBLCLICK   = 74
+COL_EVENT_IBX_TEL_FOCUS      = 75
+COL_EVENT_IBX_TEL_KEYDOWN    = 76
+COL_EVENT_IBX_TEL_KEYPRESS   = 77
+COL_EVENT_IBX_TEL_KEYUP      = 78
+COL_EVENT_IBX_TEL_MOUSEDOWN  = 79
+COL_EVENT_IBX_TEL_MOUSEMOVE  = 80
+COL_EVENT_IBX_TEL_MOUSEOUT   = 81
+COL_EVENT_IBX_TEL_MOUSEOVER  = 82
+COL_EVENT_IBX_TEL_MOUSEUP    = 83
+COL_EVENT_IBX_TEL_TOUCHSTART = 84
+COL_EVENT_IBX_TEL_TOUCHMOVE  = 85
+COL_EVENT_IBX_TEL_TOUCHEND   = 86
+## H - 手机验证码输入框(FOR TEL)
+COL_EVENT_IBX_SMS_CHANGE     = 87
+COL_EVENT_IBX_SMS_CLICK      = 88
+COL_EVENT_IBX_SMS_DBLCLICK   = 89
+COL_EVENT_IBX_SMS_FOCUS      = 90
+COL_EVENT_IBX_SMS_KEYDOWN    = 91
+COL_EVENT_IBX_SMS_KEYPRESS   = 92
+COL_EVENT_IBX_SMS_KEYUP      = 93
+COL_EVENT_IBX_SMS_MOUSEDOWN  = 94
+COL_EVENT_IBX_SMS_MOUSEMOVE  = 95
+COL_EVENT_IBX_SMS_MOUSEOUT   = 96
+COL_EVENT_IBX_SMS_MOUSEOVER  = 97
+COL_EVENT_IBX_SMS_MOUSEUP    = 98
+COL_EVENT_IBX_SMS_TOUCHSTART = 99
+COL_EVENT_IBX_SMS_TOUCHMOVE  = 100
+COL_EVENT_IBX_SMS_TOUCHEND   = 101
+## I - 手机验证码获取按钮(FOR TEL)
+COL_EVENT_BTN_SMS_CLICK      = 102
+COL_EVENT_BTN_SMS_DBLCLICK   = 103
+COL_EVENT_BTN_SMS_FOCUS      = 104
+COL_EVENT_BTN_SMS_KEYDOWN    = 105
+COL_EVENT_BTN_SMS_KEYPRESS   = 106
+COL_EVENT_BTN_SMS_KEYUP      = 107
+COL_EVENT_BTN_SMS_MOUSEDOWN  = 108
+COL_EVENT_BTN_SMS_MOUSEMOVE  = 109
+COL_EVENT_BTN_SMS_MOUSEOUT   = 110
+COL_EVENT_BTN_SMS_MOUSEOVER  = 111
+COL_EVENT_BTN_SMS_MOUSEUP    = 112
+COL_EVENT_BTN_SMS_TOUCHSTART = 113
+COL_EVENT_BTN_SMS_TOUCHMOVE  = 114
+COL_EVENT_BTN_SMS_TOUCHEND   = 115
+## J - 登录按钮
+COL_EVENT_BTN_LGN_CLICK      = 116
+COL_EVENT_BTN_LGN_DBLCLICK   = 117
+COL_EVENT_BTN_LGN_FOCUS      = 118
+COL_EVENT_BTN_LGN_KEYDOWN    = 119
+COL_EVENT_BTN_LGN_KEYPRESS   = 120
+COL_EVENT_BTN_LGN_KEYUP      = 121
+COL_EVENT_BTN_LGN_MOUSEDOWN  = 122
+COL_EVENT_BTN_LGN_MOUSEMOVE  = 123
+COL_EVENT_BTN_LGN_MOUSEOUT   = 124
+COL_EVENT_BTN_LGN_MOUSEOVER  = 125
+COL_EVENT_BTN_LGN_MOUSEUP    = 126
+COL_EVENT_BTN_LGN_TOUCHSTART = 127
+COL_EVENT_BTN_LGN_TOUCHMOVE  = 128
+COL_EVENT_BTN_LGN_TOUCHEND   = 129
+## 时间信息
+COL_TIME_DIFF_SEC = 130
 
 DescMap = {
     # 浏览器环境
@@ -221,7 +203,6 @@ DescMap = {
     COL_EVENT_IBX_USR_TOUCHSTART : '用户名TOUCHSTART:',
     COL_EVENT_IBX_USR_TOUCHMOVE : '用户名TOUCHMOVE:',
     COL_EVENT_IBX_USR_TOUCHEND : '用户名TOUCHEND:',
-    COL_EVENT_IBX_USR_TOUCHCANCEL : '用户名TOUCHCANCEL:',
     ## B - 密码输入框
     COL_EVENT_IBX_PWD_CHANGE : '密码CHANGE:',
     COL_EVENT_IBX_PWD_CLICK : '密码CLICK:',
@@ -238,7 +219,6 @@ DescMap = {
     COL_EVENT_IBX_PWD_TOUCHSTART : '密码TOUCHSTART:',
     COL_EVENT_IBX_PWD_TOUCHMOVE : '密码TOUCHMOVE:',
     COL_EVENT_IBX_PWD_TOUCHEND : '密码TOUCHEND:',
-    COL_EVENT_IBX_PWD_TOUCHCANCEL : '密码TOUCHCANCEL:',
     ## C - 验证码输入框
     COL_EVENT_IBX_IMG_CHANGE : '图片验证码CHANGE:',
     COL_EVENT_IBX_IMG_CLICK : '图片验证码CLICK:',
@@ -255,7 +235,6 @@ DescMap = {
     COL_EVENT_IBX_IMG_TOUCHSTART : '图片验证码TOUCHSTART:',
     COL_EVENT_IBX_IMG_TOUCHMOVE : '图片验证码TOUCHMOVE:',
     COL_EVENT_IBX_IMG_TOUCHEND : '图片验证码TOUCHEND:',
-    COL_EVENT_IBX_IMG_TOUCHCANCEL : '图片验证码TOUCHCANCEL:',
     ## D - 验证码刷新按钮
     COL_EVENT_BTN_IMG_CLICK : '图片验证码刷新CLICK:',
     COL_EVENT_BTN_IMG_DBLCLICK : '图片验证码刷新DBLCLICK:',
@@ -271,7 +250,6 @@ DescMap = {
     COL_EVENT_BTN_IMG_TOUCHSTART : '图片验证码刷新TOUCHSTART:',
     COL_EVENT_BTN_IMG_TOUCHMOVE : '图片验证码刷新TOUCHMOVE:',
     COL_EVENT_BTN_IMG_TOUCHEND : '图片验证码刷新TOUCHEND:',
-    COL_EVENT_BTN_IMG_TOUCHCANCEL : '图片验证码刷新TOUCHCANCEL:',
     ## E - 手机号输入框
     COL_EVENT_IBX_TEL_CHANGE : '手机号CHANGE:',
     COL_EVENT_IBX_TEL_CLICK : '手机号CLICK:',
@@ -288,7 +266,6 @@ DescMap = {
     COL_EVENT_IBX_TEL_TOUCHSTART : '手机号TOUCHSTART:',
     COL_EVENT_IBX_TEL_TOUCHMOVE : '手机号TOUCHMOVE:',
     COL_EVENT_IBX_TEL_TOUCHEND : '手机号TOUCHEND:',
-    COL_EVENT_IBX_TEL_TOUCHCANCEL : '手机号TOUCHCANCEL:',
     ## F - 短信验证码输入框(FOR TEL)
     COL_EVENT_IBX_SMS_CHANGE : '短信CHANGE:',
     COL_EVENT_IBX_SMS_CLICK : '短信CLICK:',
@@ -305,7 +282,6 @@ DescMap = {
     COL_EVENT_IBX_SMS_TOUCHSTART : '短信TOUCHSTART:',
     COL_EVENT_IBX_SMS_TOUCHMOVE : '短信TOUCHMOVE:',
     COL_EVENT_IBX_SMS_TOUCHEND : '短信TOUCHEND:',
-    COL_EVENT_IBX_SMS_TOUCHCANCEL : '短信TOUCHCANCEL:',
     ## G - 短信验证码输入框(FOR TEL)
     COL_EVENT_BTN_SMS_CLICK : '短信按钮CLICK:',
     COL_EVENT_BTN_SMS_DBLCLICK : '短信按钮DBLCLICK:',
@@ -321,7 +297,6 @@ DescMap = {
     COL_EVENT_BTN_SMS_TOUCHSTART : '短信按钮TOUCHSTART:',
     COL_EVENT_BTN_SMS_TOUCHMOVE : '短信按钮TOUCHMOVE:',
     COL_EVENT_BTN_SMS_TOUCHEND : '短信按钮TOUCHEND:',
-    COL_EVENT_BTN_SMS_TOUCHCANCEL : '短信按钮TOUCHCANCEL:',
     ## H - 登录按钮
     COL_EVENT_BTN_LGN_CLICK : '登录CLICK:',
     COL_EVENT_BTN_LGN_DBLCLICK : '登录DBLCLICK:',
@@ -337,7 +312,6 @@ DescMap = {
     COL_EVENT_BTN_LGN_TOUCHSTART : '登录TOUCHSTART:',
     COL_EVENT_BTN_LGN_TOUCHMOVE : '登录TOUCHMOVE:',
     COL_EVENT_BTN_LGN_TOUCHEND : '登录TOUCHEND:',
-    COL_EVENT_BTN_LGN_TOUCHCANCEL : '登录TOUCHCANCEL:',
     # 时间信息
     COL_TIME_DIFF_SEC : '间隔时间:'
 }
@@ -678,14 +652,6 @@ class Sample:
                         else:
                             item = unicode(DescMap[col] + '0')
                             sheet.write(row, col+COL_RESERVED, item, style) # 撰写EXECL文档
-                        # TOUCHCANCEL
-                        col += 1
-                        if js['events'][ctrl].has_key('15'):
-                            item = unicode(DescMap[col] + str(js['events'][ctrl]['15']))
-                            sheet.write(row, col+COL_RESERVED, item, style) # 撰写EXECL文档
-                        else:
-                            item = unicode(DescMap[col] + '0')
-                            sheet.write(row, col+COL_RESERVED, item, style) # 撰写EXECL文档
                     else:
                         if idx != 3 and idx != 6 and idx != 7:
                             # CHANGE
@@ -745,10 +711,6 @@ class Sample:
                         item = unicode(DescMap[col] + '0')
                         sheet.write(row, col+COL_RESERVED, item, style) # 撰写EXECL文档
                         # TOUCHEND
-                        col += 1
-                        item = unicode(DescMap[col] + '0')
-                        sheet.write(row, col+COL_RESERVED, item, style) # 撰写EXECL文档
-                        # TOUCHCANCEL
                         col += 1
                         item = unicode(DescMap[col] + '0')
                         sheet.write(row, col+COL_RESERVED, item, style) # 撰写EXECL文档
