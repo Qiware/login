@@ -316,7 +316,7 @@ func (ctx *UsrSvrCntx) online_handler(head *comm.MesgHeader, req *mesg.MesgOnlin
 	pl.Send("HMSET", key, "CID", head.GetCid(), "NID", head.GetNid())
 
 	/* 记录TOKEN->SID */
-	pl.Send("HSET", comm.AE_KEY_TOKEN_TO_SID, token, head.GetSid())
+	pl.Send("HSET", comm.AE_KEY_TOKEN_TO_SID, req.GetToken(), head.GetSid())
 
 	return err
 }
