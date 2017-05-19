@@ -230,6 +230,7 @@ class Classifier(object):
         wb = copy(bk)
         r = 0
         for row in xrange(table.nrows):
+            print("row:%d process:%f%%" % (row, row*1.0/table.nrows * 100))
             X = []
             Y = []
             r += 1
@@ -237,7 +238,7 @@ class Classifier(object):
             for idx in range(COL_PLUGIN_HAS_NAME, COL_TIME_DIFF_SEC+1):
                 col = idx + 1
                 #print("uid:%s %s" % (uid, table.row(row)[col].value.split(":")[1]))
-                print("row:%d col:%d %s|%s" % (r, col, table.row(row)[col].value.split(":")[0], table.row(row)[col].value.split(":")[1]))
+                #print("row:%d col:%d %s|%s" % (r, col, table.row(row)[col].value.split(":")[0], table.row(row)[col].value.split(":")[1]))
                 X.append(float(table.row(row)[col].value.split(":")[1]))
             # 加载标注数据
             for idx in range(0, 1):
@@ -294,10 +295,12 @@ def ClassfierTrain():
     cls = Classifier()
 
     # 训练模型
-    cls.load("./train/train-1.xlsx")
-    cls.load("./train/train-2.xlsx")
-    cls.load("./train/train-3.xlsx")
-    cls.load("./train/train-4.xlsx")
+    cls.load("./train/train-p-1.xlsx")
+    cls.load("./train/train-p-2.xlsx")
+    cls.load("./train/train-p-3.xlsx")
+
+    cls.load("./train/train-r-1.xlsx")
+    cls.load("./train/train-r-2.xlsx")
 
     cls.train()
 
