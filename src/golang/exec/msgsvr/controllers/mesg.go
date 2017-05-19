@@ -224,6 +224,11 @@ func (ctx *MsgSvrCntx) browser_env_handler(head *comm.MesgHeader, req *mesg.Mesg
 			comm.COL_SCREEN_INNER_HEIGH, screen.GetInnerHeight())
 	}
 
+	/* > 更新时间信息
+	 *   CTM: 创建时间
+	 *   UTM: 更新时间 */
+	pl.Send("HMSET", key, "CTM", time.Now().Unix(), "UTM", time.Now().Unix())
+
 	return err
 }
 
@@ -728,6 +733,7 @@ func (ctx *MsgSvrCntx) event_statistic_handler(
 			pl.Send("HINCRBY", key, comm.COL_EVENT_BTN_LGN_TOUCHCANCEL, req.GetCount())
 		}
 	}
+	pl.Send("HINCRBY", key, "UTM", time.Now().Unix()) // 更新时间
 	return err
 }
 
