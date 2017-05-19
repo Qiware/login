@@ -313,6 +313,7 @@ def ClassfierTrain():
 
     # 训练模型
     cls.load("./train/train-1.xlsx")
+    cls.load("./train/train-3.xlsx")
 
     cls.train()
 
@@ -330,7 +331,10 @@ class AiEyeHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         global redis_pool
         rds = redis.Redis(connection_pool=redis_pool)
 
-        return rds.hget('ae:token:to:sid', token)
+        sid = rds.hget('ae:token:to:sid', token)
+        if sid is None:
+            return 0
+        return int(sid)
     # 获取统计数据
     def GetStatistic(self, sid):
         global redis_pool
@@ -404,10 +408,9 @@ class AiEyeHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             X.append(int(statistic[COL_SCREEN_INNER_WIDTH]))
         else:
             X.append(0)
-        COL_SCREEN_OUTER_HEIGH = 10
         ## 屏幕INNER高度
-        if statistic.has_key(COL_SCREEN_OUTER_HEIGH):
-            X.append(int(statistic[COL_SCREEN_OUTER_HEIGH]))
+        if statistic.has_key(COL_SCREEN_INNER_HEIGH):
+            X.append(int(statistic[COL_SCREEN_INNER_HEIGH]))
         else:
             X.append(0)
 
@@ -940,10 +943,10 @@ class AiEyeHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
         return X
     # 分析风险指数
-    def PredictRisk(self, vec):
+    def PredictRisk(self, X):
         global gClassfier
 
-        return gClassfier.predict(vec)
+        return gClassfier.predict(X)
     # 预测处理
     def predict(self, params):
         risk = 10
@@ -964,8 +967,10 @@ class AiEyeHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             self.wfile.write(json.dumps(mesg))
             return
 
+        token = params["token"][0]
+
         # 通过TOKEN获取SID
-        sid = self.GetSid(params["token"][0])
+        sid = self.GetSid(token)
         if sid is None:
             logging.warning("Get sid by token failed!")
             # 发送预测结果
@@ -974,7 +979,7 @@ class AiEyeHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             self.end_headers()
 
             mesg = {}
-            mesg.setdefault("token", params["token"][0])
+            mesg.setdefault("token", token)
             mesg.setdefault("risk", risk)
             mesg.setdefault("errmsg", "Get sid by token failed!")
 
@@ -982,15 +987,15 @@ class AiEyeHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             return
 
         # 通过SID获取统计数据
-        vec = self.GetStatistic(sid)
-        if vec is None:
+        X = self.GetStatistic(sid)
+        if X is None:
             # 发送预测结果
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
             self.end_headers()
 
             mesg = {}
-            mesg.setdefault("token", params["token"])
+            mesg.setdefault("token", token)
             mesg.setdefault("risk", risk)
             mesg.setdefault("errmsg", "Get data by token failed!")
 
@@ -998,7 +1003,7 @@ class AiEyeHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             return
 
         # 进行风险预测
-        risk = self.PredictRisk(vec)
+        risk = self.PredictRisk(X)
 
         # 发送预测结果
         self.send_response(200)
@@ -1007,7 +1012,7 @@ class AiEyeHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
         mesg = {}
         mesg.setdefault("token", token)
-        mesg.setdefault("risk", risk)
+        mesg.setdefault("risk", int(risk))
         mesg.setdefault("errmsg", "Ok")
 
         self.wfile.write(json.dumps(mesg))
