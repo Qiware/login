@@ -39,6 +39,9 @@ DIR += "$(CLANG_EXEC_DIR)/client"
 DIR += "$(CLANG_EXEC_DIR)/frwder"
 DIR += "$(CLANG_EXEC_DIR)/listend"
 
+CLANG_DEMO_DIR = "src/clang/demo"
+DIR += "$(CLANG_DEMO_DIR)/websocket"
+
 GOLANG_EXEC_DIR = "src/golang/exec"
 DIR += "$(GOLANG_EXEC_DIR)/cross"
 DIR += "$(GOLANG_EXEC_DIR)/usrsvr"
