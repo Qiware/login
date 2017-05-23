@@ -125,7 +125,7 @@ func (ctx *UsrSvrCntx) online_parse(data []byte) (
 		return nil, nil, comm.ERR_SVR_HEAD_INVALID, errors.New(errmsg)
 	}
 
-	ctx.log.Debug("Online request header! cmd:0x%04X length:%d cid:%d nid:%d seq:%d head:%d",
+	ctx.log.Debug("Online request header! cmd:0x%04X length:%d sid:%d nid:%d seq:%d head:%d",
 		head.GetCmd(), head.GetLength(),
 		head.GetSid(), head.GetNid(), head.GetSeq(), comm.MESG_HEAD_SIZE)
 
@@ -177,14 +177,17 @@ func (ctx *UsrSvrCntx) online_failed(head *comm.MesgHeader,
 
 	/* > 设置协议体 */
 	ack := &mesg.MesgOnlineAck{
+		Sid:    proto.Uint64(head.GetSid()),
 		Code:   proto.Uint32(code),
 		Errmsg: proto.String(errmsg),
 	}
 
 	if nil != req {
-		ack.Sid = proto.Uint64(req.GetSid())
 		ack.App = proto.String(req.GetApp())
 		ack.Version = proto.String(req.GetVersion())
+	} else {
+		ack.App = proto.String("Unkonwn")
+		ack.Version = proto.String("Unkonwn")
 	}
 
 	/* 生成PB数据 */
