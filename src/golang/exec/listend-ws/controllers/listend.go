@@ -141,9 +141,9 @@ func LsndInit(conf *conf.LsndConf) (ctx *LsndCntx, err error) {
  **作    者: # Qifeng.zou # 2017.02.09 23:10:38 #
 ******************************************************************************/
 func (ctx *LsndCntx) Register() {
-	ctx.MesgRegister()      // 上行消息注册回调
-	ctx.UpMesgRegister()    // 下行消息注册回调
-	ctx.lws.Register("/im") // LWS路径注册回调
+	ctx.MesgRegister()          // 上行消息注册回调
+	ctx.UpMesgRegister()        // 下行消息注册回调
+	ctx.lws.Register("/upload") // LWS路径注册回调
 }
 
 /******************************************************************************
