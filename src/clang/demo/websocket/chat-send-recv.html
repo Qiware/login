@@ -53,7 +53,7 @@ $(function() {
     //var websocket = new WebSocket('ws://127.0.0.1:11111/chat');
     //var websocket = new WebSocket('ws://10.154.252.32:8088/chat');
     //var websocket = new WebSocket('ws://10.180.153.133:8088/chat');
-    var websocket = new WebSocket('ws://36.110.196.133:80/upload');
+    var websocket = new WebSocket('ws://10.127.220.161:5540/upload');
     websocket.binaryType = 'arraybuffer';
 
     // 连接建立成功，发送JOIN加入聊天室
@@ -67,8 +67,10 @@ $(function() {
     var buff = new ArrayBuffer(24 + joinStr.length);
     // set Header
     var header = new DataView(buff)
-    header.setUint16(0, 0x0105, false)   //cmd
+    header.setUint32(0, 0x0101, false)   //cmd
     header.setUint32(4, joinStr.length, false)
+    header.setUint32(8, 300, false)
+    header.setUint32(20, 1, false)
 
     // set Body
     var bufView = new Uint8Array(buff);

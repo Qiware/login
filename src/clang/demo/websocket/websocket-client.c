@@ -16,6 +16,11 @@
 
 #define AWS_SEND_BUF_LEN   (2048)  // 发送缓存的长度
 
+#define SID (392)
+char *TOKEN = "UHJTPARjW2pWMAc1BDcBa10jByUGMQQ/Cj1SNwVhUzZUNgE1BDZdZlc2AjgGPQYzAWVTYQ==";
+char *APP = "websocket-test";
+char *VERSION = "v.0.0.1";
+
 /* 输入选项 */
 typedef struct
 {
@@ -334,10 +339,10 @@ int lws_online_handler(wsc_cntx_t *ctx,
     MesgOnline online = MESG_ONLINE__INIT;
 
     /* 创建发送队列 */
-    online.sid = 392;
-    online.token = "UHJTPARjW2pWMAc1BDcBa10jByUGMQQ/Cj1SNwVhUzZUNgE1BDZdZlc2AjgGPQYzAWVTYQ==";
-    online.app = "websocket-test";
-    online.version = "v.0.0.1";
+    online.sid = SID;
+    online.token = TOKEN;
+    online.app = APP;
+    online.version = VERSION;
 
     len = mesg_online__get_packed_size(&online);
 
@@ -366,7 +371,7 @@ int lws_online_handler(wsc_cntx_t *ctx,
     head = (mesg_header_t *)(item->addr + LWS_SEND_BUFFER_PRE_PADDING);
 
     head->type = htonl(CMD_ONLINE);
-    head->sid = htonl(392);
+    head->sid = htonl(SID);
     head->seq = htonl(1);
     head->length = htonl(len);
 
