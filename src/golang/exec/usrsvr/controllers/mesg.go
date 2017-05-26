@@ -82,7 +82,7 @@ func (ctx *UsrSvrCntx) online_token_decode(token string) *OnlineToken {
  **     2.头部数据(MesgHeader)中的SID此时表示的是客户端的连接CID.
  **作    者: # Qifeng.zou # 2016.11.02 10:20:57 #
  ******************************************************************************/
-func (ctx *UsrSvrCntx) online_req_check(req *mesg.MesgOnline) error {
+func (ctx *UsrSvrCntx) online_req_check(head *comm.MesgHeader, req *mesg.MesgOnline) error {
 	token := ctx.online_token_decode(req.GetToken())
 	if nil == token {
 		ctx.log.Error("Decode token failed!")
@@ -90,7 +90,7 @@ func (ctx *UsrSvrCntx) online_req_check(req *mesg.MesgOnline) error {
 	} else if token.ttl < time.Now().Unix() {
 		ctx.log.Error("Token is timeout! sid:%d ttl:%d", token.sid, token.ttl)
 		return errors.New("Token is timeout!")
-	} else if uint64(token.sid) != req.GetSid() {
+	} else if uint64(token.sid) != req.GetSid() || head.GetSid() != req.GetSid() {
 		ctx.log.Error("Token is invalid! sid:%d/%d ttl:%d",
 			token.sid, req.GetSid(), token.ttl)
 		return errors.New("Token is invalid!!")
@@ -138,7 +138,7 @@ func (ctx *UsrSvrCntx) online_parse(data []byte) (
 	}
 
 	/* > 校验协议合法性 */
-	err = ctx.online_req_check(req)
+	err = ctx.online_req_check(head, req)
 	if nil != err {
 		ctx.log.Error("Check online-request failed!")
 		return head, req, comm.ERR_SVR_CHECK_FAIL, err
@@ -235,9 +235,11 @@ func (ctx *UsrSvrCntx) online_failed(head *comm.MesgHeader,
 func (ctx *UsrSvrCntx) online_ack(head *comm.MesgHeader, req *mesg.MesgOnline) int {
 	/* > 设置协议体 */
 	ack := &mesg.MesgOnlineAck{
-		Sid:    proto.Uint64(req.GetSid()),
-		Code:   proto.Uint32(0),
-		Errmsg: proto.String("Ok"),
+		Sid:     proto.Uint64(req.GetSid()),
+		App:     proto.String(req.GetApp()),
+		Version: proto.String(req.GetVersion()),
+		Code:    proto.Uint32(0),
+		Errmsg:  proto.String("Ok"),
 	}
 
 	/* 生成PB数据 */
