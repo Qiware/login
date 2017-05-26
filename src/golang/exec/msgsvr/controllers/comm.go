@@ -22,7 +22,7 @@ import (
  **注意事项:
  **作    者: # Qifeng.zou # 2016.12.22 09:24:00 #
  ******************************************************************************/
-func (ctx *MsgSvrCntx) send_data(cmd uint32, sid uint64, cid uint64, nid uint32, seq uint64, data []byte, length uint32) int {
+func (ctx *MsgSvrCntx) send_data(cmd uint32, sid uint32, cid uint32, nid uint32, seq uint32, data []byte, length uint32) int {
 	var head comm.MesgHeader
 
 	/* > 拼接协议包 */

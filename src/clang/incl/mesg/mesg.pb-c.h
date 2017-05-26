@@ -67,7 +67,7 @@ typedef enum _EventType {
 struct  _MesgOnline
 {
   ProtobufCMessage base;
-  uint64_t sid;
+  uint32_t sid;
   char *token;
   char *app;
   char *version;
@@ -80,7 +80,7 @@ struct  _MesgOnline
 struct  _MesgOnlineAck
 {
   ProtobufCMessage base;
-  uint64_t sid;
+  uint32_t sid;
   char *app;
   char *version;
   uint32_t code;

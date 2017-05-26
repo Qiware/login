@@ -37,7 +37,7 @@ type Protocol struct {
 /* 连接池对象 */
 type ConnPool struct {
 	sync.RWMutex                    // 读写锁
-	list         map[uint64]*Client // 连接管理池
+	list         map[uint32]*Client // 连接管理池[cid]*Client
 }
 
 /* 全局对象 */
@@ -45,7 +45,7 @@ type LwsCntx struct {
 	conf     *Conf                       // 配置参数
 	protocol *Protocol                   // 注册协议
 	log      *logs.BeeLogger             /* 日志对象 */
-	cid      uint64                      // 连接序列号(原子递增)
+	cid      uint32                      // 连接序列号(原子递增)
 	pool     [LWS_CONN_POOL_LEN]ConnPool // 连接池
 }
 
@@ -78,7 +78,7 @@ func Init(conf *Conf, log *logs.BeeLogger) *LwsCntx {
 	}
 
 	for idx := 0; idx < LWS_CONN_POOL_LEN; idx += 1 {
-		ctx.pool[idx].list = make(map[uint64]*Client)
+		ctx.pool[idx].list = make(map[uint32]*Client)
 	}
 
 	return ctx
@@ -139,7 +139,7 @@ func (ctx *LwsCntx) Launch(protocol *Protocol) int {
  **注意事项:
  **作    者: # Qifeng.zou # 2017.02.06 23:05:54 #
  ******************************************************************************/
-func (ctx *LwsCntx) AsyncSend(cid uint64, data []byte) int {
+func (ctx *LwsCntx) AsyncSend(cid uint32, data []byte) int {
 	pool := ctx.pool[cid%LWS_CONN_POOL_LEN]
 
 	pool.RLock()
@@ -172,7 +172,7 @@ func (ctx *LwsCntx) AsyncSend(cid uint64, data []byte) int {
  **注意事项:
  **作    者: # Qifeng.zou # 2017.03.06 21:46:19 #
  ******************************************************************************/
-func (ctx *LwsCntx) Kick(cid uint64) int {
+func (ctx *LwsCntx) Kick(cid uint32) int {
 	pool := ctx.pool[cid%LWS_CONN_POOL_LEN]
 
 	pool.Lock()

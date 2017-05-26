@@ -43,10 +43,10 @@ var (
 type MesgHeader struct {
 	Cmd    uint32 /* 消息类型 */
 	Length uint32 /* 报体长度 */
-	Sid    uint64 /* 会话ID */
-	Cid    uint64 /* 连接ID */
+	Sid    uint32 /* 会话ID */
+	Cid    uint32 /* 连接ID */
 	Nid    uint32 /* 结点ID */
-	Seq    uint64 /* 流水号(注: 全局唯一流水号) */
+	Seq    uint32 /* 流水号(注: 全局唯一流水号) */
 }
 
 func (head *MesgHeader) SetCmd(cmd uint32) {
@@ -61,19 +61,19 @@ func (head *MesgHeader) GetLength() uint32 {
 	return head.Length
 }
 
-func (head *MesgHeader) SetSid(sid uint64) {
+func (head *MesgHeader) SetSid(sid uint32) {
 	head.Sid = sid
 }
 
-func (head *MesgHeader) GetSid() uint64 {
+func (head *MesgHeader) GetSid() uint32 {
 	return head.Sid
 }
 
-func (head *MesgHeader) SetCid(cid uint64) {
+func (head *MesgHeader) SetCid(cid uint32) {
 	head.Cid = cid
 }
 
-func (head *MesgHeader) GetCid() uint64 {
+func (head *MesgHeader) GetCid() uint32 {
 	return head.Cid
 }
 
@@ -85,7 +85,7 @@ func (head *MesgHeader) GetNid() uint32 {
 	return head.Nid
 }
 
-func (head *MesgHeader) GetSeq() uint64 {
+func (head *MesgHeader) GetSeq() uint32 {
 	return head.Seq
 }
 
@@ -97,10 +97,10 @@ type MesgPacket struct {
 func MesgHeadHton(head *MesgHeader, p *MesgPacket) {
 	binary.BigEndian.PutUint32(p.Buff[0:4], head.Cmd)    /* CMD */
 	binary.BigEndian.PutUint32(p.Buff[4:8], head.Length) /* LENGTH */
-	binary.BigEndian.PutUint64(p.Buff[8:16], head.Sid)   /* SID */
-	binary.BigEndian.PutUint64(p.Buff[16:24], head.Cid)  /* CID */
-	binary.BigEndian.PutUint32(p.Buff[24:28], head.Nid)  /* NID */
-	binary.BigEndian.PutUint64(p.Buff[28:36], head.Seq)  /* SEQ */
+	binary.BigEndian.PutUint32(p.Buff[8:12], head.Sid)   /* SID */
+	binary.BigEndian.PutUint32(p.Buff[12:16], head.Cid)  /* CID */
+	binary.BigEndian.PutUint32(p.Buff[16:20], head.Nid)  /* NID */
+	binary.BigEndian.PutUint32(p.Buff[20:24], head.Seq)  /* SEQ */
 }
 
 /* "网络->主机"字节序 */
@@ -109,10 +109,10 @@ func MesgHeadNtoh(data []byte) *MesgHeader {
 
 	head.Cmd = binary.BigEndian.Uint32(data[0:4])
 	head.Length = binary.BigEndian.Uint32(data[4:8])
-	head.Sid = binary.BigEndian.Uint64(data[8:16])
-	head.Cid = binary.BigEndian.Uint64(data[16:24])
-	head.Nid = binary.BigEndian.Uint32(data[24:28])
-	head.Seq = binary.BigEndian.Uint64(data[28:36])
+	head.Sid = binary.BigEndian.Uint32(data[8:12])
+	head.Cid = binary.BigEndian.Uint32(data[12:16])
+	head.Nid = binary.BigEndian.Uint32(data[16:20])
+	head.Seq = binary.BigEndian.Uint32(data[20:24])
 
 	return head
 }

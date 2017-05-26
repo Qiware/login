@@ -21,7 +21,7 @@ import (
 // 上线请求
 
 type OnlineToken struct {
-	sid uint64 /* 会话SID */
+	sid uint32 /* 会话SID */
 	ttl int64  /* TTL */
 }
 
@@ -56,8 +56,8 @@ func (ctx *UsrSvrCntx) online_token_decode(token string) *OnlineToken {
 	ctx.log.Debug("token:%s orig:%s", token, orig_token)
 
 	/* > 验证TOKEN合法性 */
-	sid, _ := strconv.ParseInt(words[1], 10, 64)
-	tk.sid = uint64(sid)
+	sid, _ := strconv.ParseInt(words[1], 10, 32)
+	tk.sid = uint32(sid)
 
 	ttl, _ := strconv.ParseInt(words[3], 10, 64)
 	tk.ttl = int64(ttl)
@@ -90,7 +90,7 @@ func (ctx *UsrSvrCntx) online_req_check(head *comm.MesgHeader, req *mesg.MesgOnl
 	} else if token.ttl < time.Now().Unix() {
 		ctx.log.Error("Token is timeout! sid:%d ttl:%d", token.sid, token.ttl)
 		return errors.New("Token is timeout!")
-	} else if uint64(token.sid) != req.GetSid() || head.GetSid() != req.GetSid() {
+	} else if uint32(token.sid) != req.GetSid() || head.GetSid() != req.GetSid() {
 		ctx.log.Error("Token is invalid! sid:%d/%d ttl:%d",
 			token.sid, req.GetSid(), token.ttl)
 		return errors.New("Token is invalid!!")
@@ -160,7 +160,7 @@ func (ctx *UsrSvrCntx) online_parse(data []byte) (
  **实现描述:
  **应答协议:
  ** {
- **     required uint64 sid = 1;        // M|连接ID|数字|内部使用
+ **     required uint32 sid = 1;        // M|连接ID|数字|内部使用
  **     required string app = 2;        // M|APP名|字串|
  **     required string version = 3;    // M|APP版本|字串|
  **     optional uint32 code = 4;       // M|错误码|数字|
@@ -177,7 +177,7 @@ func (ctx *UsrSvrCntx) online_failed(head *comm.MesgHeader,
 
 	/* > 设置协议体 */
 	ack := &mesg.MesgOnlineAck{
-		Sid:    proto.Uint64(head.GetSid()),
+		Sid:    proto.Uint32(head.GetSid()),
 		Code:   proto.Uint32(code),
 		Errmsg: proto.String(errmsg),
 	}
@@ -225,7 +225,7 @@ func (ctx *UsrSvrCntx) online_failed(head *comm.MesgHeader,
  **返    回: VOID
  **实现描述:
  ** {
- **     required uint64 sid = 1;        // M|会话ID|数字|内部使用
+ **     required uint32 sid = 1;        // M|会话ID|数字|内部使用
  **     optional uint32 code = 2;       // M|错误码|数字|
  **     optional string errmsg = 3;     // M|错误描述|字串|
  ** }
@@ -235,7 +235,7 @@ func (ctx *UsrSvrCntx) online_failed(head *comm.MesgHeader,
 func (ctx *UsrSvrCntx) online_ack(head *comm.MesgHeader, req *mesg.MesgOnline) int {
 	/* > 设置协议体 */
 	ack := &mesg.MesgOnlineAck{
-		Sid:     proto.Uint64(req.GetSid()),
+		Sid:     proto.Uint32(req.GetSid()),
 		App:     proto.String(req.GetApp()),
 		Version: proto.String(req.GetVersion()),
 		Code:    proto.Uint32(0),
@@ -340,7 +340,7 @@ func (ctx *UsrSvrCntx) online_handler(head *comm.MesgHeader, req *mesg.MesgOnlin
  **实现描述:
  **请求协议:
  **     {
- **        required uint64 sid = 1;         // M|会话ID|数字|
+ **        required uint32 sid = 1;         // M|会话ID|数字|
  **        required string token = 2;       // M|鉴权TOKEN|字串|
  **        required string app = 3;         // M|APP名|字串|
  **        required string version = 4;     // M|APP版本|字串|
@@ -568,7 +568,7 @@ func UsrSvrPingHandler(cmd uint32, nid uint32, data []byte, length uint32, param
  **注意事项:
  **作    者: # Qifeng.zou # 2016.12.16 20:49:02 #
  ******************************************************************************/
-func (ctx *UsrSvrCntx) send_kick(sid uint64, cid uint64, nid uint32, code uint32, errmsg string) int {
+func (ctx *UsrSvrCntx) send_kick(sid uint32, cid uint32, nid uint32, code uint32, errmsg string) int {
 	var head comm.MesgHeader
 
 	ctx.log.Debug("Send kick command! sid:%d nid:%d", sid, nid)

@@ -106,7 +106,7 @@ func LsndUpMesgCommHandler(cmd uint32, nid uint32, data []byte, length uint32, p
  **注意事项:
  **作    者: # Qifeng.zou # 2017.03.13 01:06:41 #
  ******************************************************************************/
-func (ctx *LsndCntx) lsnd_error_online_ack_handler(cid uint64, head *comm.MesgHeader, data []byte) int {
+func (ctx *LsndCntx) lsnd_error_online_ack_handler(cid uint32, head *comm.MesgHeader, data []byte) int {
 	/* > 下发ONLINE-ACK消息 */
 	p := &comm.MesgPacket{Buff: data}
 

@@ -19,7 +19,7 @@ import (
  **注意事项:
  **作    者: # Qifeng.zou # 2017.03.02 10:13:34 #
  ******************************************************************************/
-func (ctx *SessionTab) session_del(sid uint64, cid uint64) *SessionItem {
+func (ctx *SessionTab) session_del(sid uint32, cid uint32) *SessionItem {
 	ss := &ctx.sessions[sid%SESSION_MAX_LEN]
 
 	ss.Lock()
@@ -49,7 +49,7 @@ func (ctx *SessionTab) session_del(sid uint64, cid uint64) *SessionItem {
  **注意事项:
  **作    者: # Qifeng.zou # 2017.05.11 10:03:30 #
  ******************************************************************************/
-func (ctx *SessionTab) sid2cid_del(sid uint64, cid uint64) int {
+func (ctx *SessionTab) sid2cid_del(sid uint32, cid uint32) int {
 	sc := &ctx.dict[sid%SESSION_MAX_LEN]
 
 	sc.Lock()
@@ -124,7 +124,7 @@ func (sc *SessionDict) trav_list(proc SessionTravSid2CidProcCb, param interface{
  **注意事项:
  **作    者: # Qifeng.zou # 2017.05.11 10:32:16 #
  ******************************************************************************/
-func (sc *SessionDict) query_dirty(ctx *SessionTab, ls map[uint64]uint64) {
+func (sc *SessionDict) query_dirty(ctx *SessionTab, ls map[uint32]uint32) {
 	sc.RLock()
 	defer sc.RUnlock()
 
@@ -149,7 +149,7 @@ func (sc *SessionDict) query_dirty(ctx *SessionTab, ls map[uint64]uint64) {
  ******************************************************************************/
 func (ctx *SessionTab) task_clean_sid2cid() {
 	for {
-		list := make(map[uint64]uint64)
+		list := make(map[uint32]uint32)
 
 		for idx := 0; idx < SESSION_MAX_LEN; idx += 1 {
 			sc := &ctx.dict[idx]

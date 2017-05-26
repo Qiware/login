@@ -164,7 +164,7 @@ func (ctx *LsndCntx) task_timer_clean_timeout() {
  **注意事项:
  **作    者: # Qifeng.zou # 2017.05.10 19:58:58 #
  ******************************************************************************/
-func LsndCleanTimeoutHandler(sid uint64, cid uint64, extra interface{}, param interface{}) int {
+func LsndCleanTimeoutHandler(sid uint32, cid uint32, extra interface{}, param interface{}) int {
 	ctx, ok := param.(*LsndCntx)
 	if !ok {
 		return -1

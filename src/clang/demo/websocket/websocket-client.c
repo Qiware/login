@@ -366,8 +366,8 @@ int lws_online_handler(wsc_cntx_t *ctx,
     head = (mesg_header_t *)(item->addr + LWS_SEND_BUFFER_PRE_PADDING);
 
     head->type = htonl(CMD_ONLINE);
-    head->sid = hton64(392);
-    head->seq = hton64(1);
+    head->sid = htonl(392);
+    head->seq = htonl(1);
     head->length = htonl(len);
 
     item->len = sizeof(mesg_header_t) + len;

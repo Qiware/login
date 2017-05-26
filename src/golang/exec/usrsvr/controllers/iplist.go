@@ -31,7 +31,7 @@ type IpListParam struct {
 
 /* IP列表应答 */
 type IpListRsp struct {
-	Sid    uint64   `json:"sid"`    // 会话ID
+	Sid    uint32   `json:"sid"`    // 会话ID
 	Type   int      `json:"type"`   // 网络类型(0:Unknown 1:TCP 2:WS)
 	Token  string   `json:"token"`  // 鉴权TOKEN
 	Expire int      `json:"expire"` // 过期时长
@@ -113,7 +113,7 @@ func (this *UsrSvrIplistCtrl) iplist_param_parse(ctx *UsrSvrCntx) (*IpListParam,
  **注意事项:
  **作    者: # Qifeng.zou # 2016.11.24 17:00:07 #
  ******************************************************************************/
-func (this *UsrSvrIplistCtrl) iplist_handler(ctx *UsrSvrCntx, sid uint64, param *IpListParam) {
+func (this *UsrSvrIplistCtrl) iplist_handler(ctx *UsrSvrCntx, sid uint32, param *IpListParam) {
 	iplist := this.iplist_get(ctx, param.typ, param.clientip)
 	if nil == iplist {
 		ctx.log.Error("Get ip list failed!")
@@ -138,7 +138,7 @@ func (this *UsrSvrIplistCtrl) iplist_handler(ctx *UsrSvrCntx, sid uint64, param 
  **注意事项:
  **作    者: # Qifeng.zou # 2016.11.25 23:13:02 #
  ******************************************************************************/
-func (this *UsrSvrIplistCtrl) success(sid uint64, param *IpListParam, iplist []string) {
+func (this *UsrSvrIplistCtrl) success(sid uint32, param *IpListParam, iplist []string) {
 	var resp IpListRsp
 
 	resp.Sid = sid
@@ -169,7 +169,7 @@ func (this *UsrSvrIplistCtrl) success(sid uint64, param *IpListParam, iplist []s
  **     ttl: 该token的最大生命时间
  **作    者: # Qifeng.zou # 2016.11.25 23:54:27 #
  ******************************************************************************/
-func (this *UsrSvrIplistCtrl) iplist_token(sid uint64) string {
+func (this *UsrSvrIplistCtrl) iplist_token(sid uint32) string {
 	ctx := GetUsrSvrCtx()
 	ttl := time.Now().Unix() + comm.TIME_YEAR
 

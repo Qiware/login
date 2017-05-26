@@ -13,13 +13,13 @@ import (
 
 /* 会话属性 */
 type SidAttr struct {
-	sid uint64 // 会话SID
-	cid uint64 // 连接CID
+	sid uint32 // 会话SID
+	cid uint32 // 连接CID
 	nid uint32 // 侦听层ID
 }
 
-func (attr *SidAttr) GetSid() uint64 { return attr.sid }
-func (attr *SidAttr) GetCid() uint64 { return attr.cid }
+func (attr *SidAttr) GetSid() uint32 { return attr.sid }
+func (attr *SidAttr) GetCid() uint32 { return attr.cid }
 func (attr *SidAttr) GetNid() uint32 { return attr.nid }
 
 /******************************************************************************
@@ -33,7 +33,7 @@ func (attr *SidAttr) GetNid() uint32 { return attr.nid }
  **注意事项:
  **作    者: # Qifeng.zou # 2017.01.09 08:35:54 #
  ******************************************************************************/
-func GetSidAttr(pool *redis.Pool, sid uint64) (attr *SidAttr, err error) {
+func GetSidAttr(pool *redis.Pool, sid uint32) (attr *SidAttr, err error) {
 	rds := pool.Get()
 	defer rds.Close()
 
@@ -45,12 +45,12 @@ func GetSidAttr(pool *redis.Pool, sid uint64) (attr *SidAttr, err error) {
 		return nil, err
 	}
 
-	cid, _ := strconv.ParseInt(vals[0], 10, 64)
-	nid, _ := strconv.ParseInt(vals[1], 10, 64)
+	cid, _ := strconv.ParseInt(vals[0], 10, 32)
+	nid, _ := strconv.ParseInt(vals[1], 10, 32)
 
 	attr = &SidAttr{
 		sid: sid,
-		cid: uint64(cid),
+		cid: uint32(cid),
 		nid: uint32(nid),
 	}
 	return attr, nil
@@ -70,7 +70,7 @@ func GetSidAttr(pool *redis.Pool, sid uint64) (attr *SidAttr, err error) {
  **注意事项: 当会话属性中的cid和nid与参数不一致时, 不进行清理操作.
  **作    者: # Qifeng.zou # 2017.05.10 06:32:05 #
  ******************************************************************************/
-func CleanSessionData(pool *redis.Pool, sid uint64, cid uint64, nid uint32) error {
+func CleanSessionData(pool *redis.Pool, sid uint32, cid uint32, nid uint32) error {
 	rds := pool.Get()
 	defer rds.Close()
 
@@ -116,7 +116,7 @@ func CleanSessionData(pool *redis.Pool, sid uint64, cid uint64, nid uint32) erro
  **注意事项:
  **作    者: # Qifeng.zou # 2017.01.09 08:35:54 #
  ******************************************************************************/
-func CleanSessionDataBySid(pool *redis.Pool, sid uint64) error {
+func CleanSessionDataBySid(pool *redis.Pool, sid uint32) error {
 	rds := pool.Get()
 	defer rds.Close()
 
@@ -158,7 +158,7 @@ func CleanSessionDataBySid(pool *redis.Pool, sid uint64) error {
  **注意事项:
  **作    者: # Qifeng.zou # 2017.01.11 23:34:31 #
  ******************************************************************************/
-func UpdateSessionData(pool *redis.Pool, sid uint64, cid uint64, nid uint32) (code uint32, err error) {
+func UpdateSessionData(pool *redis.Pool, sid uint32, cid uint32, nid uint32) (code uint32, err error) {
 	pl := pool.Get()
 	defer func() {
 		pl.Do("")
@@ -193,14 +193,14 @@ func UpdateSessionData(pool *redis.Pool, sid uint64, cid uint64, nid uint32) (co
  **注意事项:
  **作    者: # Qifeng.zou # 2017.05.17 19:05:55 #
  ******************************************************************************/
-func AllocSid(pool *redis.Pool) (sid uint64, err error) {
+func AllocSid(pool *redis.Pool) (sid uint32, err error) {
 	rds := pool.Get()
 	defer rds.Close()
 
-	sid, err = redis.Uint64(rds.Do("INCRBY", comm.AE_KEY_SID_INCR, 1))
+	_sid, err := redis.Uint64(rds.Do("INCRBY", comm.AE_KEY_SID_INCR, 1))
 	if nil != err {
 		return 0, err
 	}
 
-	return sid, nil
+	return uint32(_sid), nil
 }

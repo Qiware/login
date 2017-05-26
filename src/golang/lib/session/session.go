@@ -9,21 +9,21 @@ const (
 )
 
 /* 遍历回调 */
-type SessionTravSid2CidProcCb func(sid uint64, cid uint64, param interface{}) int
-type SessionTravProcCb func(sid uint64, cid uint64, extra interface{}, param interface{}) int
+type SessionTravSid2CidProcCb func(sid uint32, cid uint32, param interface{}) int
+type SessionTravProcCb func(sid uint32, cid uint32, extra interface{}, param interface{}) int
 
 /* 会话信息 */
 type SessionItem struct {
-	sid          uint64      // 会话SID
-	cid          uint64      // 连接CID
+	sid          uint32      // 会话SID
+	cid          uint32      // 连接CID
 	sync.RWMutex             // 读写锁
 	param        interface{} // 扩展数据
 }
 
 /* SESSION ITEM主键 */
 type SessionKey struct {
-	sid uint64 // 会话ID
-	cid uint64 // 连接ID
+	sid uint32 // 会话ID
+	cid uint32 // 连接ID
 }
 
 /* SESSION TAB信息 */
@@ -35,7 +35,7 @@ type SessionList struct {
 /* SID->CID字典信息 */
 type SessionDict struct {
 	sync.RWMutex                   // 读写锁
-	sid2cid      map[uint64]uint64 // 会话集合[sid]cid
+	sid2cid      map[uint32]uint32 // 会话集合[sid]cid
 }
 
 /* 全局对象 */
@@ -66,7 +66,7 @@ func Init() *SessionTab {
 	/* 初始化SID->CID映射 */
 	for idx := 0; idx < SESSION_MAX_LEN; idx += 1 {
 		ss := &ctx.dict[idx]
-		ss.sid2cid = make(map[uint64]uint64)
+		ss.sid2cid = make(map[uint32]uint32)
 	}
 
 	/* 启动定时任务 */
@@ -86,7 +86,7 @@ func Init() *SessionTab {
  **注意事项:
  **作    者: # Qifeng.zou # 2017.05.07 07:24:06 #
  ******************************************************************************/
-func (ctx *SessionTab) GetCidBySid(sid uint64) uint64 {
+func (ctx *SessionTab) GetCidBySid(sid uint32) uint32 {
 	ss := &ctx.dict[sid%SESSION_MAX_LEN]
 
 	ss.RLock()
@@ -112,7 +112,7 @@ func (ctx *SessionTab) GetCidBySid(sid uint64) uint64 {
  **注意事项:
  **作    者: # Qifeng.zou # 2017.05.07 07:42:07 #
  ******************************************************************************/
-func (ctx *SessionTab) SetCid(sid uint64, cid uint64) int {
+func (ctx *SessionTab) SetCid(sid uint32, cid uint32) int {
 	ss := &ctx.dict[sid%SESSION_MAX_LEN]
 
 	ss.Lock()
@@ -137,7 +137,7 @@ func (ctx *SessionTab) SetCid(sid uint64, cid uint64) int {
  **注意事项:
  **作    者: # Qifeng.zou # 2017.02.22 20:54:53 #
  ******************************************************************************/
-func (ctx *SessionTab) Delete(sid uint64, cid uint64) int {
+func (ctx *SessionTab) Delete(sid uint32, cid uint32) int {
 	/* > 清理映射数据 */
 	ctx.sid2cid_del(sid, cid)
 
@@ -162,7 +162,7 @@ func (ctx *SessionTab) Delete(sid uint64, cid uint64) int {
  **注意事项:
  **作    者: # Qifeng.zou # 2017.02.22 20:32:20 #
  ******************************************************************************/
-func (ctx *SessionTab) SetParam(sid uint64, cid uint64, param interface{}) int {
+func (ctx *SessionTab) SetParam(sid uint32, cid uint32, param interface{}) int {
 	ss := &ctx.sessions[sid%SESSION_MAX_LEN]
 
 	ss.Lock()
@@ -200,7 +200,7 @@ func (ctx *SessionTab) SetParam(sid uint64, cid uint64, param interface{}) int {
  **注意事项: 各层级读写锁的操作, 降低锁粒度, 防止死锁.
  **作    者: # Qifeng.zou # 2017.03.07 17:02:35 #
  ******************************************************************************/
-func (ctx *SessionTab) GetParam(sid uint64, cid uint64) (param interface{}) {
+func (ctx *SessionTab) GetParam(sid uint32, cid uint32) (param interface{}) {
 	ss := &ctx.sessions[sid%SESSION_MAX_LEN]
 
 	ss.RLock()

@@ -80,7 +80,7 @@ func (ctx *TaskerCntx) clean_sid_zset(ctm int64) {
 		sid_num := len(sid_list)
 		for idx := 0; idx < sid_num; idx += 1 {
 			sid, _ := strconv.ParseInt(sid_list[idx], 10, 64)
-			im.CleanSessionDataBySid(ctx.redis, uint64(sid))
+			im.CleanSessionDataBySid(ctx.redis, uint32(sid))
 		}
 
 		if sid_num < comm.AE_BAT_NUM {

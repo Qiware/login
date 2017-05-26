@@ -68,32 +68,32 @@ func (tab *MesgCallBackTab) Query(cmd uint32) (cb MesgCallBack, param interface{
 // 连接扩展数据操作
 
 /* 设置会话SID */
-func (conn *LsndConnExtra) SetSid(sid uint64) {
-	atomic.StoreUint64(&conn.sid, sid)
+func (conn *LsndConnExtra) SetSid(sid uint32) {
+	atomic.StoreUint32(&conn.sid, sid)
 }
 
 /* 获取会话SID */
-func (conn *LsndConnExtra) GetSid() uint64 {
-	return atomic.LoadUint64(&conn.sid)
+func (conn *LsndConnExtra) GetSid() uint32 {
+	return atomic.LoadUint32(&conn.sid)
 }
 
 /* 获取连接CID */
-func (conn *LsndConnExtra) SetCid(cid uint64) {
-	atomic.StoreUint64(&conn.cid, cid)
+func (conn *LsndConnExtra) SetCid(cid uint32) {
+	atomic.StoreUint32(&conn.cid, cid)
 }
 
 /* 获取连接CID */
-func (conn *LsndConnExtra) GetCid() uint64 {
-	return atomic.LoadUint64(&conn.cid)
+func (conn *LsndConnExtra) GetCid() uint32 {
+	return atomic.LoadUint32(&conn.cid)
 }
 
 /* 更新消息序列号
  * 注意: 参数seq必须比原有消息序列号大 */
-func (conn *LsndConnExtra) SetSeq(seq uint64) bool {
+func (conn *LsndConnExtra) SetSeq(seq uint32) bool {
 AGAIN:
-	_seq := atomic.LoadUint64(&conn.seq)
+	_seq := atomic.LoadUint32(&conn.seq)
 	if _seq < seq {
-		ok := atomic.CompareAndSwapUint64(&conn.seq, _seq, seq)
+		ok := atomic.CompareAndSwapUint32(&conn.seq, _seq, seq)
 		if !ok {
 			goto AGAIN
 		}
@@ -103,8 +103,8 @@ AGAIN:
 }
 
 /* 获取消息序列号 */
-func (conn *LsndConnExtra) GetSeq() uint64 {
-	return atomic.LoadUint64(&conn.seq)
+func (conn *LsndConnExtra) GetSeq() uint32 {
+	return atomic.LoadUint32(&conn.seq)
 }
 
 /* 设置连接状态 */
@@ -149,7 +149,7 @@ func (conn *LsndConnExtra) GetUtm() int64 {
 ////////////////////////////////////////////////////////////////////////////////
 
 /* 加入被踢列表 */
-func (ctx *LsndCntx) kick_add(cid uint64) {
+func (ctx *LsndCntx) kick_add(cid uint32) {
 	item := &LsndKickItem{
 		cid: cid,               // 连接ID
 		ttl: time.Now().Unix(), // 被踢时间
@@ -172,7 +172,7 @@ func (ctx *LsndCntx) kick_add(cid uint64) {
  **注意事项:
  **作    者: # Qifeng.zou # 2017.03.17 17:05:00 #
  ******************************************************************************/
-func (ctx *LsndCntx) offline_notify(sid uint64, cid uint64) int {
+func (ctx *LsndCntx) offline_notify(sid uint32, cid uint32) int {
 	/* > 通用协议头 */
 	head := &comm.MesgHeader{
 		Cmd:    comm.CMD_OFFLINE,

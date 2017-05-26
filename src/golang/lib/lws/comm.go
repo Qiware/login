@@ -20,7 +20,7 @@ import (
  **注意事项:
  **作    者: # Qifeng.zou # 2017.03.07 15:45:03 #
  ******************************************************************************/
-func (ctx *LwsCntx) ConnPoolAdd(cid uint64, client *Client) int {
+func (ctx *LwsCntx) ConnPoolAdd(cid uint32, client *Client) int {
 	pool := ctx.pool[cid%LWS_CONN_POOL_LEN]
 
 	pool.Lock()
@@ -42,7 +42,7 @@ func (ctx *LwsCntx) ConnPoolAdd(cid uint64, client *Client) int {
  **注意事项:
  **作    者: # Qifeng.zou # 2017.03.07 15:45:03 #
  ******************************************************************************/
-func (ctx *LwsCntx) ConnPoolDel(cid uint64) int {
+func (ctx *LwsCntx) ConnPoolDel(cid uint32) int {
 	pool := ctx.pool[cid%LWS_CONN_POOL_LEN]
 
 	pool.Lock()
@@ -85,7 +85,7 @@ func conn_handler(ctx *LwsCntx, w http.ResponseWriter, r *http.Request) {
 
 	client := &Client{
 		ctx:    ctx,                                  /* 全局对象 */
-		cid:    atomic.AddUint64(&ctx.cid, 1),        /* 连接ID */
+		cid:    atomic.AddUint32(&ctx.cid, 1),        /* 连接ID */
 		conn:   conn,                                 /* 连接对象 */
 		sendq:  make(chan []byte, ctx.conf.SendqMax), /* 发送队列 */
 		iskick: false,                                /* 是否被踢 */

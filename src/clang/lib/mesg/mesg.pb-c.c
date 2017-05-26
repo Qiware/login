@@ -529,7 +529,7 @@ static const ProtobufCFieldDescriptor mesg_online__field_descriptors[4] =
     "sid",
     1,
     PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_UINT64,
+    PROTOBUF_C_TYPE_UINT32,
     0,   /* quantifier_offset */
     offsetof(MesgOnline, sid),
     NULL,
@@ -606,7 +606,7 @@ static const ProtobufCFieldDescriptor mesg_online_ack__field_descriptors[5] =
     "sid",
     1,
     PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_UINT64,
+    PROTOBUF_C_TYPE_UINT32,
     0,   /* quantifier_offset */
     offsetof(MesgOnlineAck, sid),
     NULL,

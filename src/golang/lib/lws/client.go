@@ -12,7 +12,7 @@ var upgrader = websocket.Upgrader{
 /* 客户端对象 */
 type Client struct {
 	ctx    *LwsCntx        /* 全局对象 */
-	cid    uint64          /* 连接ID */
+	cid    uint32          /* 连接ID */
 	conn   *websocket.Conn /* WS连接对象 */
 	sendq  chan []byte     /* 发送队列 */
 	iskick bool            /* 是否被踢 */
@@ -20,7 +20,7 @@ type Client struct {
 }
 
 /* 获取连接ID */
-func (c *Client) GetCid() uint64 {
+func (c *Client) GetCid() uint32 {
 	return c.cid
 }
 

@@ -122,7 +122,7 @@ func (ctx *MsgSvrCntx) browser_env_failed(head *comm.MesgHeader,
  **返    回: VOID
  **实现描述:
  ** {
- **     required uint64 sid = 1;        // M|会话ID|数字|内部使用
+ **     required uint32 sid = 1;        // M|会话ID|数字|内部使用
  **     optional uint32 code = 2;       // M|错误码|数字|
  **     optional string errmsg = 3;     // M|错误描述|字串|
  ** }
