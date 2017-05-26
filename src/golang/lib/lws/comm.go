@@ -180,7 +180,8 @@ func (client *Client) send_routine() {
 				return
 			}
 
-			w, err := client.conn.NextWriter(websocket.TextMessage)
+			//w, err := client.conn.NextWriter(websocket.TextMessage)
+			w, err := client.conn.NextWriter(websocket.BinaryMessage)
 			if nil != err {
 				return
 			}
