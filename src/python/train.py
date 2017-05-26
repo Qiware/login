@@ -6,6 +6,7 @@ import sys
 import time
 import json
 import redis
+import numpy
 import thread
 import logging
 import urllib2
@@ -896,7 +897,7 @@ class AiEyeHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         else:
             X.append(0)
 
-        return X
+        return numpy.array(X).reshape(1, -1)
     # 分析风险指数
     def PredictRisk(self, X):
         global gClassfier
