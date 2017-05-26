@@ -911,9 +911,12 @@ class AiEyeHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         if not params.has_key("token"):
             logging.warning("Get token failed!")
             # 发送预测结果
-            self.send_response(200)
-            self.send_header('Content-type', 'application/json')
-            self.end_headers()
+            try:
+                self.send_response(200)
+                self.send_header('Content-type', 'application/json')
+                self.end_headers()
+            except Exception as e:
+                print(e)
 
             mesg = {}
             mesg.setdefault("token", '')
@@ -930,9 +933,12 @@ class AiEyeHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         if sid is None:
             logging.warning("Get sid by token failed!")
             # 发送预测结果
-            self.send_response(200)
-            self.send_header('Content-type', 'application/json')
-            self.end_headers()
+            try:
+                self.send_response(200)
+                self.send_header('Content-type', 'application/json')
+                self.end_headers()
+            except Exception as e:
+                print(e)
 
             mesg = {}
             mesg.setdefault("token", token)
@@ -946,9 +952,12 @@ class AiEyeHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         X = self.GetStatistic(sid)
         if X is None:
             # 发送预测结果
-            self.send_response(200)
-            self.send_header('Content-type', 'application/json')
-            self.end_headers()
+            try:
+                self.send_response(200)
+                self.send_header('Content-type', 'application/json')
+                self.end_headers()
+            except Exception as e:
+                print(e)
 
             mesg = {}
             mesg.setdefault("token", token)
@@ -962,9 +971,12 @@ class AiEyeHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         risk = self.PredictRisk(X)
 
         # 发送预测结果
-        self.send_response(200)
-        self.send_header('Content-type', 'application/json')
-        self.end_headers()
+        try:
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+        except Exception as e:
+            print(e)
 
         mesg = {}
         mesg.setdefault("token", token)
