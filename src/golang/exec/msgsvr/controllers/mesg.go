@@ -193,10 +193,12 @@ func (ctx *MsgSvrCntx) browser_env_handler(head *comm.MesgHeader, req *mesg.Mesg
 	plugin := req.GetPlugin()
 	if nil != plugin {
 		if len(plugin.GetName()) > 0 {
+			ctx.log.Debug("Plugin name:%s", plugin.GetName())
 			pl.Send("HSET", key, comm.COL_PLUGIN_HAS_NAME, 1)
 		}
 
 		if len(plugin.GetDesc()) > 0 {
+			ctx.log.Debug("Plugin desc:%s", plugin.GetDesc())
 			pl.Send("HSET", key, comm.COL_PLUGIN_HAS_DESC, 1)
 		}
 	}
@@ -205,6 +207,7 @@ func (ctx *MsgSvrCntx) browser_env_handler(head *comm.MesgHeader, req *mesg.Mesg
 	ua := req.GetUa()
 	if nil != ua {
 		if len(ua.GetUa()) > 0 {
+			ctx.log.Debug("Useragent:%s", ua.GetUa())
 			pl.Send("HSET", key, comm.COL_UA_EXISTS, 1)
 		}
 	}
@@ -212,6 +215,11 @@ func (ctx *MsgSvrCntx) browser_env_handler(head *comm.MesgHeader, req *mesg.Mesg
 	/* > 屏幕信息 */
 	screen := req.GetScreen()
 	if nil != screen {
+		ctx.log.Debug("Screen width:%d heigh:%d avail-width:%d avail-heigh:%d avail-left:%d avail-top:%d outer-width:%d outer-heigh:%d inner-width:%d inner-heigh:%d",
+			screen.GetWidth(), screen.GetHeight(),
+			screen.GetAvailWidth(), screen.GetAvailHeight(), screen.GetAvailLeft(), screen.GetAvailTop(),
+			screen.GetOuterWidth(), screen.GetOuterHeight(), screen.GetInnerWidth(), screen.GetInnerHeight())
+
 		pl.Send("HMSET", key, comm.COL_SCREEN_WIDTH, screen.GetWidth(),
 			comm.COL_SCREEN_HEIGH, screen.GetHeight(),
 			comm.COL_SCREEN_AVAIL_WIDTH, screen.GetAvailWidth(),
