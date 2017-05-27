@@ -12,8 +12,8 @@ import (
 //  beego.Router("/api/update",&RestController{},"put:UpdateFood")
 //  beego.Router("/api/delete",&RestController{},"delete:DeleteFood")
 func Router() {
-	beego.Router("/im/iplist", &controllers.UsrSvrIplistCtrl{}, "get:Iplist")
+	beego.Router("/robot/iplist", &controllers.UsrSvrIplistCtrl{}, "get:Iplist")
 
-	beego.Router("/im/query", &controllers.UsrSvrQueryCtrl{}, "get:Query")
-	beego.Router("/im/config", &controllers.UsrSvrConfigCtrl{}, "get:Config")
+	beego.Router("/robot/query", &controllers.UsrSvrQueryCtrl{}, "get:Query")
+	beego.Router("/robot/config", &controllers.UsrSvrConfigCtrl{}, "get:Config")
 }
