@@ -395,7 +395,7 @@ func (ctx *MsgSvrCntx) event_statistic_failed(head *comm.MesgHeader,
  **注意事项:
  **作    者: # Qifeng.zou # 2017.05.18 16:32:35 #
  ******************************************************************************/
-func (ctx *MsgSvrCntx) event_statistic_ack(head *comm.MesgHeader, req *mesg.MesgBrowserEnv) int {
+func (ctx *MsgSvrCntx) event_statistic_ack(head *comm.MesgHeader, req *mesg.MesgEventStatistic) int {
 	/* > 设置协议体 */
 	ack := &mesg.MesgEventStatisticAck{
 		Code:   proto.Uint32(0),
@@ -442,7 +442,7 @@ func (ctx *MsgSvrCntx) event_statistic_ack(head *comm.MesgHeader, req *mesg.Mesg
  **作    者: # Qifeng.zou # 2017.05.18 16:33:41 #
  ******************************************************************************/
 func (ctx *MsgSvrCntx) event_statistic_handler(
-	head *comm.MesgHeader, req *mesg.MesgEventStatistic) (err error) {
+	head *comm.MesgHeader, req *mesg.MesgEventStatistic) (code uint32, err error) {
 	pl := ctx.redis.Get()
 	defer func() {
 		pl.Do("")
@@ -718,7 +718,7 @@ func (ctx *MsgSvrCntx) event_statistic_handler(
 		}
 	}
 	pl.Send("HINCRBY", key, "UTM", time.Now().Unix()) // 更新时间
-	return err
+	return code, err
 }
 
 /******************************************************************************
@@ -744,6 +744,26 @@ func MsgSvrEventStatisticHandler(cmd uint32, nid uint32, data []byte, length uin
 	}
 
 	ctx.log.Debug("Recv event-statistic data! cmd:0x%04X nid:%d length:%d", cmd, nid, length)
+
+	/* > 解析统计数据 */
+	head, req, code, err := ctx.event_statistic_parse(data)
+	if nil != err {
+		ctx.log.Error("Parse statistic data failed! cmd:0x%04X nid:%d length:%d", cmd, nid, length)
+		ctx.event_statistic_failed(head, req, code, err.Error())
+		return -1
+	}
+
+	ctx.log.Debug("ctrl:%d event:%d count:%d", req.GetCtrl(), req.GetEvent(), req.GetCount())
+
+	/* > 处理统计数据 */
+	code, err = ctx.event_statistic_handler(head, req)
+	if nil != err {
+		ctx.log.Error("Handle statistic data failed! cmd:0x%04X nid:%d length:%d", cmd, nid, length)
+		ctx.event_statistic_failed(head, req, code, err.Error())
+		return -1
+	}
+
+	ctx.event_statistic_ack(head, req)
 
 	return 0
 }
