@@ -1,11 +1,11 @@
 <MSGSVR ID="31000"> <!-- ID: 结点ID -->
-  <LOG LEVEL="debug" PATH="../log" /> <!-- 日志配置 -->
-  <REDIS ADDR="10.130.212.59:19001" USR="beehive" PASSWD="" /> <!-- REDIS配置 -->
-  <CIPHER>%b@e!e@h@i#v@e$s$tVu^d(i(o</CIPHER> <!-- 私密密钥 -->
-  <FRWDER ADDR="127.0.0.1:28889"> <!-- RTMQ代理 -->
-    <AUTH USR="qifeng" PASSWD="111111" />       <!-- 鉴权: 用户名 + 登录密码 -->
-    <WORKER-NUM>10</WORKER-NUM>                 <!-- 工作协程数 -->
-    <SEND-CHAN-LEN>20000</SEND-CHAN-LEN>        <!-- 发送队列长度 -->
-    <RECV-CHAN-LEN>20000</RECV-CHAN-LEN>        <!-- 接收队列长度 -->
-  </FRWDER>
+    <LOG LEVEL="debug" PATH="../log" /> <!-- 日志配置 -->
+    <REDIS ADDR="10.130.212.59:19001" USR="beehive" PASSWD="" /> <!-- REDIS配置 -->
+    <CIPHER>%b@e!e@h@i#v@e$s$tVu^d(i(o</CIPHER> <!-- 私密密钥 -->
+    <FRWDER ADDR="127.0.0.1:28889"> <!-- RTMQ代理 -->
+        <AUTH USR="qifeng" PASSWD="111111" />       <!-- 鉴权: 用户名 + 登录密码 -->
+        <WORKER-NUM>10</WORKER-NUM>                 <!-- 工作协程数 -->
+        <SEND-CHAN-LEN>20000</SEND-CHAN-LEN>        <!-- 发送队列长度 -->
+        <RECV-CHAN-LEN>20000</RECV-CHAN-LEN>        <!-- 接收队列长度 -->
+    </FRWDER>
 </MSGSVR>
