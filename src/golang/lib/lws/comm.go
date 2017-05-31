@@ -8,6 +8,17 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+/* 申请连接ID */
+func (ctx *LwsCntx) AllocCid() uint32 {
+AGAIN:
+	cid := atomic.AddUint32(&ctx.cid, 1)
+	if 0 == cid {
+		goto AGAIN
+	}
+
+	return cid
+}
+
 /******************************************************************************
  **函数名称: ConnPoolAdd
  **功    能: 加入连接池操作
@@ -85,7 +96,7 @@ func conn_handler(ctx *LwsCntx, w http.ResponseWriter, r *http.Request) {
 
 	client := &Client{
 		ctx:    ctx,                                  /* 全局对象 */
-		cid:    atomic.AddUint32(&ctx.cid, 1),        /* 连接ID */
+		cid:    ctx.AllocCid(),                       /* 连接ID */
 		conn:   conn,                                 /* 连接对象 */
 		sendq:  make(chan []byte, ctx.conf.SendqMax), /* 发送队列 */
 		iskick: false,                                /* 是否被踢 */

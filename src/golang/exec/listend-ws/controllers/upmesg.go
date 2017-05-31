@@ -182,7 +182,7 @@ func LsndUpMesgOnlineAckHandler(cmd uint32, nid uint32, data []byte, length uint
 
 	/* 更新SID->CID映射 */
 	_cid := ctx.session.GetCidBySid(ack.GetSid())
-	if cid != _cid {
+	if (0 != _cid) && (cid != _cid) {
 		ctx.kick_add(_cid)
 	}
 	ctx.session.SetCid(ack.GetSid(), cid)
