@@ -197,9 +197,12 @@ func AllocSid(pool *redis.Pool) (sid uint32, err error) {
 	rds := pool.Get()
 	defer rds.Close()
 
+AGAIN:
 	_sid, err := redis.Uint64(rds.Do("INCRBY", comm.AE_KEY_SID_INCR, 1))
 	if nil != err {
 		return 0, err
+	} else if 0 == _sid {
+		goto AGAIN
 	}
 
 	return uint32(_sid), nil
