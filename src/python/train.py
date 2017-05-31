@@ -330,560 +330,561 @@ class AiEyeHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
         statistic = rds.hgetall("ae:sid:%d:statistic" % (sid))
         if statistic is None:
+            print("Get statistic failed! sid:%d" % sid)
             return None
 
         X = []
         # 浏览器环境
         ## 是否存在插件名
-        if statistic.has_key(COL_PLUGIN_HAS_NAME):
+        if statistic.has_key(str(COL_PLUGIN_HAS_NAME)):
             X.append(1)
         else:
             X.append(0)
         ## 是否存在描述信息
-        if statistic.has_key(COL_PLUGIN_HAS_DESC):
+        if statistic.has_key(str(COL_PLUGIN_HAS_DESC)):
             X.append(1)
         else:
             X.append(0)
         ## 是否存在用户代理
-        if statistic.has_key(COL_UA_EXISTS):
+        if statistic.has_key(str(COL_UA_EXISTS)):
             X.append(1)
         else:
             X.append(0)
 
         # 屏幕信息
         ## 屏幕宽度
-        if statistic.has_key(COL_SCREEN_WIDTH):
-            X.append(int(statistic[COL_SCREEN_WIDTH]))
+        if statistic.has_key(str(COL_SCREEN_WIDTH)):
+            X.append(int(statistic[str(COL_SCREEN_WIDTH)]))
         else:
             X.append(0)
         ## 屏幕高度
-        if statistic.has_key(COL_SCREEN_HEIGH):
-            X.append(int(statistic[COL_SCREEN_HEIGH]))
+        if statistic.has_key(str(COL_SCREEN_HEIGH)):
+            X.append(int(statistic[str(COL_SCREEN_HEIGH)]))
         else:
             X.append(0)
         ## 屏幕AVAIL宽度
-        if statistic.has_key(COL_SCREEN_AVAIL_WIDTH):
-            X.append(int(statistic[COL_SCREEN_AVAIL_WIDTH]))
+        if statistic.has_key(str(COL_SCREEN_AVAIL_WIDTH)):
+            X.append(int(statistic[str(COL_SCREEN_AVAIL_WIDTH)]))
         else:
             X.append(0)
         ## 屏幕AVAIL高度
-        if statistic.has_key(COL_SCREEN_AVAIL_HEIGH):
-            X.append(int(statistic[COL_SCREEN_AVAIL_HEIGH]))
+        if statistic.has_key(str(COL_SCREEN_AVAIL_HEIGH)):
+            X.append(int(statistic[str(COL_SCREEN_AVAIL_HEIGH)]))
         else:
             X.append(0)
         ## 屏幕AVAIL左边距
-        if statistic.has_key(COL_SCREEN_AVAIL_LEFT):
-            X.append(int(statistic[COL_SCREEN_AVAIL_LEFT]))
+        if statistic.has_key(str(COL_SCREEN_AVAIL_LEFT)):
+            X.append(int(statistic[str(COL_SCREEN_AVAIL_LEFT)]))
         else:
             X.append(0)
         ## 屏幕AVAIL顶部
-        if statistic.has_key(COL_SCREEN_AVAIL_TOP):
-            X.append(int(statistic[COL_SCREEN_AVAIL_TOP]))
+        if statistic.has_key(str(COL_SCREEN_AVAIL_TOP)):
+            X.append(int(statistic[str(COL_SCREEN_AVAIL_TOP)]))
         else:
             X.append(0)
         ## 屏幕OUTER宽度
-        if statistic.has_key(COL_SCREEN_OUTER_WIDTH):
-            X.append(int(statistic[COL_SCREEN_OUTER_WIDTH]))
+        if statistic.has_key(str(COL_SCREEN_OUTER_WIDTH)):
+            X.append(int(statistic[str(COL_SCREEN_OUTER_WIDTH)]))
         else:
             X.append(0)
         ## 屏幕OUTER高度
-        if statistic.has_key(COL_SCREEN_OUTER_HEIGH):
-            X.append(int(statistic[COL_SCREEN_OUTER_HEIGH]))
+        if statistic.has_key(str(COL_SCREEN_OUTER_HEIGH)):
+            X.append(int(statistic[str(COL_SCREEN_OUTER_HEIGH)]))
         else:
             X.append(0)
         ## 屏幕INNER宽度
-        if statistic.has_key(COL_SCREEN_INNER_WIDTH):
-            X.append(int(statistic[COL_SCREEN_INNER_WIDTH]))
+        if statistic.has_key(str(COL_SCREEN_INNER_WIDTH)):
+            X.append(int(statistic[str(COL_SCREEN_INNER_WIDTH)]))
         else:
             X.append(0)
         ## 屏幕INNER高度
-        if statistic.has_key(COL_SCREEN_INNER_HEIGH):
-            X.append(int(statistic[COL_SCREEN_INNER_HEIGH]))
+        if statistic.has_key(str(COL_SCREEN_INNER_HEIGH)):
+            X.append(int(statistic[str(COL_SCREEN_INNER_HEIGH)]))
         else:
             X.append(0)
 
         # 事件信息
         # A - 用户名输入框
-        if statistic.has_key(COL_EVENT_IBX_USR_CHANGE):
-            X.append(int(statistic[COL_EVENT_IBX_USR_CHANGE]))
+        if statistic.has_key(str(COL_EVENT_IBX_USR_CHANGE)):
+            X.append(int(statistic[str(COL_EVENT_IBX_USR_CHANGE)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_USR_CLICK):
-            X.append(int(statistic[COL_EVENT_IBX_USR_CLICK]))
+        if statistic.has_key(str(COL_EVENT_IBX_USR_CLICK)):
+            X.append(int(statistic[str(COL_EVENT_IBX_USR_CLICK)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_USR_DBLCLICK):
-            X.append(int(statistic[COL_EVENT_IBX_USR_DBLCLICK]))
+        if statistic.has_key(str(COL_EVENT_IBX_USR_DBLCLICK)):
+            X.append(int(statistic[str(COL_EVENT_IBX_USR_DBLCLICK)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_USR_FOCUS):
-            X.append(int(statistic[COL_EVENT_IBX_USR_FOCUS]))
+        if statistic.has_key(str(COL_EVENT_IBX_USR_FOCUS)):
+            X.append(int(statistic[str(COL_EVENT_IBX_USR_FOCUS)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_USR_KEYDOWN):
-            X.append(int(statistic[COL_EVENT_IBX_USR_KEYDOWN]))
+        if statistic.has_key(str(COL_EVENT_IBX_USR_KEYDOWN)):
+            X.append(int(statistic[str(COL_EVENT_IBX_USR_KEYDOWN)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_USR_KEYPRESS):
-            X.append(int(statistic[COL_EVENT_IBX_USR_KEYPRESS]))
+        if statistic.has_key(str(COL_EVENT_IBX_USR_KEYPRESS)):
+            X.append(int(statistic[str(COL_EVENT_IBX_USR_KEYPRESS)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_USR_KEYUP):
-            X.append(int(statistic[COL_EVENT_IBX_USR_KEYUP]))
+        if statistic.has_key(str(COL_EVENT_IBX_USR_KEYUP)):
+            X.append(int(statistic[str(COL_EVENT_IBX_USR_KEYUP)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_USR_MOUSEDOWN):
-            X.append(int(statistic[COL_EVENT_IBX_USR_MOUSEDOWN]))
+        if statistic.has_key(str(COL_EVENT_IBX_USR_MOUSEDOWN)):
+            X.append(int(statistic[str(COL_EVENT_IBX_USR_MOUSEDOWN)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_USR_MOUSEMOVE):
-            X.append(int(statistic[COL_EVENT_IBX_USR_MOUSEMOVE]))
+        if statistic.has_key(str(COL_EVENT_IBX_USR_MOUSEMOVE)):
+            X.append(int(statistic[str(COL_EVENT_IBX_USR_MOUSEMOVE)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_USR_MOUSEOUT):
-            X.append(int(statistic[COL_EVENT_IBX_USR_MOUSEOUT]))
+        if statistic.has_key(str(COL_EVENT_IBX_USR_MOUSEOUT)):
+            X.append(int(statistic[str(COL_EVENT_IBX_USR_MOUSEOUT)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_USR_MOUSEOVER):
-            X.append(int(statistic[COL_EVENT_IBX_USR_MOUSEOVER]))
+        if statistic.has_key(str(COL_EVENT_IBX_USR_MOUSEOVER)):
+            X.append(int(statistic[str(COL_EVENT_IBX_USR_MOUSEOVER)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_USR_MOUSEUP):
-            X.append(int(statistic[COL_EVENT_IBX_USR_MOUSEUP]))
+        if statistic.has_key(str(COL_EVENT_IBX_USR_MOUSEUP)):
+            X.append(int(statistic[str(COL_EVENT_IBX_USR_MOUSEUP)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_USR_TOUCHSTART):
-            X.append(int(statistic[COL_EVENT_IBX_USR_TOUCHSTART]))
+        if statistic.has_key(str(COL_EVENT_IBX_USR_TOUCHSTART)):
+            X.append(int(statistic[str(COL_EVENT_IBX_USR_TOUCHSTART)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_USR_TOUCHMOVE):
-            X.append(int(statistic[COL_EVENT_IBX_USR_TOUCHMOVE]))
+        if statistic.has_key(str(COL_EVENT_IBX_USR_TOUCHMOVE)):
+            X.append(int(statistic[str(COL_EVENT_IBX_USR_TOUCHMOVE)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_USR_TOUCHEND):
-            X.append(int(statistic[COL_EVENT_IBX_USR_TOUCHEND]))
+        if statistic.has_key(str(COL_EVENT_IBX_USR_TOUCHEND)):
+            X.append(int(statistic[str(COL_EVENT_IBX_USR_TOUCHEND)]))
         else:
             X.append(0)
 
         # B - 密码输入框
-        if statistic.has_key(COL_EVENT_IBX_PWD_CHANGE):
-            X.append(int(statistic[COL_EVENT_IBX_PWD_CHANGE]))
+        if statistic.has_key(str(COL_EVENT_IBX_PWD_CHANGE)):
+            X.append(int(statistic[str(COL_EVENT_IBX_PWD_CHANGE)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_PWD_CLICK):
-            X.append(int(statistic[COL_EVENT_IBX_PWD_CLICK]))
+        if statistic.has_key(str(COL_EVENT_IBX_PWD_CLICK)):
+            X.append(int(statistic[str(COL_EVENT_IBX_PWD_CLICK)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_PWD_DBLCLICK):
-            X.append(int(statistic[COL_EVENT_IBX_PWD_DBLCLICK]))
+        if statistic.has_key(str(COL_EVENT_IBX_PWD_DBLCLICK)):
+            X.append(int(statistic[str(COL_EVENT_IBX_PWD_DBLCLICK)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_PWD_FOCUS):
-            X.append(int(statistic[COL_EVENT_IBX_PWD_FOCUS]))
+        if statistic.has_key(str(COL_EVENT_IBX_PWD_FOCUS)):
+            X.append(int(statistic[str(COL_EVENT_IBX_PWD_FOCUS)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_PWD_KEYDOWN):
-            X.append(int(statistic[COL_EVENT_IBX_PWD_KEYDOWN]))
+        if statistic.has_key(str(COL_EVENT_IBX_PWD_KEYDOWN)):
+            X.append(int(statistic[str(COL_EVENT_IBX_PWD_KEYDOWN)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_PWD_KEYPRESS):
-            X.append(int(statistic[COL_EVENT_IBX_PWD_KEYPRESS]))
+        if statistic.has_key(str(COL_EVENT_IBX_PWD_KEYPRESS)):
+            X.append(int(statistic[str(COL_EVENT_IBX_PWD_KEYPRESS)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_PWD_KEYUP):
-            X.append(int(statistic[COL_EVENT_IBX_PWD_KEYUP]))
+        if statistic.has_key(str(COL_EVENT_IBX_PWD_KEYUP)):
+            X.append(int(statistic[str(COL_EVENT_IBX_PWD_KEYUP)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_PWD_MOUSEDOWN):
-            X.append(int(statistic[COL_EVENT_IBX_PWD_MOUSEDOWN]))
+        if statistic.has_key(str(COL_EVENT_IBX_PWD_MOUSEDOWN)):
+            X.append(int(statistic[str(COL_EVENT_IBX_PWD_MOUSEDOWN)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_PWD_MOUSEMOVE):
-            X.append(int(statistic[COL_EVENT_IBX_PWD_MOUSEMOVE]))
+        if statistic.has_key(str(COL_EVENT_IBX_PWD_MOUSEMOVE)):
+            X.append(int(statistic[str(COL_EVENT_IBX_PWD_MOUSEMOVE)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_PWD_MOUSEOUT):
-            X.append(int(statistic[COL_EVENT_IBX_PWD_MOUSEOUT]))
+        if statistic.has_key(str(COL_EVENT_IBX_PWD_MOUSEOUT)):
+            X.append(int(statistic[str(COL_EVENT_IBX_PWD_MOUSEOUT)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_PWD_MOUSEOVER):
-            X.append(int(statistic[COL_EVENT_IBX_PWD_MOUSEOVER]))
+        if statistic.has_key(str(COL_EVENT_IBX_PWD_MOUSEOVER)):
+            X.append(int(statistic[str(COL_EVENT_IBX_PWD_MOUSEOVER)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_PWD_MOUSEUP):
-            X.append(int(statistic[COL_EVENT_IBX_PWD_MOUSEUP]))
+        if statistic.has_key(str(COL_EVENT_IBX_PWD_MOUSEUP)):
+            X.append(int(statistic[str(COL_EVENT_IBX_PWD_MOUSEUP)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_PWD_TOUCHSTART):
-            X.append(int(statistic[COL_EVENT_IBX_PWD_TOUCHSTART]))
+        if statistic.has_key(str(COL_EVENT_IBX_PWD_TOUCHSTART)):
+            X.append(int(statistic[str(COL_EVENT_IBX_PWD_TOUCHSTART)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_PWD_TOUCHMOVE):
-            X.append(int(statistic[COL_EVENT_IBX_PWD_TOUCHMOVE]))
+        if statistic.has_key(str(COL_EVENT_IBX_PWD_TOUCHMOVE)):
+            X.append(int(statistic[str(COL_EVENT_IBX_PWD_TOUCHMOVE)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_PWD_TOUCHEND):
-            X.append(int(statistic[COL_EVENT_IBX_PWD_TOUCHEND]))
+        if statistic.has_key(str(COL_EVENT_IBX_PWD_TOUCHEND)):
+            X.append(int(statistic[str(COL_EVENT_IBX_PWD_TOUCHEND)]))
         else:
             X.append(0)
 
         # C - 图形验证码输入框
-        if statistic.has_key(COL_EVENT_IBX_IMG_CHANGE):
-            X.append(int(statistic[COL_EVENT_IBX_IMG_CHANGE]))
+        if statistic.has_key(str(COL_EVENT_IBX_IMG_CHANGE)):
+            X.append(int(statistic[str(COL_EVENT_IBX_IMG_CHANGE)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_IMG_CLICK):
-            X.append(int(statistic[COL_EVENT_IBX_IMG_CLICK]))
+        if statistic.has_key(str(COL_EVENT_IBX_IMG_CLICK)):
+            X.append(int(statistic[str(COL_EVENT_IBX_IMG_CLICK)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_IMG_DBLCLICK):
-            X.append(int(statistic[COL_EVENT_IBX_IMG_DBLCLICK]))
+        if statistic.has_key(str(COL_EVENT_IBX_IMG_DBLCLICK)):
+            X.append(int(statistic[str(COL_EVENT_IBX_IMG_DBLCLICK)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_IMG_FOCUS):
-            X.append(int(statistic[COL_EVENT_IBX_IMG_FOCUS]))
+        if statistic.has_key(str(COL_EVENT_IBX_IMG_FOCUS)):
+            X.append(int(statistic[str(COL_EVENT_IBX_IMG_FOCUS)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_IMG_KEYDOWN):
-            X.append(int(statistic[COL_EVENT_IBX_IMG_KEYDOWN]))
+        if statistic.has_key(str(COL_EVENT_IBX_IMG_KEYDOWN)):
+            X.append(int(statistic[str(COL_EVENT_IBX_IMG_KEYDOWN)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_IMG_KEYPRESS):
-            X.append(int(statistic[COL_EVENT_IBX_IMG_KEYPRESS]))
+        if statistic.has_key(str(COL_EVENT_IBX_IMG_KEYPRESS)):
+            X.append(int(statistic[str(COL_EVENT_IBX_IMG_KEYPRESS)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_IMG_KEYUP):
-            X.append(int(statistic[COL_EVENT_IBX_IMG_KEYUP]))
+        if statistic.has_key(str(COL_EVENT_IBX_IMG_KEYUP)):
+            X.append(int(statistic[str(COL_EVENT_IBX_IMG_KEYUP)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_IMG_MOUSEDOWN):
-            X.append(int(statistic[COL_EVENT_IBX_IMG_MOUSEDOWN]))
+        if statistic.has_key(str(COL_EVENT_IBX_IMG_MOUSEDOWN)):
+            X.append(int(statistic[str(COL_EVENT_IBX_IMG_MOUSEDOWN)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_IMG_MOUSEMOVE):
-            X.append(int(statistic[COL_EVENT_IBX_IMG_MOUSEMOVE]))
+        if statistic.has_key(str(COL_EVENT_IBX_IMG_MOUSEMOVE)):
+            X.append(int(statistic[str(COL_EVENT_IBX_IMG_MOUSEMOVE)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_IMG_MOUSEOUT):
-            X.append(int(statistic[COL_EVENT_IBX_IMG_MOUSEOUT]))
+        if statistic.has_key(str(COL_EVENT_IBX_IMG_MOUSEOUT)):
+            X.append(int(statistic[str(COL_EVENT_IBX_IMG_MOUSEOUT)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_IMG_MOUSEOVER):
-            X.append(int(statistic[COL_EVENT_IBX_IMG_MOUSEOVER]))
+        if statistic.has_key(str(COL_EVENT_IBX_IMG_MOUSEOVER)):
+            X.append(int(statistic[str(COL_EVENT_IBX_IMG_MOUSEOVER)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_IMG_MOUSEUP):
-            X.append(int(statistic[COL_EVENT_IBX_IMG_MOUSEUP]))
+        if statistic.has_key(str(COL_EVENT_IBX_IMG_MOUSEUP)):
+            X.append(int(statistic[str(COL_EVENT_IBX_IMG_MOUSEUP)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_IMG_TOUCHSTART):
-            X.append(int(statistic[COL_EVENT_IBX_IMG_TOUCHSTART]))
+        if statistic.has_key(str(COL_EVENT_IBX_IMG_TOUCHSTART)):
+            X.append(int(statistic[str(COL_EVENT_IBX_IMG_TOUCHSTART)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_IMG_TOUCHMOVE):
-            X.append(int(statistic[COL_EVENT_IBX_IMG_TOUCHMOVE]))
+        if statistic.has_key(str(COL_EVENT_IBX_IMG_TOUCHMOVE)):
+            X.append(int(statistic[str(COL_EVENT_IBX_IMG_TOUCHMOVE)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_IMG_TOUCHEND):
-            X.append(int(statistic[COL_EVENT_IBX_IMG_TOUCHEND]))
+        if statistic.has_key(str(COL_EVENT_IBX_IMG_TOUCHEND)):
+            X.append(int(statistic[str(COL_EVENT_IBX_IMG_TOUCHEND)]))
         else:
             X.append(0)
 
         # D - 图形验证码刷新按钮
-        if statistic.has_key(COL_EVENT_BTN_IMG_CLICK):
-            X.append(int(statistic[COL_EVENT_BTN_IMG_CLICK]))
+        if statistic.has_key(str(COL_EVENT_BTN_IMG_CLICK)):
+            X.append(int(statistic[str(COL_EVENT_BTN_IMG_CLICK)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_IMG_DBLCLICK):
-            X.append(int(statistic[COL_EVENT_BTN_IMG_DBLCLICK]))
+        if statistic.has_key(str(COL_EVENT_BTN_IMG_DBLCLICK)):
+            X.append(int(statistic[str(COL_EVENT_BTN_IMG_DBLCLICK)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_IMG_FOCUS):
-            X.append(int(statistic[COL_EVENT_BTN_IMG_FOCUS]))
+        if statistic.has_key(str(COL_EVENT_BTN_IMG_FOCUS)):
+            X.append(int(statistic[str(COL_EVENT_BTN_IMG_FOCUS)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_IMG_KEYDOWN):
-            X.append(int(statistic[COL_EVENT_BTN_IMG_KEYDOWN]))
+        if statistic.has_key(str(COL_EVENT_BTN_IMG_KEYDOWN)):
+            X.append(int(statistic[str(COL_EVENT_BTN_IMG_KEYDOWN)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_IMG_KEYPRESS):
-            X.append(int(statistic[COL_EVENT_BTN_IMG_KEYPRESS]))
+        if statistic.has_key(str(COL_EVENT_BTN_IMG_KEYPRESS)):
+            X.append(int(statistic[str(COL_EVENT_BTN_IMG_KEYPRESS)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_IMG_KEYUP):
-            X.append(int(statistic[COL_EVENT_BTN_IMG_KEYUP]))
+        if statistic.has_key(str(COL_EVENT_BTN_IMG_KEYUP)):
+            X.append(int(statistic[str(COL_EVENT_BTN_IMG_KEYUP)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_IMG_MOUSEDOWN):
-            X.append(int(statistic[COL_EVENT_BTN_IMG_MOUSEDOWN]))
+        if statistic.has_key(str(COL_EVENT_BTN_IMG_MOUSEDOWN)):
+            X.append(int(statistic[str(COL_EVENT_BTN_IMG_MOUSEDOWN)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_IMG_MOUSEMOVE):
-            X.append(int(statistic[COL_EVENT_BTN_IMG_MOUSEMOVE]))
+        if statistic.has_key(str(COL_EVENT_BTN_IMG_MOUSEMOVE)):
+            X.append(int(statistic[str(COL_EVENT_BTN_IMG_MOUSEMOVE)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_IMG_MOUSEOUT):
-            X.append(int(statistic[COL_EVENT_BTN_IMG_MOUSEOUT]))
+        if statistic.has_key(str(COL_EVENT_BTN_IMG_MOUSEOUT)):
+            X.append(int(statistic[str(COL_EVENT_BTN_IMG_MOUSEOUT)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_IMG_MOUSEOVER):
-            X.append(int(statistic[COL_EVENT_BTN_IMG_MOUSEOVER]))
+        if statistic.has_key(str(COL_EVENT_BTN_IMG_MOUSEOVER)):
+            X.append(int(statistic[str(COL_EVENT_BTN_IMG_MOUSEOVER)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_IMG_MOUSEUP):
-            X.append(int(statistic[COL_EVENT_BTN_IMG_MOUSEUP]))
+        if statistic.has_key(str(COL_EVENT_BTN_IMG_MOUSEUP)):
+            X.append(int(statistic[str(COL_EVENT_BTN_IMG_MOUSEUP)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_IMG_TOUCHSTART):
-            X.append(int(statistic[COL_EVENT_BTN_IMG_TOUCHSTART]))
+        if statistic.has_key(str(COL_EVENT_BTN_IMG_TOUCHSTART)):
+            X.append(int(statistic[str(COL_EVENT_BTN_IMG_TOUCHSTART)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_IMG_TOUCHMOVE):
-            X.append(int(statistic[COL_EVENT_BTN_IMG_TOUCHMOVE]))
+        if statistic.has_key(str(COL_EVENT_BTN_IMG_TOUCHMOVE)):
+            X.append(int(statistic[str(COL_EVENT_BTN_IMG_TOUCHMOVE)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_IMG_TOUCHEND):
-            X.append(int(statistic[COL_EVENT_BTN_IMG_TOUCHEND]))
+        if statistic.has_key(str(COL_EVENT_BTN_IMG_TOUCHEND)):
+            X.append(int(statistic[str(COL_EVENT_BTN_IMG_TOUCHEND)]))
         else:
             X.append(0)
 
         # E - 手机号输入框
-        if statistic.has_key(COL_EVENT_IBX_TEL_CHANGE):
-            X.append(int(statistic[COL_EVENT_IBX_TEL_CHANGE]))
+        if statistic.has_key(str(COL_EVENT_IBX_TEL_CHANGE)):
+            X.append(int(statistic[str(COL_EVENT_IBX_TEL_CHANGE)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_TEL_CLICK):
-            X.append(int(statistic[COL_EVENT_IBX_TEL_CLICK]))
+        if statistic.has_key(str(COL_EVENT_IBX_TEL_CLICK)):
+            X.append(int(statistic[str(COL_EVENT_IBX_TEL_CLICK)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_TEL_DBLCLICK):
-            X.append(int(statistic[COL_EVENT_IBX_TEL_DBLCLICK]))
+        if statistic.has_key(str(COL_EVENT_IBX_TEL_DBLCLICK)):
+            X.append(int(statistic[str(COL_EVENT_IBX_TEL_DBLCLICK)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_TEL_FOCUS):
-            X.append(int(statistic[COL_EVENT_IBX_TEL_FOCUS]))
+        if statistic.has_key(str(COL_EVENT_IBX_TEL_FOCUS)):
+            X.append(int(statistic[str(COL_EVENT_IBX_TEL_FOCUS)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_TEL_KEYDOWN):
-            X.append(int(statistic[COL_EVENT_IBX_TEL_KEYDOWN]))
+        if statistic.has_key(str(COL_EVENT_IBX_TEL_KEYDOWN)):
+            X.append(int(statistic[str(COL_EVENT_IBX_TEL_KEYDOWN)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_TEL_KEYPRESS):
-            X.append(int(statistic[COL_EVENT_IBX_TEL_KEYPRESS]))
+        if statistic.has_key(str(COL_EVENT_IBX_TEL_KEYPRESS)):
+            X.append(int(statistic[str(COL_EVENT_IBX_TEL_KEYPRESS)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_TEL_KEYUP):
-            X.append(int(statistic[COL_EVENT_IBX_TEL_KEYUP]))
+        if statistic.has_key(str(COL_EVENT_IBX_TEL_KEYUP)):
+            X.append(int(statistic[str(COL_EVENT_IBX_TEL_KEYUP)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_TEL_MOUSEDOWN):
-            X.append(int(statistic[COL_EVENT_IBX_TEL_MOUSEDOWN]))
+        if statistic.has_key(str(COL_EVENT_IBX_TEL_MOUSEDOWN)):
+            X.append(int(statistic[str(COL_EVENT_IBX_TEL_MOUSEDOWN)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_TEL_MOUSEMOVE):
-            X.append(int(statistic[COL_EVENT_IBX_TEL_MOUSEMOVE]))
+        if statistic.has_key(str(COL_EVENT_IBX_TEL_MOUSEMOVE)):
+            X.append(int(statistic[str(COL_EVENT_IBX_TEL_MOUSEMOVE)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_TEL_MOUSEOUT):
-            X.append(int(statistic[COL_EVENT_IBX_TEL_MOUSEOUT]))
+        if statistic.has_key(str(COL_EVENT_IBX_TEL_MOUSEOUT)):
+            X.append(int(statistic[str(COL_EVENT_IBX_TEL_MOUSEOUT)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_TEL_MOUSEOVER):
-            X.append(int(statistic[COL_EVENT_IBX_TEL_MOUSEOVER]))
+        if statistic.has_key(str(COL_EVENT_IBX_TEL_MOUSEOVER)):
+            X.append(int(statistic[str(COL_EVENT_IBX_TEL_MOUSEOVER)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_TEL_MOUSEUP):
-            X.append(int(statistic[COL_EVENT_IBX_TEL_MOUSEUP]))
+        if statistic.has_key(str(COL_EVENT_IBX_TEL_MOUSEUP)):
+            X.append(int(statistic[str(COL_EVENT_IBX_TEL_MOUSEUP)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_TEL_TOUCHSTART):
-            X.append(int(statistic[COL_EVENT_IBX_TEL_TOUCHSTART]))
+        if statistic.has_key(str(COL_EVENT_IBX_TEL_TOUCHSTART)):
+            X.append(int(statistic[str(COL_EVENT_IBX_TEL_TOUCHSTART)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_TEL_TOUCHMOVE):
-            X.append(int(statistic[COL_EVENT_IBX_TEL_TOUCHMOVE]))
+        if statistic.has_key(str(COL_EVENT_IBX_TEL_TOUCHMOVE)):
+            X.append(int(statistic[str(COL_EVENT_IBX_TEL_TOUCHMOVE)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_TEL_TOUCHEND):
-            X.append(int(statistic[COL_EVENT_IBX_TEL_TOUCHEND]))
+        if statistic.has_key(str(COL_EVENT_IBX_TEL_TOUCHEND)):
+            X.append(int(statistic[str(COL_EVENT_IBX_TEL_TOUCHEND)]))
         else:
             X.append(0)
 
         # H - 手机验证码输入框(FOR TEL)
-        if statistic.has_key(COL_EVENT_IBX_SMS_CHANGE):
-            X.append(int(statistic[COL_EVENT_IBX_SMS_CHANGE]))
+        if statistic.has_key(str(COL_EVENT_IBX_SMS_CHANGE)):
+            X.append(int(statistic[str(COL_EVENT_IBX_SMS_CHANGE)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_SMS_CLICK):
-            X.append(int(statistic[COL_EVENT_IBX_SMS_CLICK]))
+        if statistic.has_key(str(COL_EVENT_IBX_SMS_CLICK)):
+            X.append(int(statistic[str(COL_EVENT_IBX_SMS_CLICK)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_SMS_DBLCLICK):
-            X.append(int(statistic[COL_EVENT_IBX_SMS_DBLCLICK]))
+        if statistic.has_key(str(COL_EVENT_IBX_SMS_DBLCLICK)):
+            X.append(int(statistic[str(COL_EVENT_IBX_SMS_DBLCLICK)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_SMS_FOCUS):
-            X.append(int(statistic[COL_EVENT_IBX_SMS_FOCUS]))
+        if statistic.has_key(str(COL_EVENT_IBX_SMS_FOCUS)):
+            X.append(int(statistic[str(COL_EVENT_IBX_SMS_FOCUS)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_SMS_KEYDOWN):
-            X.append(int(statistic[COL_EVENT_IBX_SMS_KEYDOWN]))
+        if statistic.has_key(str(COL_EVENT_IBX_SMS_KEYDOWN)):
+            X.append(int(statistic[str(COL_EVENT_IBX_SMS_KEYDOWN)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_SMS_KEYPRESS):
-            X.append(int(statistic[COL_EVENT_IBX_SMS_KEYPRESS]))
+        if statistic.has_key(str(COL_EVENT_IBX_SMS_KEYPRESS)):
+            X.append(int(statistic[str(COL_EVENT_IBX_SMS_KEYPRESS)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_SMS_KEYUP):
-            X.append(int(statistic[COL_EVENT_IBX_SMS_KEYUP]))
+        if statistic.has_key(str(COL_EVENT_IBX_SMS_KEYUP)):
+            X.append(int(statistic[str(COL_EVENT_IBX_SMS_KEYUP)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_SMS_MOUSEDOWN):
-            X.append(int(statistic[COL_EVENT_IBX_SMS_MOUSEDOWN]))
+        if statistic.has_key(str(COL_EVENT_IBX_SMS_MOUSEDOWN)):
+            X.append(int(statistic[str(COL_EVENT_IBX_SMS_MOUSEDOWN)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_SMS_MOUSEMOVE):
-            X.append(int(statistic[COL_EVENT_IBX_SMS_MOUSEMOVE]))
+        if statistic.has_key(str(COL_EVENT_IBX_SMS_MOUSEMOVE)):
+            X.append(int(statistic[str(COL_EVENT_IBX_SMS_MOUSEMOVE)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_SMS_MOUSEOUT):
-            X.append(int(statistic[COL_EVENT_IBX_SMS_MOUSEOUT]))
+        if statistic.has_key(str(COL_EVENT_IBX_SMS_MOUSEOUT)):
+            X.append(int(statistic[str(COL_EVENT_IBX_SMS_MOUSEOUT)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_SMS_MOUSEOVER):
-            X.append(int(statistic[COL_EVENT_IBX_SMS_MOUSEOVER]))
+        if statistic.has_key(str(COL_EVENT_IBX_SMS_MOUSEOVER)):
+            X.append(int(statistic[str(COL_EVENT_IBX_SMS_MOUSEOVER)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_SMS_MOUSEUP):
-            X.append(int(statistic[COL_EVENT_IBX_SMS_MOUSEUP]))
+        if statistic.has_key(str(COL_EVENT_IBX_SMS_MOUSEUP)):
+            X.append(int(statistic[str(COL_EVENT_IBX_SMS_MOUSEUP)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_SMS_TOUCHSTART):
-            X.append(int(statistic[COL_EVENT_IBX_SMS_TOUCHSTART]))
+        if statistic.has_key(str(COL_EVENT_IBX_SMS_TOUCHSTART)):
+            X.append(int(statistic[str(COL_EVENT_IBX_SMS_TOUCHSTART)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_SMS_TOUCHMOVE):
-            X.append(int(statistic[COL_EVENT_IBX_SMS_TOUCHMOVE]))
+        if statistic.has_key(str(COL_EVENT_IBX_SMS_TOUCHMOVE)):
+            X.append(int(statistic[str(COL_EVENT_IBX_SMS_TOUCHMOVE)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_IBX_SMS_TOUCHEND):
-            X.append(int(statistic[COL_EVENT_IBX_SMS_TOUCHEND]))
+        if statistic.has_key(str(COL_EVENT_IBX_SMS_TOUCHEND)):
+            X.append(int(statistic[str(COL_EVENT_IBX_SMS_TOUCHEND)]))
         else:
             X.append(0)
 
         # I - 手机验证码获取按钮(FOR TEL)
-        if statistic.has_key(COL_EVENT_BTN_SMS_CLICK):
-            X.append(int(statistic[COL_EVENT_BTN_SMS_CLICK]))
+        if statistic.has_key(str(COL_EVENT_BTN_SMS_CLICK)):
+            X.append(int(statistic[str(COL_EVENT_BTN_SMS_CLICK)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_SMS_DBLCLICK):
-            X.append(int(statistic[COL_EVENT_BTN_SMS_DBLCLICK]))
+        if statistic.has_key(str(COL_EVENT_BTN_SMS_DBLCLICK)):
+            X.append(int(statistic[str(COL_EVENT_BTN_SMS_DBLCLICK)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_SMS_FOCUS):
-            X.append(int(statistic[COL_EVENT_BTN_SMS_FOCUS]))
+        if statistic.has_key(str(COL_EVENT_BTN_SMS_FOCUS)):
+            X.append(int(statistic[str(COL_EVENT_BTN_SMS_FOCUS)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_SMS_KEYDOWN):
-            X.append(int(statistic[COL_EVENT_BTN_SMS_KEYDOWN]))
+        if statistic.has_key(str(COL_EVENT_BTN_SMS_KEYDOWN)):
+            X.append(int(statistic[str(COL_EVENT_BTN_SMS_KEYDOWN)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_SMS_KEYPRESS):
-            X.append(int(statistic[COL_EVENT_BTN_SMS_KEYPRESS]))
+        if statistic.has_key(str(COL_EVENT_BTN_SMS_KEYPRESS)):
+            X.append(int(statistic[str(COL_EVENT_BTN_SMS_KEYPRESS)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_SMS_KEYUP):
-            X.append(int(statistic[COL_EVENT_BTN_SMS_KEYUP]))
+        if statistic.has_key(str(COL_EVENT_BTN_SMS_KEYUP)):
+            X.append(int(statistic[str(COL_EVENT_BTN_SMS_KEYUP)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_SMS_MOUSEDOWN):
-            X.append(int(statistic[COL_EVENT_BTN_SMS_MOUSEDOWN]))
+        if statistic.has_key(str(COL_EVENT_BTN_SMS_MOUSEDOWN)):
+            X.append(int(statistic[str(COL_EVENT_BTN_SMS_MOUSEDOWN)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_SMS_MOUSEMOVE):
-            X.append(int(statistic[COL_EVENT_BTN_SMS_MOUSEMOVE]))
+        if statistic.has_key(str(COL_EVENT_BTN_SMS_MOUSEMOVE)):
+            X.append(int(statistic[str(COL_EVENT_BTN_SMS_MOUSEMOVE)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_SMS_MOUSEOUT):
-            X.append(int(statistic[COL_EVENT_BTN_SMS_MOUSEOUT]))
+        if statistic.has_key(str(COL_EVENT_BTN_SMS_MOUSEOUT)):
+            X.append(int(statistic[str(COL_EVENT_BTN_SMS_MOUSEOUT)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_SMS_MOUSEOVER):
-            X.append(int(statistic[COL_EVENT_BTN_SMS_MOUSEOVER]))
+        if statistic.has_key(str(COL_EVENT_BTN_SMS_MOUSEOVER)):
+            X.append(int(statistic[str(COL_EVENT_BTN_SMS_MOUSEOVER)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_SMS_MOUSEUP):
-            X.append(int(statistic[COL_EVENT_BTN_SMS_MOUSEUP]))
+        if statistic.has_key(str(COL_EVENT_BTN_SMS_MOUSEUP)):
+            X.append(int(statistic[str(COL_EVENT_BTN_SMS_MOUSEUP)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_SMS_TOUCHSTART):
-            X.append(int(statistic[COL_EVENT_BTN_SMS_TOUCHSTART]))
+        if statistic.has_key(str(COL_EVENT_BTN_SMS_TOUCHSTART)):
+            X.append(int(statistic[str(COL_EVENT_BTN_SMS_TOUCHSTART)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_SMS_TOUCHMOVE):
-            X.append(int(statistic[COL_EVENT_BTN_SMS_TOUCHMOVE]))
+        if statistic.has_key(str(COL_EVENT_BTN_SMS_TOUCHMOVE)):
+            X.append(int(statistic[str(COL_EVENT_BTN_SMS_TOUCHMOVE)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_SMS_TOUCHEND):
-            X.append(int(statistic[COL_EVENT_BTN_SMS_TOUCHEND]))
+        if statistic.has_key(str(COL_EVENT_BTN_SMS_TOUCHEND)):
+            X.append(int(statistic[str(COL_EVENT_BTN_SMS_TOUCHEND)]))
         else:
             X.append(0)
 
         # J - 登录按钮
-        if statistic.has_key(COL_EVENT_BTN_LGN_CLICK):
-            X.append(int(statistic[COL_EVENT_BTN_LGN_CLICK]))
+        if statistic.has_key(str(COL_EVENT_BTN_LGN_CLICK)):
+            X.append(int(statistic[str(COL_EVENT_BTN_LGN_CLICK)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_LGN_DBLCLICK):
-            X.append(int(statistic[COL_EVENT_BTN_LGN_DBLCLICK]))
+        if statistic.has_key(str(COL_EVENT_BTN_LGN_DBLCLICK)):
+            X.append(int(statistic[str(COL_EVENT_BTN_LGN_DBLCLICK)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_LGN_FOCUS):
-            X.append(int(statistic[COL_EVENT_BTN_LGN_FOCUS]))
+        if statistic.has_key(str(COL_EVENT_BTN_LGN_FOCUS)):
+            X.append(int(statistic[str(COL_EVENT_BTN_LGN_FOCUS)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_LGN_KEYDOWN):
-            X.append(int(statistic[COL_EVENT_BTN_LGN_KEYDOWN]))
+        if statistic.has_key(str(COL_EVENT_BTN_LGN_KEYDOWN)):
+            X.append(int(statistic[str(COL_EVENT_BTN_LGN_KEYDOWN)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_LGN_KEYPRESS):
-            X.append(int(statistic[COL_EVENT_BTN_LGN_KEYPRESS]))
+        if statistic.has_key(str(COL_EVENT_BTN_LGN_KEYPRESS)):
+            X.append(int(statistic[str(COL_EVENT_BTN_LGN_KEYPRESS)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_LGN_KEYUP):
-            X.append(int(statistic[COL_EVENT_BTN_LGN_KEYUP]))
+        if statistic.has_key(str(COL_EVENT_BTN_LGN_KEYUP)):
+            X.append(int(statistic[str(COL_EVENT_BTN_LGN_KEYUP)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_LGN_MOUSEDOWN):
-            X.append(int(statistic[COL_EVENT_BTN_LGN_MOUSEDOWN]))
+        if statistic.has_key(str(COL_EVENT_BTN_LGN_MOUSEDOWN)):
+            X.append(int(statistic[str(COL_EVENT_BTN_LGN_MOUSEDOWN)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_LGN_MOUSEMOVE):
-            X.append(int(statistic[COL_EVENT_BTN_LGN_MOUSEMOVE]))
+        if statistic.has_key(str(COL_EVENT_BTN_LGN_MOUSEMOVE)):
+            X.append(int(statistic[str(COL_EVENT_BTN_LGN_MOUSEMOVE)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_LGN_MOUSEOUT):
-            X.append(int(statistic[COL_EVENT_BTN_LGN_MOUSEOUT]))
+        if statistic.has_key(str(COL_EVENT_BTN_LGN_MOUSEOUT)):
+            X.append(int(statistic[str(COL_EVENT_BTN_LGN_MOUSEOUT)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_LGN_MOUSEOVER):
-            X.append(int(statistic[COL_EVENT_BTN_LGN_MOUSEOVER]))
+        if statistic.has_key(str(COL_EVENT_BTN_LGN_MOUSEOVER)):
+            X.append(int(statistic[str(COL_EVENT_BTN_LGN_MOUSEOVER)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_LGN_MOUSEUP):
-            X.append(int(statistic[COL_EVENT_BTN_LGN_MOUSEUP]))
+        if statistic.has_key(str(COL_EVENT_BTN_LGN_MOUSEUP)):
+            X.append(int(statistic[str(COL_EVENT_BTN_LGN_MOUSEUP)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_LGN_TOUCHSTART):
-            X.append(int(statistic[COL_EVENT_BTN_LGN_TOUCHSTART]))
+        if statistic.has_key(str(COL_EVENT_BTN_LGN_TOUCHSTART)):
+            X.append(int(statistic[str(COL_EVENT_BTN_LGN_TOUCHSTART)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_LGN_TOUCHMOVE):
-            X.append(int(statistic[COL_EVENT_BTN_LGN_TOUCHMOVE]))
+        if statistic.has_key(str(COL_EVENT_BTN_LGN_TOUCHMOVE)):
+            X.append(int(statistic[str(COL_EVENT_BTN_LGN_TOUCHMOVE)]))
         else:
             X.append(0)
-        if statistic.has_key(COL_EVENT_BTN_LGN_TOUCHEND):
-            X.append(int(statistic[COL_EVENT_BTN_LGN_TOUCHEND]))
+        if statistic.has_key(str(COL_EVENT_BTN_LGN_TOUCHEND)):
+            X.append(int(statistic[str(COL_EVENT_BTN_LGN_TOUCHEND)]))
         else:
             X.append(0)
 
@@ -891,12 +892,14 @@ class AiEyeHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         ctm = time.time()
         if statistic.has_key('UTM'): # 更新时间
             if int(statistic['UTM']) < ctm:
-                X.append(ctm - int(statistic['UTM']))
+                #X.append(ctm - int(statistic['UTM')]))
+                X.append(0)
             else:
                 X.append(0)
         else:
             X.append(0)
 
+        print(X)
         return numpy.array(X).reshape(1, -1)
     # 分析风险指数
     def PredictRisk(self, X):
@@ -988,16 +991,19 @@ class AiEyeHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         return
 
     def do_GET(self):
-        logging.warning("======= GET STARTED =======")
-        logging.warning(self.headers)
+        try:
+            logging.warning("======= GET STARTED =======")
+            logging.warning(self.headers)
 
-        token="invalid-token"
-        parmas = {}
-        if '?' in self.path: #如果带有参数
-            query = urllib.unquote(self.path.split('?',1)[1])
-            params = urlparse.parse_qs(query)
-            print(params)
-        self.predict(params)
+            token="invalid-token"
+            parmas = {}
+            if '?' in self.path: #如果带有参数
+                query = urllib.unquote(self.path.split('?',1)[1])
+                params = urlparse.parse_qs(query)
+                print(params)
+            self.predict(params)
+        except Exception as e:
+            print(e)
 
     def do_POST(self):
         logging.warning("======= POST STARTED =======")
