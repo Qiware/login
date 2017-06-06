@@ -288,7 +288,7 @@ int main(int argc, char **argv)
 
     /* create a client websocket using chat protocol */
     for (n=0; n<opt->num; n++) {
-        wsi = lws_client_connect(lws, opt->ipaddr, opt->port, 0,
+        wsi = lws_client_connect(lws, opt->ipaddr, opt->port, opt->use_ssl,
                 "/upload", opt->ipaddr, opt->ipaddr,
                 g_protocols[PROTOCOL_CHAT].name, opt->ietf_version);
         if (NULL == wsi) {

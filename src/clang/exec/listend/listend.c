@@ -341,6 +341,8 @@ static int lsnd_set_reg(lsnd_cntx_t *ctx)
 
     LSND_ACC_REG_CB(ctx, CMD_UNKNOWN, lsnd_mesg_def_handler, ctx); /* 默认处理 */
     LSND_ACC_REG_CB(ctx, CMD_ONLINE, lsnd_mesg_online_handler, ctx);
+    LSND_ACC_REG_CB(ctx, CMD_BROWSER_ENV, lsnd_mesg_def_handler, ctx);
+    LSND_ACC_REG_CB(ctx, CMD_EVENT_STATISTIC, lsnd_mesg_def_handler, ctx);
     LSND_ACC_REG_CB(ctx, CMD_OFFLINE, lsnd_mesg_offline_handler, ctx);
     LSND_ACC_REG_CB(ctx, CMD_PING, lsnd_mesg_ping_handler, ctx);
 
@@ -351,8 +353,10 @@ static int lsnd_set_reg(lsnd_cntx_t *ctx)
         return LSND_ERR; \
     }
 
-    LSND_RTQ_REG_CB(ctx, CMD_ONLINE_ACK, lsnd_mesg_online_ack_handler, ctx);
-    LSND_RTQ_REG_CB(ctx, CMD_KICK, lsnd_mesg_kick_handler, ctx);
+    LSND_RTQ_REG_CB(ctx, CMD_ONLINE_ACK, lsnd_upmesg_online_ack_handler, ctx);
+    LSND_RTQ_REG_CB(ctx, CMD_BROWSER_ENV_ACK, lsnd_upmesg_def_handler, ctx);
+    LSND_RTQ_REG_CB(ctx, CMD_EVENT_STATISTIC_ACK, lsnd_upmesg_def_handler, ctx);
+    LSND_RTQ_REG_CB(ctx, CMD_KICK, lsnd_upmesg_kick_handler, ctx);
 
     /* 注册定时任务回调 */
     lsnd_set_timer(ctx);
