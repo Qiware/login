@@ -134,10 +134,16 @@ func CleanSessionDataBySid(pool *redis.Pool, sid uint32) error {
 		return err
 	} else if 0 == num {
 		pl.Send("ZREM", comm.AE_KEY_SID_ZSET, sid)
+
+		key = fmt.Sprintf(comm.AE_KEY_SID_STATISTIC, sid)
+		pl.Send("DEL", key)
 		return nil
 	}
 
 	pl.Send("ZREM", comm.AE_KEY_SID_ZSET, sid)
+
+	key = fmt.Sprintf(comm.AE_KEY_SID_STATISTIC, sid)
+	pl.Send("DEL", key)
 
 	return nil
 }

@@ -1,10 +1,10 @@
 package comm
 
 const (
-	AE_SID_TTL = 300  // 会话SID-TTL
-	AE_OP_TTL  = 30   // 运营商ID-TTL
-	AE_NID_TTL = 30   // 结点ID-TTL
-	AE_BAT_NUM = 1000 // 批量操作个数
+	AE_SID_TTL = 86400 // 会话SID-TTL
+	AE_OP_TTL  = 30    // 运营商ID-TTL
+	AE_NID_TTL = 30    // 结点ID-TTL
+	AE_BAT_NUM = 1000  // 批量操作个数
 )
 
 /* 时间转换成秒 */

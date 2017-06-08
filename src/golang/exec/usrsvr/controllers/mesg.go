@@ -315,7 +315,7 @@ func (ctx *UsrSvrCntx) online_handler(head *comm.MesgHeader, req *mesg.MesgOnlin
 
 	/* 记录SID集合 */
 	pl.Send("ZADD", comm.AE_KEY_SID_ZSET, ttl, req.GetSid())
-	pl.Send("ZADD", comm.AE_KEY_TOKEN_ZSET, ttl+86400, req.GetToken())
+	pl.Send("ZADD", comm.AE_KEY_TOKEN_ZSET, ttl, req.GetToken())
 
 	/* 记录SID->CID & NID */
 	key = fmt.Sprintf(comm.AE_KEY_SID_ATTR, req.GetSid())

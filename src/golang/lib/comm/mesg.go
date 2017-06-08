@@ -25,8 +25,8 @@ const (
 	/* 上报消息 */
 	CMD_BROWSER_ENV         = 0x0201 /* 浏览器环境 */
 	CMD_BROWSER_ENV_ACK     = 0x0202 /* 浏览器环境应答 */
-	CMD_EVENT_STATISTIC     = 0x0203 /* 添加好友 */
-	CMD_EVENT_STATISTIC_ACK = 0x0204 /* 添加好友应答 */
+	CMD_EVENT_STATISTIC     = 0x0203 /* 事件统计 */
+	CMD_EVENT_STATISTIC_ACK = 0x0204 /* 事件统计应答 */
 
 	/* 系统内部消息 */
 	CMD_LSND_INFO     = 0x0301 /* 帧听层信息上报 */
