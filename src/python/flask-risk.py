@@ -973,6 +973,7 @@ def Predict(params):
 ##注意事项:
 ##作    者: # Qifeng.zou # 2017.04.14 16:54:32 #
 ################################################################################
+IP = "0.0.0.0"
 PORT = 8081
 app = Flask(__name__)
 @app.route("/login/action/risk/query", methods=['GET', 'POST'])
@@ -998,4 +999,4 @@ def login_action_risk_query():
         return Predict(request.args)
 
 if __name__ == "__main__":
-    app.run(port=PORT)
+    app.run(host=IP, port=PORT)
