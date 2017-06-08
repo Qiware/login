@@ -9,10 +9,10 @@ import (
 
 	"github.com/golang/protobuf/proto"
 
-	"ai-eye/src/golang/lib/comm"
-	"ai-eye/src/golang/lib/crypt"
-	"ai-eye/src/golang/lib/im"
-	"ai-eye/src/golang/lib/mesg"
+	"login/src/golang/lib/comm"
+	"login/src/golang/lib/crypt"
+	"login/src/golang/lib/im"
+	"login/src/golang/lib/mesg"
 )
 
 // 通用请求

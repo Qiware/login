@@ -4,9 +4,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"ai-eye/src/golang/lib/log"
-	"ai-eye/src/golang/lib/lws"
-	"ai-eye/src/golang/lib/rtmq"
+	"login/src/golang/lib/log"
+	"login/src/golang/lib/lws"
+	"login/src/golang/lib/rtmq"
 )
 
 /* 侦听层配置 */

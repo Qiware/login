@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"ai-eye/src/golang/lib/log"
+	"login/src/golang/lib/log"
 )
 
 /* 运营商配置 */

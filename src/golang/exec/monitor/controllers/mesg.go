@@ -9,8 +9,8 @@ import (
 	"github.com/garyburd/redigo/redis"
 	"github.com/golang/protobuf/proto"
 
-	"ai-eye/src/golang/lib/comm"
-	"ai-eye/src/golang/lib/mesg"
+	"login/src/golang/lib/comm"
+	"login/src/golang/lib/mesg"
 )
 
 ////////////////////////////////////////////////////////////////////////////////

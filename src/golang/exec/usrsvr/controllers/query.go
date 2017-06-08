@@ -3,7 +3,7 @@ package controllers
 import (
 	"fmt"
 
-	"ai-eye/src/golang/lib/comm"
+	"login/src/golang/lib/comm"
 )
 
 type UsrSvrQueryCtrl struct {

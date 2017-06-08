@@ -7,12 +7,12 @@ import (
 	"github.com/astaxie/beego/logs"
 	"github.com/garyburd/redigo/redis"
 
-	"ai-eye/src/golang/lib/cache"
-	"ai-eye/src/golang/lib/comm"
-	"ai-eye/src/golang/lib/log"
-	"ai-eye/src/golang/lib/rtmq"
+	"login/src/golang/lib/cache"
+	"login/src/golang/lib/comm"
+	"login/src/golang/lib/log"
+	"login/src/golang/lib/rtmq"
 
-	"ai-eye/src/golang/exec/usrsvr/controllers/conf"
+	"login/src/golang/exec/usrsvr/controllers/conf"
 )
 
 /* 侦听层列表 */

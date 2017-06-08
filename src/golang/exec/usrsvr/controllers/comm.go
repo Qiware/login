@@ -3,7 +3,7 @@ package controllers
 import (
 	"github.com/astaxie/beego"
 
-	"ai-eye/src/golang/lib/comm"
+	"login/src/golang/lib/comm"
 )
 
 type ViewController struct {

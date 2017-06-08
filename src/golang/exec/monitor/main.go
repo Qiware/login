@@ -8,8 +8,8 @@ import (
 	"runtime"
 	"syscall"
 
-	"ai-eye/src/golang/exec/monitor/controllers"
-	"ai-eye/src/golang/exec/monitor/controllers/conf"
+	"login/src/golang/exec/monitor/controllers"
+	"login/src/golang/exec/monitor/controllers/conf"
 )
 
 /* 输入参数 */

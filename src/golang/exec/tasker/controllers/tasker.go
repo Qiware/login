@@ -6,11 +6,11 @@ import (
 	"github.com/astaxie/beego/logs"
 	"github.com/garyburd/redigo/redis"
 
-	"ai-eye/src/golang/lib/cache"
-	"ai-eye/src/golang/lib/log"
-	"ai-eye/src/golang/lib/rtmq"
+	"login/src/golang/lib/cache"
+	"login/src/golang/lib/log"
+	"login/src/golang/lib/rtmq"
 
-	"ai-eye/src/golang/exec/tasker/controllers/conf"
+	"login/src/golang/exec/tasker/controllers/conf"
 )
 
 /* Tasker上下文 */

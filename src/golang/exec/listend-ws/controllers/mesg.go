@@ -3,8 +3,8 @@ package controllers
 import (
 	_ "github.com/golang/protobuf/proto"
 
-	"ai-eye/src/golang/lib/comm"
-	_ "ai-eye/src/golang/lib/mesg"
+	"login/src/golang/lib/comm"
+	_ "login/src/golang/lib/mesg"
 )
 
 /******************************************************************************

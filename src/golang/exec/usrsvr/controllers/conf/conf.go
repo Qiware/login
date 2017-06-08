@@ -4,8 +4,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"ai-eye/src/golang/lib/log"
-	"ai-eye/src/golang/lib/rtmq"
+	"login/src/golang/lib/log"
+	"login/src/golang/lib/rtmq"
 )
 
 /* 在线中心配置 */

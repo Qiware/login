@@ -4,7 +4,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"ai-eye/src/golang/lib/comm"
+	"login/src/golang/lib/comm"
 )
 
 ////////////////////////////////////////////////////////////////////////////////

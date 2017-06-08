@@ -3,8 +3,8 @@ package controllers
 import (
 	"time"
 
-	"ai-eye/src/golang/lib/comm"
-	"ai-eye/src/golang/lib/lws"
+	"login/src/golang/lib/comm"
+	"login/src/golang/lib/lws"
 )
 
 /******************************************************************************

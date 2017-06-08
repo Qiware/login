@@ -9,8 +9,8 @@ import (
 	"runtime/pprof"
 	"syscall"
 
-	"ai-eye/src/golang/exec/listend-ws/controllers"
-	"ai-eye/src/golang/exec/listend-ws/controllers/conf"
+	"login/src/golang/exec/listend-ws/controllers"
+	"login/src/golang/exec/listend-ws/controllers/conf"
 )
 
 /* 输入参数 */

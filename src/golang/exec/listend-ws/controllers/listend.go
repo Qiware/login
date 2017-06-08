@@ -6,13 +6,13 @@ import (
 
 	"github.com/astaxie/beego/logs"
 
-	"ai-eye/src/golang/lib/comm"
-	"ai-eye/src/golang/lib/log"
-	"ai-eye/src/golang/lib/lws"
-	"ai-eye/src/golang/lib/rtmq"
-	"ai-eye/src/golang/lib/session"
+	"login/src/golang/lib/comm"
+	"login/src/golang/lib/log"
+	"login/src/golang/lib/lws"
+	"login/src/golang/lib/rtmq"
+	"login/src/golang/lib/session"
 
-	"ai-eye/src/golang/exec/listend-ws/controllers/conf"
+	"login/src/golang/exec/listend-ws/controllers/conf"
 )
 
 /* 连接状态定义 */

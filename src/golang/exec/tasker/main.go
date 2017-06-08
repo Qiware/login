@@ -8,8 +8,8 @@ import (
 	"runtime"
 	"syscall"
 
-	"ai-eye/src/golang/exec/tasker/controllers"
-	"ai-eye/src/golang/exec/tasker/controllers/conf"
+	"login/src/golang/exec/tasker/controllers"
+	"login/src/golang/exec/tasker/controllers/conf"
 )
 
 /* 输入参数 */

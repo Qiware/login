@@ -8,9 +8,9 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/plugins/cors"
 
-	"ai-eye/src/golang/exec/usrsvr/controllers"
-	"ai-eye/src/golang/exec/usrsvr/controllers/conf"
-	"ai-eye/src/golang/exec/usrsvr/routers"
+	"login/src/golang/exec/usrsvr/controllers"
+	"login/src/golang/exec/usrsvr/controllers/conf"
+	"login/src/golang/exec/usrsvr/routers"
 )
 
 /* 输入参数 */
@@ -32,7 +32,7 @@ func parse_param() *InputParam {
 
 /* 设置BEEGO配置 */
 func beego_config(conf *conf.UsrSvrConf) {
-	beego.BConfig.AppName = "ai-eye"
+	beego.BConfig.AppName = "login"
 	beego.BConfig.Listen.EnableHTTP = true
 	beego.BConfig.Listen.HTTPAddr = ""
 	beego.BConfig.Listen.HTTPPort = int(conf.Port)

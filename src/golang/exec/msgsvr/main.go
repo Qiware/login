@@ -9,8 +9,8 @@ import (
 	"runtime/pprof"
 	"syscall"
 
-	"ai-eye/src/golang/exec/msgsvr/controllers"
-	"ai-eye/src/golang/exec/msgsvr/controllers/conf"
+	"login/src/golang/exec/msgsvr/controllers"
+	"login/src/golang/exec/msgsvr/controllers/conf"
 )
 
 /* 输入参数 */

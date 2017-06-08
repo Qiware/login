@@ -8,7 +8,7 @@ import (
 
 	"github.com/garyburd/redigo/redis"
 
-	"ai-eye/src/golang/lib/comm"
+	"login/src/golang/lib/comm"
 )
 
 /* 会话属性 */

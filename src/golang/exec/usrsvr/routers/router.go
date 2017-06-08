@@ -3,7 +3,7 @@ package routers
 import (
 	"github.com/astaxie/beego"
 
-	"ai-eye/src/golang/exec/usrsvr/controllers"
+	"login/src/golang/exec/usrsvr/controllers"
 )
 
 /* > 设置路由回调 */

@@ -8,8 +8,8 @@ import (
 
 	"github.com/astaxie/beego/logs"
 
-	"chat/src/golang/lib/comm"
-	"chat/src/golang/lib/rtmq"
+	"login/src/golang/lib/comm"
+	"login/src/golang/lib/rtmq"
 )
 
 /* ONLINE注册回调 */
