@@ -306,8 +306,8 @@ def ClassfierTrain():
 
     return cls
 
-#gClassfier = ClassfierTrain()
-#redis_pool = redis.ConnectionPool(host="10.130.212.77", port=19001, db=0)
+gClassfier = ClassfierTrain()
+redis_pool = redis.ConnectionPool(host="10.110.98.220", port=19003, db=0)
 
 ################################################################################
 ################################################################################
@@ -905,29 +905,8 @@ def PredictRisk(X):
     return gClassfier.predict(X)
 
 # 预测处理
-def Predict(params):
+def PredictByToken(token):
     risk = 10
-
-    # 判断报体合法性
-    if not params.has_key("token"):
-        logging.warning("Get token failed!")
-        # 发送预测结果
-        mesg = {}
-        mesg.setdefault("token", '')
-        mesg.setdefault("risk", risk)
-        mesg.setdefault("errmsg", "Get token failed!")
-
-        return json.dumps(mesg)
-
-    token = params["token"]
-
-    mesg = {}
-    mesg.setdefault("token", token)
-    mesg.setdefault("risk", risk)
-    mesg.setdefault("errmsg", "Get token failed!")
-
-    return json.dumps(mesg)
-
 
     # 通过TOKEN获取SID
     sid = GetSid(token)
@@ -978,6 +957,7 @@ PORT = 8081
 app = Flask(__name__)
 @app.route("/login/action/risk/query", methods=['GET', 'POST'])
 def login_action_risk_query():
+    risk = 10
     if request.method == 'POST':
         content = request.form.getlist('content', None)
         if content is None:
@@ -994,9 +974,34 @@ def login_action_risk_query():
             mesg.setdefault("risk", risk)
             mesg.setdefault("errmsg", "Parse json failed!")
             return json.dumps(mesg)
-        return Predict(params)
+
+        # 判断报体合法性
+        if not params.has_key("token"):
+            logging.warning("Get token failed!")
+            # 发送预测结果
+            mesg = {}
+            mesg.setdefault("token", '')
+            mesg.setdefault("risk", risk)
+            mesg.setdefault("errmsg", "Get token failed!")
+            return json.dumps(mesg)
+
+        token = params["token"]
+
+        return PredictByToken(token)
     else:
-        return Predict(request.args)
+        # 判断报体合法性
+        if not request.args.has_key("token"):
+            logging.warning("Get token failed!")
+            # 发送预测结果
+            mesg = {}
+            mesg.setdefault("token", '')
+            mesg.setdefault("risk", risk)
+            mesg.setdefault("errmsg", "Get token failed!")
+            return json.dumps(mesg)
+
+        token = request.args.get("token")
+
+        return PredictByToken(token)
 
 if __name__ == "__main__":
     app.run(host=IP, port=PORT)
