@@ -118,7 +118,7 @@ func (ctx *LwsCntx) Launch(protocol *Protocol) int {
 	ctx.protocol = protocol
 
 	/* 侦听指定端口 */
-	addr := fmt.Sprintf("%s:%d", ctx.conf.Ip, ctx.conf.Port)
+	addr := fmt.Sprintf(":%d", ctx.conf.Port)
 
 	err := http.ListenAndServe(addr, nil)
 	if nil != err {
