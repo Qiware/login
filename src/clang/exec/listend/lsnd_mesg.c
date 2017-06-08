@@ -382,7 +382,8 @@ int lsnd_upmesg_kick_handler(int type, int orig, void *data, size_t len, void *a
         return -1;
     }
 
-    log_debug(lsnd->log, "Kick session [%d]! code:%d errmsg:%s", hhead.sid, kick->code, kick->errmsg);
+    log_debug(lsnd->log, "Kick session [%d]! code:%d errmsg:%s",
+            hhead.sid, kick->code, kick->errmsg);
 
     mesg_kick__free_unpacked(kick, NULL);
 
