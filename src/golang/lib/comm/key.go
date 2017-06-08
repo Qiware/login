@@ -173,6 +173,7 @@ const (
 	AE_KEY_SID_ZSET     = "ae:sid:zset"     //*| ZSET | 会话SID集合 | 成员:SID 分值:TTL |
 	AE_KEY_SID_INCR     = "ae:sid:incr"     //*| STRING | 会话SID增量器 | 只增不减 注意:sid不能为0 |
 	AE_KEY_SID_ATTR     = "ae:sid:%d:attr"  //*| HASH | 会话SID属性 | 包含UID/NID |
+	AE_KEY_TOKEN_ZSET   = "ae:token:zset"   //*| ZSET | 会话TOKEN集合 | 成员:TOKEN 分值:TTL |
 	AE_KEY_TOKEN_TO_SID = "ae:token:to:sid" //*| HASH | 存储TOKEN->SID映射 | 无 |
 
 	//|**宏**|**键值**|**类型**|**描述**|**备注**|

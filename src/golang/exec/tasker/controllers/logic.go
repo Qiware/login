@@ -26,6 +26,7 @@ func (ctx *TaskerCntx) timer_clean() {
 		ctm := time.Now().Unix()
 
 		ctx.clean_sid_zset(ctm)
+		ctx.clean_token_zset(ctm)
 
 		time.Sleep(30 * time.Second)
 	}
@@ -84,6 +85,43 @@ func (ctx *TaskerCntx) clean_sid_zset(ctm int64) {
 		}
 
 		if sid_num < comm.AE_BAT_NUM {
+			break
+		}
+		off += comm.AE_BAT_NUM
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+/******************************************************************************
+ **函数名称: clean_token_zset
+ **功    能: 清理会话TOKEN资源
+ **输入参数:
+ **输出参数: NONE
+ **返    回:
+ **实现描述:
+ **注意事项:
+ **作    者: # Qifeng.zou # 2017.05.08 10:43:59 #
+ ******************************************************************************/
+func (ctx *TaskerCntx) clean_token_zset(ctm int64) {
+	rds := ctx.redis.Get()
+	defer rds.Close()
+
+	off := 0
+	for {
+		token_list, err := redis.Strings(rds.Do("ZRANGEBYSCORE",
+			comm.AE_KEY_TOKEN_ZSET, "-inf", ctm, "LIMIT", off, comm.AE_BAT_NUM))
+		if nil != err {
+			ctx.log.Error("Get token list failed! errmsg:%s", err.Error())
+			return
+		}
+
+		token_num := len(token_list)
+		for idx := 0; idx < token_num; idx += 1 {
+			rds.Do("HDEL", comm.AE_KEY_TOKEN_TO_SID, token_list[idx])
+		}
+
+		if token_num < comm.AE_BAT_NUM {
 			break
 		}
 		off += comm.AE_BAT_NUM
