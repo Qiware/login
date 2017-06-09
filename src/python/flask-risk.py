@@ -295,6 +295,8 @@ def ClassfierTrain():
     cls = Classifier()
 
     # 训练模型
+    cls.load("./train/train-m-1.xlsx")
+
     cls.load("./train/train-p-1.xlsx")
     cls.load("./train/train-p-2.xlsx")
     cls.load("./train/train-p-3.xlsx")

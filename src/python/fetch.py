@@ -437,6 +437,8 @@ def ClassfierTrain():
     cls = Classifier()
 
     # 训练模型
+    cls.load("./train/train-m-1.xlsx")
+
     cls.load("./train/train-p-1.xlsx")
     cls.load("./train/train-p-2.xlsx")
     cls.load("./train/train-p-3.xlsx")
@@ -775,6 +777,7 @@ def GetStatistic(sheet, row, sid):
         X.append(0)
         item = unicode(DescMap[col] + '0')
         sheet.write(row, col+COL_RESERVED, item, style) # 撰写EXECL文档
+    col += 1
     if statistic.has_key(str(COL_EVENT_IBX_PWD_FOCUS)):
         X.append(int(statistic[str(COL_EVENT_IBX_PWD_FOCUS)]))
         item = unicode(DescMap[col] + statistic[str(COL_EVENT_IBX_PWD_FOCUS)])
@@ -826,6 +829,9 @@ def GetStatistic(sheet, row, sid):
         sheet.write(row, col+COL_RESERVED, item, style) # 撰写EXECL文档
     else:
         X.append(0)
+        item = unicode(DescMap[col] + '0')
+        sheet.write(row, col+COL_RESERVED, item, style) # 撰写EXECL文档
+    col += 1
     if statistic.has_key(str(COL_EVENT_IBX_PWD_MOUSEOUT)):
         X.append(int(statistic[str(COL_EVENT_IBX_PWD_MOUSEOUT)]))
         item = unicode(DescMap[col] + statistic[str(COL_EVENT_IBX_PWD_MOUSEOUT)])
@@ -1770,8 +1776,6 @@ if __name__ == "__main__":
     for token in token_list:
         PredictByToken(sheet, row, token)
         row += 1
-        if row > 100:
-            break
 
     # 调整文档格式
     for idx in range(COL_PLUGIN_HAS_NAME+COL_RESERVED, COL_TIME_DIFF_SEC+COL_RESERVED+1):
