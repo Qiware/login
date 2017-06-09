@@ -1,11 +1,11 @@
 package comm
 
 const (
-	AE_SID_TTL   = 300       // 会话SID-TTL
-	AE_OP_TTL    = 30        // 运营商ID-TTL
-	AE_NID_TTL   = 30        // 结点ID-TTL
-	AE_BAT_NUM   = 1000      // 批量操作个数
-	AE_TOKEN_TTL = 7 * 86400 // 会话TOKEN-TTL: 用于控制清理token相关数据
+	AE_SID_TTL = 300       // 会话SID-TTL
+	AE_OP_TTL  = 30        // 运营商ID-TTL
+	AE_NID_TTL = 30        // 结点ID-TTL
+	AE_BAT_NUM = 1000      // 批量操作个数
+	AE_ACT_TTL = 7 * 86400 // 会话行为数据存储时间: 用于控制清理相关数据
 )
 
 /* 时间转换成秒 */

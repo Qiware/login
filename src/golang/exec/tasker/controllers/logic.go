@@ -3,13 +3,11 @@ package controllers
 import (
 	"fmt"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/garyburd/redigo/redis"
 
 	"login/src/golang/lib/comm"
-	"login/src/golang/lib/crypt"
 	"login/src/golang/lib/im"
 )
 
@@ -28,7 +26,7 @@ func (ctx *TaskerCntx) timer_clean() {
 		ctm := time.Now().Unix()
 
 		ctx.clean_sid_zset(ctm)
-		ctx.clean_token_zset(ctm)
+		ctx.clean_act_zset(ctm)
 
 		time.Sleep(30 * time.Second)
 	}
@@ -96,45 +94,8 @@ func (ctx *TaskerCntx) clean_sid_zset(ctm int64) {
 ////////////////////////////////////////////////////////////////////////////////
 
 /******************************************************************************
- **函数名称: online_token_decode
- **功    能: 解码TOKEN
- **输入参数:
- **     token: TOKEN字串
- **输出参数: NONE
- **返    回: 会话SID
- **实现描述: 解析token, 并提取有效数据.
- **注意事项:
- **     TOKEN的格式"sid:${sid}:ttl:${ttl}:end"
- **     sid: 会话SID
- **     ttl: 该token的最大生命时间
- **作    者: # Qifeng.zou # 2016.11.20 09:28:06 #
- ******************************************************************************/
-func (ctx *TaskerCntx) online_token_decode(token string) uint32 {
-	/* > TOKEN解码 */
-	cry := crypt.CreateEncodeCtx(ctx.conf.Cipher)
-
-	orig_token := crypt.Decode(cry, token)
-
-	words := strings.Split(orig_token, ":")
-	if 5 != len(words) {
-		ctx.log.Error("Token format not right! token:%s orig:%s", token, orig_token)
-		return 0
-	}
-
-	ctx.log.Debug("token:%s orig:%s", token, orig_token)
-
-	/* > 验证TOKEN合法性 */
-	sid, _ := strconv.ParseInt(words[1], 10, 32)
-	ttl, _ := strconv.ParseInt(words[3], 10, 64)
-
-	ctx.log.Debug("Parse token success! sid:%d ttl:%d", sid, ttl)
-
-	return uint32(sid)
-}
-
-/******************************************************************************
- **函数名称: clean_token_zset
- **功    能: 清理会话TOKEN资源
+ **函数名称: clean_act_zset
+ **功    能: 清理会话行为数据
  **输入参数:
  **输出参数: NONE
  **返    回:
@@ -142,7 +103,7 @@ func (ctx *TaskerCntx) online_token_decode(token string) uint32 {
  **注意事项:
  **作    者: # Qifeng.zou # 2017.05.08 10:43:59 #
  ******************************************************************************/
-func (ctx *TaskerCntx) clean_token_zset(ctm int64) {
+func (ctx *TaskerCntx) clean_act_zset(ctm int64) {
 	rds := ctx.redis.Get()
 	defer rds.Close()
 
@@ -154,26 +115,25 @@ func (ctx *TaskerCntx) clean_token_zset(ctm int64) {
 
 	off := 0
 	for {
-		token_list, err := redis.Strings(rds.Do("ZRANGEBYSCORE",
-			comm.AE_KEY_TOKEN_ZSET, "-inf", ctm, "LIMIT", off, comm.AE_BAT_NUM))
+		sid_list, err := redis.Strings(rds.Do("ZRANGEBYSCORE",
+			comm.AE_KEY_ACT_ZSET, "-inf", ctm, "LIMIT", off, comm.AE_BAT_NUM))
 		if nil != err {
-			ctx.log.Error("Get token list failed! errmsg:%s", err.Error())
+			ctx.log.Error("Get sid list failed! errmsg:%s", err.Error())
 			return
 		}
 
-		token_num := len(token_list)
-		for idx := 0; idx < token_num; idx += 1 {
-			pl.Send("ZREM", comm.AE_KEY_TOKEN_ZSET, token_list[idx])
-			pl.Send("HDEL", comm.AE_KEY_TOKEN_TO_SID, token_list[idx])
+		sid_num := len(sid_list)
+		for idx := 0; idx < sid_num; idx += 1 {
+			pl.Send("ZREM", comm.AE_KEY_ACT_ZSET, sid_list[idx])
 
 			/* 清理采集数据 */
-			sid := ctx.online_token_decode(token_list[idx])
+			sid, _ := strconv.ParseInt(sid_list[idx], 10, 64)
 
-			key := fmt.Sprintf(comm.AE_KEY_SID_STATISTIC, sid)
+			key := fmt.Sprintf(comm.AE_KEY_SID_STATISTIC, uint32(sid))
 			pl.Send("DEL", key)
 		}
 
-		if token_num < comm.AE_BAT_NUM {
+		if sid_num < comm.AE_BAT_NUM {
 			break
 		}
 		off += comm.AE_BAT_NUM

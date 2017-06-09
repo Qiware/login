@@ -296,8 +296,8 @@ func (ctx *UsrSvrCntx) online_handler(head *comm.MesgHeader, req *mesg.MesgOnlin
 		pl.Close()
 	}()
 
-	ttl := time.Now().Unix() + comm.AE_SID_TTL
-	token_ttl := time.Now().Unix() + comm.AE_TOKEN_TTL
+	sid_ttl := time.Now().Unix() + comm.AE_SID_TTL
+	act_ttl := time.Now().Unix() + comm.AE_ACT_TTL
 
 	/* 获取会话属性 */
 	attr, err := im.GetSidAttr(ctx.redis, req.GetSid())
@@ -315,15 +315,12 @@ func (ctx *UsrSvrCntx) online_handler(head *comm.MesgHeader, req *mesg.MesgOnlin
 	}
 
 	/* 记录SID集合 */
-	pl.Send("ZADD", comm.AE_KEY_SID_ZSET, ttl, req.GetSid())
-	pl.Send("ZADD", comm.AE_KEY_TOKEN_ZSET, token_ttl, req.GetToken())
+	pl.Send("ZADD", comm.AE_KEY_SID_ZSET, sid_ttl, req.GetSid())
+	pl.Send("ZADD", comm.AE_KEY_ACT_ZSET, act_ttl, req.GetSid())
 
 	/* 记录SID->CID & NID */
 	key = fmt.Sprintf(comm.AE_KEY_SID_ATTR, req.GetSid())
 	pl.Send("HMSET", key, "CID", head.GetCid(), "NID", head.GetNid())
-
-	/* 记录TOKEN->SID */
-	pl.Send("HSET", comm.AE_KEY_TOKEN_TO_SID, req.GetToken(), head.GetSid())
 
 	return err
 }
