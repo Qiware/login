@@ -313,15 +313,7 @@ redis_pool = redis.ConnectionPool(host="10.110.98.220", port=19003, db=0)
 
 ################################################################################
 ################################################################################
-# 获取会话SID
-def GetSid(token):
-    global redis_pool
-    rds = redis.Redis(connection_pool=redis_pool)
 
-    sid = rds.hget('ae:token:to:sid', token)
-    if sid is None:
-        return 0
-    return int(sid)
 # 获取统计数据
 def GetStatistic(sid):
     global redis_pool
@@ -907,29 +899,17 @@ def PredictRisk(X):
     return gClassfier.predict(X)
 
 # 预测处理
-def PredictByToken(token):
+def PredictBySid(sid):
     risk = 10
-
-    # 通过TOKEN获取SID
-    sid = GetSid(token)
-    if sid is None:
-        logging.warning("Get sid by token failed!")
-        # 发送预测结果
-        mesg = {}
-        mesg.setdefault("risk", risk)
-        mesg.setdefault("token", token)
-        mesg.setdefault("errmsg", "Get sid by token failed!")
-
-        return json.dumps(mesg)
 
     # 通过SID获取统计数据
     X = GetStatistic(sid)
     if X is None:
         # 发送预测结果
         mesg = {}
+        mesg.setdefault("sid", sid)
         mesg.setdefault("risk", risk)
-        mesg.setdefault("token", token)
-        mesg.setdefault("errmsg", "Get data by token failed!")
+        mesg.setdefault("errmsg", "Get data by sid failed!")
 
         return json.dumps(mesg)
 
@@ -938,8 +918,8 @@ def PredictByToken(token):
 
     # 发送预测结果
     mesg = {}
+    mesg.setdefault("sid", sid)
     mesg.setdefault("risk", int(risk))
-    mesg.setdefault("token", token)
     mesg.setdefault("errmsg", "Ok")
 
     return json.dumps(mesg)
@@ -957,54 +937,23 @@ def PredictByToken(token):
 IP = "0.0.0.0"
 PORT = 8001
 app = Flask(__name__)
-@app.route("/login/action/risk/query", methods=['GET', 'POST'])
+@app.route("/login/action/risk/query", methods=['GET'])
 def login_action_risk_query():
     risk = 10
-    if request.method == 'POST':
-        #print request.form
-        content = request.form.getlist('content', None)
-        if content is None:
-            mesg = {}
-            mesg.setdefault("token", '')
-            mesg.setdefault("risk", risk)
-            mesg.setdefault("errmsg", "Get content failed!")
-            return json.dumps(mesg)
 
-        params = json.loads(str(content[0]))
-        if params is None:
-            mesg = {}
-            mesg.setdefault("token", '')
-            mesg.setdefault("risk", risk)
-            mesg.setdefault("errmsg", "Parse json failed!")
-            return json.dumps(mesg)
+    # 判断报体合法性
+    if not request.args.has_key("sid"):
+        logging.warning("Get sid failed!")
+        # 发送预测结果
+        mesg = {}
+        mesg.setdefault("sid", '0')
+        mesg.setdefault("risk", risk)
+        mesg.setdefault("errmsg", "Get sid failed!")
+        return json.dumps(mesg)
 
-        # 判断报体合法性
-        if not params.has_key("token"):
-            logging.warning("Get token failed!")
-            # 发送预测结果
-            mesg = {}
-            mesg.setdefault("token", '')
-            mesg.setdefault("risk", risk)
-            mesg.setdefault("errmsg", "Get token failed!")
-            return json.dumps(mesg)
+    sid = request.args.get("sid")
 
-        token = params["token"]
-
-        return PredictByToken(token)
-    else:
-        # 判断报体合法性
-        if not request.args.has_key("token"):
-            logging.warning("Get token failed!")
-            # 发送预测结果
-            mesg = {}
-            mesg.setdefault("token", '')
-            mesg.setdefault("risk", risk)
-            mesg.setdefault("errmsg", "Get token failed!")
-            return json.dumps(mesg)
-
-        token = request.args.get("token")
-
-        return PredictByToken(token)
+    return PredictBySid(int(sid))
 
 if __name__ == "__main__":
     port = PORT
