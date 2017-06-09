@@ -897,7 +897,7 @@ def GetStatistic(sid):
             X.append(0)
     else:
         X.append(0)
-    print(X)
+    #print(X)
     return numpy.array(X).reshape(1, -1)
 
 # 分析风险指数
@@ -955,12 +955,13 @@ def PredictByToken(token):
 ##作    者: # Qifeng.zou # 2017.04.14 16:54:32 #
 ################################################################################
 IP = "0.0.0.0"
-PORT = 8081
+PORT = 8001
 app = Flask(__name__)
 @app.route("/login/action/risk/query", methods=['GET', 'POST'])
 def login_action_risk_query():
     risk = 10
     if request.method == 'POST':
+        #print request.form
         content = request.form.getlist('content', None)
         if content is None:
             mesg = {}
@@ -1006,4 +1007,8 @@ def login_action_risk_query():
         return PredictByToken(token)
 
 if __name__ == "__main__":
-    app.run(host=IP, port=PORT)
+    port = PORT
+    if 2 == len(sys.argv):
+        port = int(sys.argv[1])
+
+    app.run(host=IP, port=port, threaded=True)
