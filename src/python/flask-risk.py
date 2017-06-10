@@ -29,8 +29,11 @@ sys.setdefaultencoding('utf8')
 
 type = sys.getfilesystemencoding()
 
-# 密钥
-CIPHER = "%b@e!e@h@i#v@e$s$tVu^d(i(o"
+# 错误码定义
+ERR_OK              = 0     # 正常
+ERR_PARAM_INVALID   = 10001 # 参数非法
+ERR_GET_DATA        = 10002 # 获取数据失败
+ERR_SYSTEM        = 10002 # 获取数据失败
 
 ## 浏览器环境
 COL_PLUGIN_HAS_NAME = 0
@@ -310,6 +313,7 @@ def ClassfierTrain():
 
 gClassfier = ClassfierTrain()
 redis_pool = redis.ConnectionPool(host="10.110.98.220", port=19003, db=0)
+#redis_pool = redis.ConnectionPool(host="127.0.0.1", port=6379, db=0, password="111111")
 
 ################################################################################
 ################################################################################
@@ -318,6 +322,8 @@ redis_pool = redis.ConnectionPool(host="10.110.98.220", port=19003, db=0)
 def GetStatistic(sid):
     global redis_pool
     rds = redis.Redis(connection_pool=redis_pool);
+
+    exist = False
 
     statistic = rds.hgetall("ae:sid:%d:statistic" % (sid))
     if statistic is None:
@@ -329,16 +335,19 @@ def GetStatistic(sid):
     ## 是否存在插件名
     if statistic.has_key(str(COL_PLUGIN_HAS_NAME)):
         X.append(1)
+        exist = True
     else:
         X.append(0)
     ## 是否存在描述信息
     if statistic.has_key(str(COL_PLUGIN_HAS_DESC)):
         X.append(1)
+        exist = True
     else:
         X.append(0)
     ## 是否存在用户代理
     if statistic.has_key(str(COL_UA_EXISTS)):
         X.append(1)
+        exist = True
     else:
         X.append(0)
 
@@ -346,51 +355,61 @@ def GetStatistic(sid):
     ## 屏幕宽度
     if statistic.has_key(str(COL_SCREEN_WIDTH)):
         X.append(int(statistic[str(COL_SCREEN_WIDTH)]))
+        exist = True
     else:
         X.append(0)
     ## 屏幕高度
     if statistic.has_key(str(COL_SCREEN_HEIGH)):
         X.append(int(statistic[str(COL_SCREEN_HEIGH)]))
+        exist = True
     else:
         X.append(0)
     ## 屏幕AVAIL宽度
     if statistic.has_key(str(COL_SCREEN_AVAIL_WIDTH)):
         X.append(int(statistic[str(COL_SCREEN_AVAIL_WIDTH)]))
+        exist = True
     else:
         X.append(0)
     ## 屏幕AVAIL高度
     if statistic.has_key(str(COL_SCREEN_AVAIL_HEIGH)):
         X.append(int(statistic[str(COL_SCREEN_AVAIL_HEIGH)]))
+        exist = True
     else:
         X.append(0)
     ## 屏幕AVAIL左边距
     if statistic.has_key(str(COL_SCREEN_AVAIL_LEFT)):
         X.append(int(statistic[str(COL_SCREEN_AVAIL_LEFT)]))
+        exist = True
     else:
         X.append(0)
     ## 屏幕AVAIL顶部
     if statistic.has_key(str(COL_SCREEN_AVAIL_TOP)):
         X.append(int(statistic[str(COL_SCREEN_AVAIL_TOP)]))
+        exist = True
     else:
         X.append(0)
     ## 屏幕OUTER宽度
     if statistic.has_key(str(COL_SCREEN_OUTER_WIDTH)):
         X.append(int(statistic[str(COL_SCREEN_OUTER_WIDTH)]))
+        exist = True
     else:
         X.append(0)
     ## 屏幕OUTER高度
     if statistic.has_key(str(COL_SCREEN_OUTER_HEIGH)):
         X.append(int(statistic[str(COL_SCREEN_OUTER_HEIGH)]))
+        exist = True
     else:
         X.append(0)
     ## 屏幕INNER宽度
     if statistic.has_key(str(COL_SCREEN_INNER_WIDTH)):
         X.append(int(statistic[str(COL_SCREEN_INNER_WIDTH)]))
+        exist = True
     else:
         X.append(0)
     ## 屏幕INNER高度
     if statistic.has_key(str(COL_SCREEN_INNER_HEIGH)):
         X.append(int(statistic[str(COL_SCREEN_INNER_HEIGH)]))
+        exist = True
     else:
         X.append(0)
 
@@ -398,484 +417,601 @@ def GetStatistic(sid):
     # A - 用户名输入框
     if statistic.has_key(str(COL_EVENT_IBX_USR_CHANGE)):
         X.append(int(statistic[str(COL_EVENT_IBX_USR_CHANGE)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_USR_CLICK)):
         X.append(int(statistic[str(COL_EVENT_IBX_USR_CLICK)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_USR_DBLCLICK)):
         X.append(int(statistic[str(COL_EVENT_IBX_USR_DBLCLICK)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_USR_FOCUS)):
         X.append(int(statistic[str(COL_EVENT_IBX_USR_FOCUS)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_USR_KEYDOWN)):
         X.append(int(statistic[str(COL_EVENT_IBX_USR_KEYDOWN)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_USR_KEYPRESS)):
         X.append(int(statistic[str(COL_EVENT_IBX_USR_KEYPRESS)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_USR_KEYUP)):
         X.append(int(statistic[str(COL_EVENT_IBX_USR_KEYUP)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_USR_MOUSEDOWN)):
         X.append(int(statistic[str(COL_EVENT_IBX_USR_MOUSEDOWN)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_USR_MOUSEMOVE)):
         X.append(int(statistic[str(COL_EVENT_IBX_USR_MOUSEMOVE)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_USR_MOUSEOUT)):
         X.append(int(statistic[str(COL_EVENT_IBX_USR_MOUSEOUT)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_USR_MOUSEOVER)):
         X.append(int(statistic[str(COL_EVENT_IBX_USR_MOUSEOVER)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_USR_MOUSEUP)):
         X.append(int(statistic[str(COL_EVENT_IBX_USR_MOUSEUP)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_USR_TOUCHSTART)):
         X.append(int(statistic[str(COL_EVENT_IBX_USR_TOUCHSTART)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_USR_TOUCHMOVE)):
         X.append(int(statistic[str(COL_EVENT_IBX_USR_TOUCHMOVE)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_USR_TOUCHEND)):
         X.append(int(statistic[str(COL_EVENT_IBX_USR_TOUCHEND)]))
+        exist = True
     else:
         X.append(0)
 
     # B - 密码输入框
     if statistic.has_key(str(COL_EVENT_IBX_PWD_CHANGE)):
         X.append(int(statistic[str(COL_EVENT_IBX_PWD_CHANGE)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_PWD_CLICK)):
         X.append(int(statistic[str(COL_EVENT_IBX_PWD_CLICK)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_PWD_DBLCLICK)):
         X.append(int(statistic[str(COL_EVENT_IBX_PWD_DBLCLICK)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_PWD_FOCUS)):
         X.append(int(statistic[str(COL_EVENT_IBX_PWD_FOCUS)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_PWD_KEYDOWN)):
         X.append(int(statistic[str(COL_EVENT_IBX_PWD_KEYDOWN)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_PWD_KEYPRESS)):
         X.append(int(statistic[str(COL_EVENT_IBX_PWD_KEYPRESS)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_PWD_KEYUP)):
         X.append(int(statistic[str(COL_EVENT_IBX_PWD_KEYUP)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_PWD_MOUSEDOWN)):
         X.append(int(statistic[str(COL_EVENT_IBX_PWD_MOUSEDOWN)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_PWD_MOUSEMOVE)):
         X.append(int(statistic[str(COL_EVENT_IBX_PWD_MOUSEMOVE)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_PWD_MOUSEOUT)):
         X.append(int(statistic[str(COL_EVENT_IBX_PWD_MOUSEOUT)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_PWD_MOUSEOVER)):
         X.append(int(statistic[str(COL_EVENT_IBX_PWD_MOUSEOVER)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_PWD_MOUSEUP)):
         X.append(int(statistic[str(COL_EVENT_IBX_PWD_MOUSEUP)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_PWD_TOUCHSTART)):
         X.append(int(statistic[str(COL_EVENT_IBX_PWD_TOUCHSTART)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_PWD_TOUCHMOVE)):
         X.append(int(statistic[str(COL_EVENT_IBX_PWD_TOUCHMOVE)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_PWD_TOUCHEND)):
         X.append(int(statistic[str(COL_EVENT_IBX_PWD_TOUCHEND)]))
+        exist = True
     else:
         X.append(0)
 
     # C - 图形验证码输入框
     if statistic.has_key(str(COL_EVENT_IBX_IMG_CHANGE)):
         X.append(int(statistic[str(COL_EVENT_IBX_IMG_CHANGE)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_IMG_CLICK)):
         X.append(int(statistic[str(COL_EVENT_IBX_IMG_CLICK)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_IMG_DBLCLICK)):
         X.append(int(statistic[str(COL_EVENT_IBX_IMG_DBLCLICK)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_IMG_FOCUS)):
         X.append(int(statistic[str(COL_EVENT_IBX_IMG_FOCUS)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_IMG_KEYDOWN)):
         X.append(int(statistic[str(COL_EVENT_IBX_IMG_KEYDOWN)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_IMG_KEYPRESS)):
         X.append(int(statistic[str(COL_EVENT_IBX_IMG_KEYPRESS)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_IMG_KEYUP)):
         X.append(int(statistic[str(COL_EVENT_IBX_IMG_KEYUP)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_IMG_MOUSEDOWN)):
         X.append(int(statistic[str(COL_EVENT_IBX_IMG_MOUSEDOWN)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_IMG_MOUSEMOVE)):
         X.append(int(statistic[str(COL_EVENT_IBX_IMG_MOUSEMOVE)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_IMG_MOUSEOUT)):
         X.append(int(statistic[str(COL_EVENT_IBX_IMG_MOUSEOUT)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_IMG_MOUSEOVER)):
         X.append(int(statistic[str(COL_EVENT_IBX_IMG_MOUSEOVER)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_IMG_MOUSEUP)):
         X.append(int(statistic[str(COL_EVENT_IBX_IMG_MOUSEUP)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_IMG_TOUCHSTART)):
         X.append(int(statistic[str(COL_EVENT_IBX_IMG_TOUCHSTART)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_IMG_TOUCHMOVE)):
         X.append(int(statistic[str(COL_EVENT_IBX_IMG_TOUCHMOVE)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_IMG_TOUCHEND)):
         X.append(int(statistic[str(COL_EVENT_IBX_IMG_TOUCHEND)]))
+        exist = True
     else:
         X.append(0)
 
     # D - 图形验证码刷新按钮
     if statistic.has_key(str(COL_EVENT_BTN_IMG_CLICK)):
         X.append(int(statistic[str(COL_EVENT_BTN_IMG_CLICK)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_IMG_DBLCLICK)):
         X.append(int(statistic[str(COL_EVENT_BTN_IMG_DBLCLICK)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_IMG_FOCUS)):
         X.append(int(statistic[str(COL_EVENT_BTN_IMG_FOCUS)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_IMG_KEYDOWN)):
         X.append(int(statistic[str(COL_EVENT_BTN_IMG_KEYDOWN)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_IMG_KEYPRESS)):
         X.append(int(statistic[str(COL_EVENT_BTN_IMG_KEYPRESS)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_IMG_KEYUP)):
         X.append(int(statistic[str(COL_EVENT_BTN_IMG_KEYUP)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_IMG_MOUSEDOWN)):
         X.append(int(statistic[str(COL_EVENT_BTN_IMG_MOUSEDOWN)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_IMG_MOUSEMOVE)):
         X.append(int(statistic[str(COL_EVENT_BTN_IMG_MOUSEMOVE)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_IMG_MOUSEOUT)):
         X.append(int(statistic[str(COL_EVENT_BTN_IMG_MOUSEOUT)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_IMG_MOUSEOVER)):
         X.append(int(statistic[str(COL_EVENT_BTN_IMG_MOUSEOVER)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_IMG_MOUSEUP)):
         X.append(int(statistic[str(COL_EVENT_BTN_IMG_MOUSEUP)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_IMG_TOUCHSTART)):
         X.append(int(statistic[str(COL_EVENT_BTN_IMG_TOUCHSTART)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_IMG_TOUCHMOVE)):
         X.append(int(statistic[str(COL_EVENT_BTN_IMG_TOUCHMOVE)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_IMG_TOUCHEND)):
         X.append(int(statistic[str(COL_EVENT_BTN_IMG_TOUCHEND)]))
+        exist = True
     else:
         X.append(0)
 
     # E - 手机号输入框
     if statistic.has_key(str(COL_EVENT_IBX_TEL_CHANGE)):
         X.append(int(statistic[str(COL_EVENT_IBX_TEL_CHANGE)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_TEL_CLICK)):
         X.append(int(statistic[str(COL_EVENT_IBX_TEL_CLICK)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_TEL_DBLCLICK)):
         X.append(int(statistic[str(COL_EVENT_IBX_TEL_DBLCLICK)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_TEL_FOCUS)):
         X.append(int(statistic[str(COL_EVENT_IBX_TEL_FOCUS)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_TEL_KEYDOWN)):
         X.append(int(statistic[str(COL_EVENT_IBX_TEL_KEYDOWN)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_TEL_KEYPRESS)):
         X.append(int(statistic[str(COL_EVENT_IBX_TEL_KEYPRESS)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_TEL_KEYUP)):
         X.append(int(statistic[str(COL_EVENT_IBX_TEL_KEYUP)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_TEL_MOUSEDOWN)):
         X.append(int(statistic[str(COL_EVENT_IBX_TEL_MOUSEDOWN)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_TEL_MOUSEMOVE)):
         X.append(int(statistic[str(COL_EVENT_IBX_TEL_MOUSEMOVE)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_TEL_MOUSEOUT)):
         X.append(int(statistic[str(COL_EVENT_IBX_TEL_MOUSEOUT)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_TEL_MOUSEOVER)):
         X.append(int(statistic[str(COL_EVENT_IBX_TEL_MOUSEOVER)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_TEL_MOUSEUP)):
         X.append(int(statistic[str(COL_EVENT_IBX_TEL_MOUSEUP)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_TEL_TOUCHSTART)):
         X.append(int(statistic[str(COL_EVENT_IBX_TEL_TOUCHSTART)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_TEL_TOUCHMOVE)):
         X.append(int(statistic[str(COL_EVENT_IBX_TEL_TOUCHMOVE)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_TEL_TOUCHEND)):
         X.append(int(statistic[str(COL_EVENT_IBX_TEL_TOUCHEND)]))
+        exist = True
     else:
         X.append(0)
 
     # H - 手机验证码输入框(FOR TEL)
     if statistic.has_key(str(COL_EVENT_IBX_SMS_CHANGE)):
         X.append(int(statistic[str(COL_EVENT_IBX_SMS_CHANGE)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_SMS_CLICK)):
         X.append(int(statistic[str(COL_EVENT_IBX_SMS_CLICK)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_SMS_DBLCLICK)):
         X.append(int(statistic[str(COL_EVENT_IBX_SMS_DBLCLICK)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_SMS_FOCUS)):
         X.append(int(statistic[str(COL_EVENT_IBX_SMS_FOCUS)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_SMS_KEYDOWN)):
         X.append(int(statistic[str(COL_EVENT_IBX_SMS_KEYDOWN)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_SMS_KEYPRESS)):
         X.append(int(statistic[str(COL_EVENT_IBX_SMS_KEYPRESS)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_SMS_KEYUP)):
         X.append(int(statistic[str(COL_EVENT_IBX_SMS_KEYUP)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_SMS_MOUSEDOWN)):
         X.append(int(statistic[str(COL_EVENT_IBX_SMS_MOUSEDOWN)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_SMS_MOUSEMOVE)):
         X.append(int(statistic[str(COL_EVENT_IBX_SMS_MOUSEMOVE)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_SMS_MOUSEOUT)):
         X.append(int(statistic[str(COL_EVENT_IBX_SMS_MOUSEOUT)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_SMS_MOUSEOVER)):
         X.append(int(statistic[str(COL_EVENT_IBX_SMS_MOUSEOVER)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_SMS_MOUSEUP)):
         X.append(int(statistic[str(COL_EVENT_IBX_SMS_MOUSEUP)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_SMS_TOUCHSTART)):
         X.append(int(statistic[str(COL_EVENT_IBX_SMS_TOUCHSTART)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_SMS_TOUCHMOVE)):
         X.append(int(statistic[str(COL_EVENT_IBX_SMS_TOUCHMOVE)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_IBX_SMS_TOUCHEND)):
         X.append(int(statistic[str(COL_EVENT_IBX_SMS_TOUCHEND)]))
+        exist = True
     else:
         X.append(0)
 
     # I - 手机验证码获取按钮(FOR TEL)
     if statistic.has_key(str(COL_EVENT_BTN_SMS_CLICK)):
         X.append(int(statistic[str(COL_EVENT_BTN_SMS_CLICK)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_SMS_DBLCLICK)):
         X.append(int(statistic[str(COL_EVENT_BTN_SMS_DBLCLICK)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_SMS_FOCUS)):
         X.append(int(statistic[str(COL_EVENT_BTN_SMS_FOCUS)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_SMS_KEYDOWN)):
         X.append(int(statistic[str(COL_EVENT_BTN_SMS_KEYDOWN)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_SMS_KEYPRESS)):
         X.append(int(statistic[str(COL_EVENT_BTN_SMS_KEYPRESS)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_SMS_KEYUP)):
         X.append(int(statistic[str(COL_EVENT_BTN_SMS_KEYUP)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_SMS_MOUSEDOWN)):
         X.append(int(statistic[str(COL_EVENT_BTN_SMS_MOUSEDOWN)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_SMS_MOUSEMOVE)):
         X.append(int(statistic[str(COL_EVENT_BTN_SMS_MOUSEMOVE)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_SMS_MOUSEOUT)):
         X.append(int(statistic[str(COL_EVENT_BTN_SMS_MOUSEOUT)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_SMS_MOUSEOVER)):
         X.append(int(statistic[str(COL_EVENT_BTN_SMS_MOUSEOVER)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_SMS_MOUSEUP)):
         X.append(int(statistic[str(COL_EVENT_BTN_SMS_MOUSEUP)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_SMS_TOUCHSTART)):
         X.append(int(statistic[str(COL_EVENT_BTN_SMS_TOUCHSTART)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_SMS_TOUCHMOVE)):
         X.append(int(statistic[str(COL_EVENT_BTN_SMS_TOUCHMOVE)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_SMS_TOUCHEND)):
         X.append(int(statistic[str(COL_EVENT_BTN_SMS_TOUCHEND)]))
+        exist = True
     else:
         X.append(0)
 
     # J - 登录按钮
     if statistic.has_key(str(COL_EVENT_BTN_LGN_CLICK)):
         X.append(int(statistic[str(COL_EVENT_BTN_LGN_CLICK)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_LGN_DBLCLICK)):
         X.append(int(statistic[str(COL_EVENT_BTN_LGN_DBLCLICK)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_LGN_FOCUS)):
         X.append(int(statistic[str(COL_EVENT_BTN_LGN_FOCUS)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_LGN_KEYDOWN)):
         X.append(int(statistic[str(COL_EVENT_BTN_LGN_KEYDOWN)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_LGN_KEYPRESS)):
         X.append(int(statistic[str(COL_EVENT_BTN_LGN_KEYPRESS)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_LGN_KEYUP)):
         X.append(int(statistic[str(COL_EVENT_BTN_LGN_KEYUP)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_LGN_MOUSEDOWN)):
         X.append(int(statistic[str(COL_EVENT_BTN_LGN_MOUSEDOWN)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_LGN_MOUSEMOVE)):
         X.append(int(statistic[str(COL_EVENT_BTN_LGN_MOUSEMOVE)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_LGN_MOUSEOUT)):
         X.append(int(statistic[str(COL_EVENT_BTN_LGN_MOUSEOUT)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_LGN_MOUSEOVER)):
         X.append(int(statistic[str(COL_EVENT_BTN_LGN_MOUSEOVER)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_LGN_MOUSEUP)):
         X.append(int(statistic[str(COL_EVENT_BTN_LGN_MOUSEUP)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_LGN_TOUCHSTART)):
         X.append(int(statistic[str(COL_EVENT_BTN_LGN_TOUCHSTART)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_LGN_TOUCHMOVE)):
         X.append(int(statistic[str(COL_EVENT_BTN_LGN_TOUCHMOVE)]))
+        exist = True
     else:
         X.append(0)
     if statistic.has_key(str(COL_EVENT_BTN_LGN_TOUCHEND)):
         X.append(int(statistic[str(COL_EVENT_BTN_LGN_TOUCHEND)]))
+        exist = True
     else:
         X.append(0)
 
@@ -890,6 +1026,9 @@ def GetStatistic(sid):
     else:
         X.append(0)
     #print(X)
+
+    if False == exist:
+        return None
     return numpy.array(X).reshape(1, -1)
 
 # 分析风险指数
@@ -899,7 +1038,7 @@ def PredictRisk(X):
     return gClassfier.predict(X)
 
 # 预测处理
-def PredictBySid(sid):
+def GetRiskBySid(sid):
     risk = 10
 
     # 通过SID获取统计数据
@@ -909,7 +1048,8 @@ def PredictBySid(sid):
         mesg = {}
         mesg.setdefault("sid", sid)
         mesg.setdefault("risk", risk)
-        mesg.setdefault("errmsg", "Get data by sid failed!")
+        mesg.setdefault("code", ERR_GET_DATA)
+        mesg.setdefault("errmsg", "Get statistic data by sid failed!")
 
         return json.dumps(mesg)
 
@@ -920,6 +1060,35 @@ def PredictBySid(sid):
     mesg = {}
     mesg.setdefault("sid", sid)
     mesg.setdefault("risk", int(risk))
+    mesg.setdefault("code", ERR_OK)
+    mesg.setdefault("errmsg", "Ok")
+
+    return json.dumps(mesg)
+
+# 设置风险
+def SetRiskBySid(sid, risk):
+    global redis_pool
+    rds = redis.Redis(connection_pool=redis_pool);
+
+    # 通过SID获取统计数据
+    X = GetStatistic(sid)
+    if X is None:
+        # 发送预测结果
+        mesg = {}
+        mesg.setdefault("sid", sid)
+        mesg.setdefault("risk", risk)
+        mesg.setdefault("code", ERR_GET_DATA)
+        mesg.setdefault("errmsg", "Get statistic data by sid failed!")
+
+        return json.dumps(mesg)
+
+    rds.hset("ae:sid:%d:statistic" % (sid), "risk", risk)
+
+    # 发送预测结果
+    mesg = {}
+    mesg.setdefault("sid", sid)
+    mesg.setdefault("risk", int(risk))
+    mesg.setdefault("code", ERR_OK)
     mesg.setdefault("errmsg", "Ok")
 
     return json.dumps(mesg)
@@ -937,27 +1106,74 @@ def PredictBySid(sid):
 IP = "0.0.0.0"
 PORT = 8001
 app = Flask(__name__)
-@app.route("/login/action/risk/query", methods=['GET'])
-def login_action_risk_query():
-    risk = 10
+#查询风险: /login/action?option=risk&action=get&sid=10231
+#设置风险: /login/action?option=risk&action=set&sid=10231&risk=10
+@app.route("/login/action", methods=['GET'])
+def login_action():
+    if not request.args.has_key("option"):
+        return login_action_fail(ERR_PARAM_INVALID, "Get option failed!")
 
-    # 判断报体合法性
-    if not request.args.has_key("sid"):
-        logging.warning("Get sid failed!")
-        # 发送预测结果
-        mesg = {}
-        mesg.setdefault("sid", '0')
-        mesg.setdefault("risk", risk)
-        mesg.setdefault("errmsg", "Get sid failed!")
-        return json.dumps(mesg)
+    # 获取操作选项
+    option = request.args.get("option")
+    print("Option:%s" % option)
+    if "risk" == option:
+        return login_action_risk();
 
-    sid = request.args.get("sid")
+    return login_action_fail(ERR_PARAM_INVALID, "Unknown option!")
 
-    return PredictBySid(int(sid))
+# 应答失败信息
+def login_action_fail(code, errmsg):
+    mesg = {}
+    mesg.setdefault("code", code)
+    mesg.setdefault("errmsg", errmsg)
+    return json.dumps(mesg)
+
+# 登录行为风险处理
+def login_action_risk():
+    if not request.args.has_key("action"):
+        return login_action_fail(ERR_PARAM_INVALID, "Get action failed!")
+
+    # 获取操作行为
+    action = request.args.get("action")
+    if "get" == action:
+        return login_action_get_risk()
+    elif "set" == action:
+        return login_action_set_risk()
+
+    return login_action_fail(ERR_PARAM_INVALID, "Unknown action!")
+
+# 获取登录行为的风险
+def login_action_get_risk():
+    try:
+        # 判断报体合法性
+        if not request.args.has_key("sid"):
+            return login_action_fail(ERR_PARAM_INVALID, "Get sid failed!")
+
+        sid = request.args.get("sid")
+
+        return GetRiskBySid(int(sid))
+    except Exception as e:
+        return login_action_fail(ERR_SYSTEM, e)
+
+# 设置登录行为的风险
+def login_action_set_risk():
+    try:
+        # 判断报体合法性
+        if not request.args.has_key("sid"):
+            return login_action_fail(ERR_PARAM_INVALID, "Get sid failed!")
+        elif not request.args.has_key("risk"):
+            return login_action_fail(ERR_PARAM_INVALID, "Get risk failed!")
+
+        sid = request.args.get("sid")
+        risk = request.args.get("risk")
+
+        return SetRiskBySid(int(sid), int(risk))
+    except Exception as e:
+        return login_action_fail(ERR_SYSTEM, e)
 
 if __name__ == "__main__":
     port = PORT
     if 2 == len(sys.argv):
         port = int(sys.argv[1])
 
-    app.run(host=IP, port=port, threaded=True)
+    app.run(host=IP, port=port, threaded=False)
