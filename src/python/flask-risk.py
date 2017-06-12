@@ -324,6 +324,9 @@ def GetStatistic(sid):
     rds = redis.Redis(connection_pool=redis_pool);
 
     exist = False
+    if 0 == sid:
+        print("Sid is invalid! sid:%d" % sid)
+        return None
 
     statistic = rds.hgetall("ae:sid:%d:statistic" % (sid))
     if statistic is None:
@@ -1176,4 +1179,4 @@ if __name__ == "__main__":
     if 2 == len(sys.argv):
         port = int(sys.argv[1])
 
-    app.run(host=IP, port=port, threaded=False)
+    app.run(host=IP, port=port, threaded=True)
