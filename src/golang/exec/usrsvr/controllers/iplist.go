@@ -144,7 +144,7 @@ func (this *UsrSvrIplistCtrl) success(sid uint32, param *IpListParam, iplist []s
 	resp.Sid = sid
 	resp.Type = param.typ
 	resp.Token = this.iplist_token(sid)
-	resp.Expire = comm.TIME_DAY
+	resp.Expire = comm.TIME_MIN
 	resp.Len = len(iplist)
 	resp.List = iplist
 	resp.Code = 0
@@ -171,7 +171,7 @@ func (this *UsrSvrIplistCtrl) success(sid uint32, param *IpListParam, iplist []s
  ******************************************************************************/
 func (this *UsrSvrIplistCtrl) iplist_token(sid uint32) string {
 	ctx := GetUsrSvrCtx()
-	ttl := time.Now().Unix() + comm.TIME_YEAR
+	ttl := time.Now().Unix() + comm.TIME_MIN
 
 	/* > 原始TOKEN */
 	token := fmt.Sprintf("sid:%d:ttl:%d:end", sid, ttl)
