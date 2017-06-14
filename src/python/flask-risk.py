@@ -1021,9 +1021,10 @@ def GetStatistic(sid):
     # 时间信息
     ctm = time.time()
     if statistic.has_key('UTM'): # 更新时间
-        if int(statistic['UTM']) < ctm:
-            #X.append(ctm - int(statistic['UTM')]))
-            X.append(0)
+        #print("ctm:%d utm:%s" % (ctm, statistic['UTM']))
+        if int(statistic['UTM']) < int(ctm):
+            diff = int(ctm) - int(statistic['UTM'])
+            X.append(diff)
         else:
             X.append(0)
     else:
