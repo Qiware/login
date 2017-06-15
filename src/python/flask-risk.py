@@ -33,7 +33,12 @@ type = sys.getfilesystemencoding()
 ERR_OK              = 0     # 正常
 ERR_PARAM_INVALID   = 10001 # 参数非法
 ERR_GET_DATA        = 10002 # 获取数据失败
-ERR_SYSTEM        = 10002 # 获取数据失败
+ERR_SYSTEM          = 10003 # 系统错误
+ERR_TIMEOUT         = 10004 # 数据超时
+ERR_SID_INVALID     = 10005 # 会话SID非法
+
+# 常量定义
+RISK_DEF_VAL        = 10    # 默认风险值
 
 ## 浏览器环境
 COL_PLUGIN_HAS_NAME = 0
@@ -306,6 +311,8 @@ def ClassfierTrain():
 
     cls.load("./train/train-r-1.xlsx")
     cls.load("./train/train-r-2.xlsx")
+    cls.load("./train/train-r-3.xlsx")
+    cls.load("./train/train-r-4.xlsx")
 
     cls.train()
 
@@ -323,16 +330,21 @@ def GetStatistic(sid):
     global redis_pool
     rds = redis.Redis(connection_pool=redis_pool);
 
+    diff = 0
     exist = False
     if 0 == sid:
-        print("Sid is invalid! sid:%d" % sid)
-        return None
+        return (ERR_SID_INVALID, "Sid is invalid", RISK_DEF_VAL, None)
 
     statistic = rds.hgetall("ae:sid:%d:statistic" % (sid))
     if statistic is None:
-        print("Get statistic failed! sid:%d" % sid)
-        return None
+        return (ERR_SYSTEM, "Get statistic failed!", RISK_DEF_VAL, None)
 
+    ctm = time.time()
+    if statistic.has_key('UTM'): # 更新时间
+        if int(statistic['UTM']) < int(ctm):
+            diff = int(ctm) - int(statistic['UTM'])
+            if diff >= 5:
+                return (ERR_TIMEOUT, "Statistic data was timeout!", RISK_DEF_VAL, None)
     X = []
     # 浏览器环境
     ## 是否存在插件名
@@ -1019,21 +1031,14 @@ def GetStatistic(sid):
         X.append(0)
 
     # 时间信息
-    ctm = time.time()
-    if statistic.has_key('UTM'): # 更新时间
-        #print("ctm:%d utm:%s" % (ctm, statistic['UTM']))
-        if int(statistic['UTM']) < int(ctm):
-            diff = int(ctm) - int(statistic['UTM'])
-            X.append(diff)
-        else:
-            X.append(0)
-    else:
-        X.append(0)
+    X.append(diff)
+
     #print(X)
 
     if False == exist:
-        return None
-    return numpy.array(X).reshape(1, -1)
+        return (ERR_GET_DATA, "Get Statistic data failed!", RISK_DEF_VAL, None)
+
+    return (0, "Ok", RISK_DEF_VAL, numpy.array(X).reshape(1, -1))
 
 # 分析风险指数
 def PredictRisk(X):
@@ -1043,17 +1048,21 @@ def PredictRisk(X):
 
 # 预测处理
 def GetRiskBySid(sid):
-    risk = 10
-
     # 通过SID获取统计数据
-    X = GetStatistic(sid)
+    ret = GetStatistic(sid)
+    code = ret[0]
+    errmsg = ret[1]
+    risk = ret[2]
+    X = ret[3]
     if X is None:
         # 发送预测结果
         mesg = {}
         mesg.setdefault("sid", sid)
         mesg.setdefault("risk", risk)
-        mesg.setdefault("code", ERR_GET_DATA)
-        mesg.setdefault("errmsg", "Get statistic data by sid failed!")
+        mesg.setdefault("code", code)
+        mesg.setdefault("errmsg", errmsg)
+
+        print("sid:%d risk:%d code:%d errmsg:%s" % (sid, risk, code, errmsg))
 
         return json.dumps(mesg)
 
@@ -1067,6 +1076,8 @@ def GetRiskBySid(sid):
     mesg.setdefault("code", ERR_OK)
     mesg.setdefault("errmsg", "Ok")
 
+    print("sid:%d risk:%d code:%d errmsg:%s" % (sid, risk, ERR_OK, "Ok"))
+
     return json.dumps(mesg)
 
 # 设置风险
@@ -1075,14 +1086,18 @@ def SetRiskBySid(sid, risk):
     rds = redis.Redis(connection_pool=redis_pool);
 
     # 通过SID获取统计数据
-    X = GetStatistic(sid)
+    ret = GetStatistic(sid)
+    code = ret[0]
+    errmsg = ret[1]
+    risk = ret[2]
+    X = ret[3]
     if X is None:
         # 发送预测结果
         mesg = {}
         mesg.setdefault("sid", sid)
         mesg.setdefault("risk", risk)
-        mesg.setdefault("code", ERR_GET_DATA)
-        mesg.setdefault("errmsg", "Get statistic data by sid failed!")
+        mesg.setdefault("code", code)
+        mesg.setdefault("errmsg", errmsg)
 
         return json.dumps(mesg)
 
