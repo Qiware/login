@@ -1101,7 +1101,9 @@ def SetRiskBySid(sid, risk):
 
         return json.dumps(mesg)
 
-    rds.hset("ae:sid:%d:statistic" % (sid), "risk", risk)
+    ctm = time.time()
+    rds.zadd("ae:act:zset", sid, int(ctm))
+    rds.hset("ae:sid:%d:statistic" % (sid), "risk", risk);
 
     # 发送预测结果
     mesg = {}
@@ -1148,6 +1150,8 @@ def SetLabelBySid(sid, label):
     rds = redis.Redis(connection_pool=redis_pool);
 
     # 通过SID获取统计数据
+    ctm = time.time()
+    rds.zadd("ae:act:zset", sid, int(ctm))
     rds.hset("ae:sid:%d:statistic" % (sid), "label", label)
 
     # 发送预测结果
