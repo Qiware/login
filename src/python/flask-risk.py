@@ -1112,6 +1112,53 @@ def SetRiskBySid(sid, risk):
 
     return json.dumps(mesg)
 
+# 预测标注(自己/非自己)
+def GetLabelBySid(sid):
+    global redis_pool
+    rds = redis.Redis(connection_pool=redis_pool);
+
+    # 通过SID获取统计数据
+    label = rds.hget("ae:sid:%d:statistic" % (sid), "label")
+    print(label)
+    if label is None:
+        mesg = {}
+        mesg.setdefault("sid", sid)
+        mesg.setdefault("label", -1)
+        mesg.setdefault("code", ERR_GET_DATA)
+        mesg.setdefault("errmsg", "Didn't get label by sid")
+
+        print("Get label by sid failed! sid:%d" % (sid))
+
+        return json.dumps(mesg)
+
+    # 发送预测结果
+    mesg = {}
+    mesg.setdefault("sid", sid)
+    mesg.setdefault("label", int(label))
+    mesg.setdefault("code", ERR_OK)
+    mesg.setdefault("errmsg", "Ok")
+
+    print("sid:%d label:%d code:%d errmsg:%s" % (sid, int(label), ERR_OK, "Ok"))
+
+    return json.dumps(mesg)
+
+# 设置标注(自己/非自己)
+def SetLabelBySid(sid, label):
+    global redis_pool
+    rds = redis.Redis(connection_pool=redis_pool);
+
+    # 通过SID获取统计数据
+    rds.hset("ae:sid:%d:statistic" % (sid), "label", label)
+
+    # 发送预测结果
+    mesg = {}
+    mesg.setdefault("sid", sid)
+    mesg.setdefault("label", int(label))
+    mesg.setdefault("code", ERR_OK)
+    mesg.setdefault("errmsg", "Ok")
+
+    return json.dumps(mesg)
+
 ################################################################################
 ##函数名称: main
 ##功    能:
@@ -1137,6 +1184,8 @@ def login_action():
     print("Option:%s" % option)
     if "risk" == option:
         return login_action_risk();
+    elif "label" == option:
+        return login_action_label();
 
     return login_action_fail(ERR_PARAM_INVALID, "Unknown option!")
 
@@ -1146,6 +1195,8 @@ def login_action_fail(code, errmsg):
     mesg.setdefault("code", code)
     mesg.setdefault("errmsg", errmsg)
     return json.dumps(mesg)
+
+################################################################################
 
 # 登录行为风险处理
 def login_action_risk():
@@ -1190,9 +1241,56 @@ def login_action_set_risk():
     except Exception as e:
         return login_action_fail(ERR_SYSTEM, e)
 
+################################################################################
+
+# 登录行为标注处理
+def login_action_label():
+    if not request.args.has_key("action"):
+        return login_action_fail(ERR_PARAM_INVALID, "Get action failed!")
+
+    # 获取操作行为
+    action = request.args.get("action")
+    if "get" == action:
+        return login_action_get_label()
+    elif "set" == action:
+        return login_action_set_label()
+
+    return login_action_fail(ERR_PARAM_INVALID, "Unknown action!")
+
+# 获取登录行为的标注
+def login_action_get_label():
+    try:
+        # 判断报体合法性
+        if not request.args.has_key("sid"):
+            return login_action_fail(ERR_PARAM_INVALID, "Get sid failed!")
+
+        sid = request.args.get("sid")
+
+        return GetLabelBySid(int(sid))
+    except Exception as e:
+        return login_action_fail(ERR_SYSTEM, e)
+
+# 设置登录行为的标注
+def login_action_set_label():
+    try:
+        # 判断报体合法性
+        if not request.args.has_key("sid"):
+            return login_action_fail(ERR_PARAM_INVALID, "Get sid failed!")
+        elif not request.args.has_key("label"):
+            return login_action_fail(ERR_PARAM_INVALID, "Get paramter label failed!")
+
+        sid = request.args.get("sid")
+        label = request.args.get("label")
+
+        return SetLabelBySid(int(sid), int(label))
+    except Exception as e:
+        return login_action_fail(ERR_SYSTEM, e)
+
+################################################################################
+
 if __name__ == "__main__":
     port = PORT
     if 2 == len(sys.argv):
         port = int(sys.argv[1])
 
-    app.run(host=IP, port=port, threaded=True)
+    app.run(host=IP, port=port, threaded=False)
