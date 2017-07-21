@@ -141,20 +141,15 @@ int log_get_level(const char *level_str)
 {
     if (!strcasecmp(level_str, LOG_LEVEL_FATAL_STR)) {
         return LOG_LEVEL_FATAL;
-    }
-    else if (!strcasecmp(level_str, LOG_LEVEL_ERROR_STR)) {
+    } else if (!strcasecmp(level_str, LOG_LEVEL_ERROR_STR)) {
         return LOG_LEVEL_ERROR;
-    }
-    else if (!strcasecmp(level_str, LOG_LEVEL_WARN_STR)) {
+    } else if (!strcasecmp(level_str, LOG_LEVEL_WARN_STR)) {
         return LOG_LEVEL_WARN;
-    }
-    else if (!strcasecmp(level_str, LOG_LEVEL_INFO_STR)) {
+    } else if (!strcasecmp(level_str, LOG_LEVEL_INFO_STR)) {
         return LOG_LEVEL_INFO;
-    }
-    else if (!strcasecmp(level_str, LOG_LEVEL_DEBUG_STR)) {
+    } else if (!strcasecmp(level_str, LOG_LEVEL_DEBUG_STR)) {
         return LOG_LEVEL_DEBUG;
-    }
-    else if (!strcasecmp(level_str, LOG_LEVEL_TRACE_STR)) {
+    } else if (!strcasecmp(level_str, LOG_LEVEL_TRACE_STR)) {
         return LOG_LEVEL_TRACE;
     }
 
@@ -176,33 +171,19 @@ const char *log_get_str(int level)
 {
     switch (level) {
         case LOG_LEVEL_FATAL:
-        {
             return LOG_LEVEL_FATAL_STR;
-        }
         case LOG_LEVEL_ERROR:
-        {
             return LOG_LEVEL_ERROR_STR;
-        }
         case LOG_LEVEL_WARN:
-        {
             return LOG_LEVEL_WARN_STR;
-        }
         case LOG_LEVEL_INFO:
-        {
             return LOG_LEVEL_INFO_STR;
-        }
         case LOG_LEVEL_DEBUG:
-        {
             return LOG_LEVEL_DEBUG_STR;
-        }
         case LOG_LEVEL_TRACE:
-        {
             return LOG_LEVEL_TRACE_STR;
-        }
         default:
-        {
             return LOG_LEVEL_UNKNOWN_STR;
-        }
     }
 }
 
@@ -404,8 +385,7 @@ static int log_print_dump(char *addr, const void *dump, int dumplen)
                     &&    ((unsigned char)(*dump_ptr) >= (var[0])))
                 {
                     *(in++) = '*';
-                }
-                else {
+                } else {
                     *(in++) = *dump_ptr;
                 }
                 dump_ptr++;

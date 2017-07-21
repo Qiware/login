@@ -38,13 +38,18 @@ static int rtmq_proxy_ssvr_cmd_proc_all_req(rtmq_proxy_t *pxy, rtmq_proxy_ssvr_t
  **输入参数:
  **     pxy: 全局信息
  **     ssvr: 发送服务对象
+ **     idx: 对象序列号
+ **     ipaddr: 服务端IP地址
+ **     port: 服务端侦听端口
+ **     sendq: 发送队列
  **输出参数: NONE
  **返    回: 0:成功 !0:失败
  **实现描述:
  **注意事项:
- **作    者: # Qifeng.zou # 2015.01.14 #
+ **作    者: # Qifeng.zou # 2015.01.14, 2017-07-20 15:31:33 #
  ******************************************************************************/
-int rtmq_proxy_ssvr_init(rtmq_proxy_t *pxy, rtmq_proxy_ssvr_t *ssvr, int idx)
+int rtmq_proxy_ssvr_init(rtmq_proxy_t *pxy,
+        rtmq_proxy_ssvr_t *ssvr, int idx, const char *ipaddr, int port, queue_t *sendq)
 {
     void *addr;
     rtmq_proxy_conf_t *conf = &pxy->conf;
@@ -56,8 +61,9 @@ int rtmq_proxy_ssvr_init(rtmq_proxy_t *pxy, rtmq_proxy_ssvr_t *ssvr, int idx)
     ssvr->ctx = (void *)pxy;
     ssvr->sck.fd = INVALID_FD;
 
-    /* > 创建发送队列 */
-    ssvr->sendq = pxy->sendq[idx];
+    ssvr->sendq = sendq; /* 发送队列 */
+    ssvr->port = port;   /* 服务端端口 */
+    snprintf(ssvr->ipaddr, sizeof(ssvr->ipaddr), "%s", ipaddr); /* 服务端IP地址 */
 
     /* > 创建unix套接字 */
     if (rtmq_proxy_ssvr_creat_usck(ssvr, conf)) {
@@ -139,8 +145,7 @@ static void rtmq_proxy_ssvr_bind_cpu(rtmq_proxy_t *pxy, int id)
     mod = sysconf(_SC_NPROCESSORS_CONF) - cpu->start;
     if (mod <= 0) {
         idx = id % sysconf(_SC_NPROCESSORS_CONF);
-    }
-    else {
+    } else {
         idx = cpu->start + (id % mod);
     }
 
@@ -179,8 +184,7 @@ void rtmq_proxy_ssvr_set_rwset(rtmq_proxy_ssvr_t *ssvr)
     {
         FD_SET(ssvr->sck.fd, &ssvr->wset);
         return;
-    }
-    else if (!wiov_isempty(&ssvr->sck.send)) {
+    } else if (!wiov_isempty(&ssvr->sck.send)) {
         FD_SET(ssvr->sck.fd, &ssvr->wset);
         return;
     }
@@ -206,7 +210,6 @@ void *rtmq_proxy_ssvr_routine(void *_ctx)
     rtmq_proxy_ssvr_t *ssvr;
     struct timeval timeout;
     rtmq_proxy_t *pxy = (rtmq_proxy_t *)_ctx;
-    rtmq_proxy_conf_t *conf = &pxy->conf;
 
     nice(-20);
 
@@ -232,9 +235,9 @@ void *rtmq_proxy_ssvr_routine(void *_ctx)
             Sleep(RTMQ_RECONN_INTV);
 
             /* 重连Recv端 */
-            if ((sck->fd = tcp_connect(AF_INET, conf->ipaddr, conf->port)) < 0) {
+            if ((sck->fd = tcp_connect(AF_INET, ssvr->ipaddr, ssvr->port)) < 0) {
                 log_error(ssvr->log, "Conncet [%s:%d] failed! errmsg:[%d] %s!",
-                        conf->ipaddr, conf->port, errno, strerror(errno));
+                        ssvr->ipaddr, ssvr->port, errno, strerror(errno));
                 continue;
             }
 
@@ -254,8 +257,7 @@ void *rtmq_proxy_ssvr_routine(void *_ctx)
             log_fatal(ssvr->log, "errmsg:[%d] %s!", errno, strerror(errno));
             abort();
             return (void *)-1;
-        }
-        else if (0 == ret) {
+        } else if (0 == ret) {
             rtmq_proxy_ssvr_timeout_hdl(pxy, ssvr);
             continue;
         }
@@ -451,17 +453,14 @@ static int rtmq_proxy_ssvr_recv_proc(rtmq_proxy_t *pxy, rtmq_proxy_ssvr_t *ssvr)
                 return RTMQ_ERR;
             }
             continue;
-        }
-        else if (0 == n) {
+        } else if (0 == n) {
             log_error(ssvr->log, "Server disconnected. fd:%d n:%d/%d", sck->fd, n, left);
             CLOSE(sck->fd);
             rtmq_snap_reset(recv);
             return RTMQ_SCK_DISCONN;
-        }
-        else if ((n < 0) && (EAGAIN == errno)) {
+        } else if ((n < 0) && (EAGAIN == errno)) {
             return RTMQ_OK; /* Again */
-        }
-        else if (EINTR == errno) {
+        } else if (EINTR == errno) {
             continue;
         }
 
@@ -551,8 +550,7 @@ static int rtmq_proxy_ssvr_data_proc(rtmq_proxy_t *pxy, rtmq_proxy_ssvr_t *ssvr,
         /* 2.3 进行数据处理 */
         if (RTMQ_SYS_MESG == head->flag) {
             rtmq_proxy_ssvr_sys_mesg_proc(pxy, ssvr, sck, recv->optr);
-        }
-        else {
+        } else {
             rtmq_proxy_ssvr_exp_mesg_proc(pxy, ssvr, sck, recv->optr);
         }
 
@@ -654,8 +652,7 @@ static int rtmq_proxy_ssvr_wiov_add(rtmq_proxy_ssvr_t *ssvr, rtmq_proxy_sct_t *s
         head = (rtmq_header_t *)list_lpop(sck->mesg_list);
         if (NULL == head) {
             break; /* 无数据 */
-        }
-        else if (RTMQ_CHKSUM_VAL != head->chksum) {
+        } else if (RTMQ_CHKSUM_VAL != head->chksum) {
             assert(0);
         }
 
@@ -815,7 +812,7 @@ static int rtmq_proxy_ssvr_sys_mesg_proc(rtmq_proxy_t *pxy, rtmq_proxy_ssvr_t *s
             log_debug(ssvr->log, "Received keepalive ack!");
             rtmq_set_kpalive_stat(sck, RTMQ_KPALIVE_STAT_SUCC);
             return RTMQ_OK;
-        case RTMQ_CMD_LINK_AUTH_ACK:    /* 链路鉴权应答 */
+        case RTMQ_CMD_AUTH_ACK:         /* 链路鉴权应答 */
             return rtmq_link_auth_ack_hdl(pxy, ssvr, sck, addr + sizeof(rtmq_header_t));
     }
 
@@ -899,8 +896,8 @@ static int rtmq_link_auth_req(rtmq_proxy_t *pxy, rtmq_proxy_ssvr_t *ssvr)
     int size;
     void *addr;
     rtmq_header_t *head;
+    rtmq_link_auth_req_t *auth;
     rtmq_proxy_sct_t *sck = &ssvr->sck;
-    rtmq_link_auth_req_t *link_auth_req;
     rtmq_proxy_conf_t *conf = &pxy->conf;
 
     /* > 申请内存空间 */
@@ -915,17 +912,18 @@ static int rtmq_link_auth_req(rtmq_proxy_t *pxy, rtmq_proxy_ssvr_t *ssvr)
     /* > 设置头部数据 */
     head = (rtmq_header_t *)addr;
 
-    head->type = RTMQ_CMD_LINK_AUTH_REQ;
+    head->type = RTMQ_CMD_AUTH_REQ;
     head->nid = conf->nid;
     head->length = sizeof(rtmq_link_auth_req_t);
     head->flag = RTMQ_SYS_MESG;
     head->chksum = RTMQ_CHKSUM_VAL;
 
     /* > 设置鉴权信息 */
-    link_auth_req = (rtmq_link_auth_req_t *)(head + 1);
+    auth = (rtmq_link_auth_req_t *)(head + 1);
 
-    snprintf(link_auth_req->usr, sizeof(link_auth_req->usr), "%s", pxy->conf.auth.usr);
-    snprintf(link_auth_req->passwd, sizeof(link_auth_req->passwd), "%s", pxy->conf.auth.passwd);
+    auth->gid = htonl(conf->gid);
+    snprintf(auth->usr, sizeof(auth->usr), "%s", pxy->conf.auth.usr);
+    snprintf(auth->passwd, sizeof(auth->passwd), "%s", pxy->conf.auth.passwd);
 
     /* > 加入发送列表 */
     if (list_rpush(sck->mesg_list, addr)) {
@@ -993,7 +991,7 @@ static int rtmq_add_sub_req(rtmq_reg_t *item, rtmq_proxy_ssvr_t *ssvr)
     /* > 设置头部数据 */
     head = (rtmq_header_t *)addr;
 
-    head->type = RTMQ_CMD_SUB_ONE_REQ;
+    head->type = RTMQ_CMD_SUB_REQ;
     head->nid = conf->nid;
     head->length = sizeof(rtmq_sub_req_t);
     head->flag = RTMQ_SYS_MESG;
@@ -1011,7 +1009,7 @@ static int rtmq_add_sub_req(rtmq_reg_t *item, rtmq_proxy_ssvr_t *ssvr)
         return RTMQ_ERR;
     }
 
-    log_debug(ssvr->log, "Add sub request. type:%d", item->type);
+    log_debug(ssvr->log, "Add sub request. type:0x%04X", item->type);
 
     return RTMQ_OK;
 }

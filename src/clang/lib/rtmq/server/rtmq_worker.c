@@ -66,8 +66,7 @@ void *rtmq_worker_routine(void *_ctx)
             log_fatal(worker->log, "errmsg:[%d] %s", errno, strerror(errno));
             abort();
             return (void *)-1;
-        }
-        else if (0 == ret) {
+        } else if (0 == ret) {
             /* 超时: 模拟处理命令 */
             rtmq_cmd_t cmd;
             req = (rtmq_cmd_proc_req_t *)&cmd.param;
@@ -182,14 +181,10 @@ static int rtmq_worker_event_core_hdl(rtmq_cntx_t *ctx, rtmq_worker_t *worker)
 
     switch (cmd.type) {
         case RTMQ_CMD_PROC_REQ:
-        {
             return rtmq_worker_cmd_proc_req_hdl(ctx, worker, &cmd);
-        }
         default:
-        {
             log_error(worker->log, "Received unknown type! %d", cmd.type);
             return RTMQ_ERR_UNKNOWN_CMD;
-        }
     }
 
     return RTMQ_ERR_UNKNOWN_CMD;
@@ -254,8 +249,7 @@ static int rtmq_worker_cmd_proc_req_hdl(rtmq_cntx_t *ctx, rtmq_worker_t *worker,
             if (reg->proc(head->type, head->nid,
                 (void *)(head + 1), head->length, reg->param)) {
                 ++worker->err_total;    /* 错误计数 */
-            }
-            else {
+            } else {
                 ++worker->proc_total;   /* 处理计数 */
             }
 

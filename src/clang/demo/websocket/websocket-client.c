@@ -100,8 +100,7 @@ static int callback_upload(
             if ((strcmp(in, "deflate-stream") == 0) && opt->deny_deflate) {
                 fprintf(stderr, "denied deflate-stream extension\n");
                 return 1;
-            }
-            else if ((strcmp(in, "deflate-frame") == 0) && opt->deny_deflate) {
+            } else if ((strcmp(in, "deflate-frame") == 0) && opt->deny_deflate) {
                 fprintf(stderr, "denied deflate-frame extension\n");
                 return 1;
             }
@@ -134,8 +133,7 @@ static int callback_upload(
                         item->len, LWS_WRITE_BINARY);
                 if (n < 0) {
                     return -1;
-                }
-                else if (n < (int)item->len) {
+                } else if (n < (int)item->len) {
                     lwsl_err("Partial write LWS_CALLBACK_CLIENT_WRITEABLE\n");
                     return -1;
                 }

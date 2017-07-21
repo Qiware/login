@@ -64,7 +64,6 @@ int frwd_set_reg(frwd_cntx_t *frwd)
  ******************************************************************************/
 static int frwd_mesg_from_fw_def_hdl(int type, int orig, char *data, size_t len, void *args)
 {
-    int nid;
     frwd_cntx_t *ctx = (frwd_cntx_t *)args;
     mesg_header_t *head = (mesg_header_t *)data, hhead;
 
@@ -72,16 +71,11 @@ static int frwd_mesg_from_fw_def_hdl(int type, int orig, char *data, size_t len,
     MESG_HEAD_NTOH(head, &hhead);
 
     log_trace(ctx->log, "type:0x%04X sid:%lu seq:%lu len:%d",
-            hhead.type, hhead.sid, hhead.seq, hhead.length);
+            hhead.type, hhead.sid, hhead.seq,
+            hhead.length);
 
     /* > 发送数据 */
-    nid = rtmq_sub_query(ctx->backend, type);
-    if (-1 == nid) {
-        log_error(ctx->log, "No module sub type! type:0x%04X", type);
-        return 0;
-    }
-
-    return rtmq_async_send(ctx->backend, type, nid, data, len);
+    return rtmq_publish(ctx->backend, type, data, len);
 }
 
 /******************************************************************************

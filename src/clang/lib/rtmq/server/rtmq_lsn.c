@@ -66,8 +66,7 @@ void *rtmq_lsn_routine(void *param)
             log_error(lsn->log, "errmsg:[%d] %s", errno, strerror(errno));
             abort();
             return (void *)-1;
-        }
-        else if (0 == ret) {
+        } else if (0 == ret) {
             continue;
         }
 
@@ -178,8 +177,7 @@ static int rtmq_lsn_accept(rtmq_cntx_t *ctx, rtmq_listen_t *lsn)
         sckid = accept(lsn->lsn_sck_id, (struct sockaddr *)&cliaddr, &len);
         if (sckid >= 0) {
             break;
-        }
-        else if (EINTR == errno) {
+        } else if (EINTR == errno) {
             continue;
         }
 
@@ -238,22 +236,14 @@ static int rtmq_lsn_cmd_core_hdl(rtmq_cntx_t *ctx, rtmq_listen_t *lsn)
     /* 2. 处理命令 */
     switch (cmd.type) {
         case RTMQ_CMD_QUERY_CONF_REQ:
-        {
             return rtmq_lsn_cmd_query_conf_hdl(ctx, lsn, &cmd);
-        }
         case RTMQ_CMD_QUERY_RECV_STAT_REQ:
-        {
             return rtmq_lsn_cmd_query_recv_stat_hdl(ctx, lsn, &cmd);
-        }
         case RTMQ_CMD_QUERY_PROC_STAT_REQ:
-        {
             return rtmq_lsn_cmd_query_proc_stat_hdl(ctx, lsn, &cmd);
-        }
         default:
-        {
             log_error(lsn->log, "Unknown command! type:%d", cmd.type);
             return RTMQ_ERR_UNKNOWN_CMD;
-        }
     }
 
     return RTMQ_ERR_UNKNOWN_CMD;

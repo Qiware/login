@@ -241,8 +241,7 @@ AGAIN:
             return -1;
         }
         hash_tab_unlock(tab->dict, (void *)&key, WRLOCK);
-    }
-    else {
+    } else {
         /* > 新建SID->CID项 */
         item = (session_dict_item_t *)calloc(1, sizeof(session_dict_item_t));
         if (NULL == item) {
@@ -290,8 +289,7 @@ int session_dict_del(session_tab_t *tab, uint64_t sid, uint64_t cid)
             hash_tab_delete(tab->dict, (void *)&key, NONLOCK);
             hash_tab_unlock(tab->dict, (void *)&key, WRLOCK);
             free(item);
-        }
-        else {
+        } else {
             hash_tab_unlock(tab->dict, (void *)&key, WRLOCK);
         }
     }

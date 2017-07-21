@@ -45,6 +45,7 @@ type MonConfRtmqProxyXmlData struct {
 type MonConfXmlData struct {
 	Name   xml.Name                `xml:"MONITOR"` // 根结点名
 	Id     uint32                  `xml:"ID,attr"` // 结点ID
+	Gid    uint32                  `xml:"GID,attr"` // 分组ID
 	Redis  MonRedisConf            `xml:"REDIS"`   // Redis地址(IP+PORT)
 	Log    MonConfLogXmlData       `xml:"LOG"`     // 日志配置
 	Frwder MonConfRtmqProxyXmlData `xml:"FRWDER"`  // RTMQ PROXY配置
@@ -84,9 +85,15 @@ func (conf *MonConf) parse() (err error) {
 
 	/* > 解析配置文件 */
 	/* 结点ID */
-	conf.NodeId = node.Id
-	if 0 == conf.NodeId {
+	conf.Id = node.Id
+	if 0 == conf.Id {
 		return errors.New("Get node id failed!")
+	}
+
+	/* 分组ID */
+	conf.Gid = node.Gid
+	if 0 == conf.Gid {
+		return errors.New("Get gid failed!")
 	}
 
 	/* Redis配置 */
@@ -107,7 +114,8 @@ func (conf *MonConf) parse() (err error) {
 	}
 
 	/* FRWDER配置 */
-	conf.Frwder.NodeId = conf.NodeId
+	conf.Frwder.Id = conf.Id
+	conf.Frwder.Gid = conf.Gid
 
 	/* 转发层(IP+PROT) */
 	conf.Frwder.RemoteAddr = node.Frwder.RemoteAddr

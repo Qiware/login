@@ -9,6 +9,7 @@
 typedef struct
 {
     int nid;                        /* 结点ID */
+    int gid;                        /* 分组ID */
     char wdir[FILE_PATH_MAX_LEN];   /* 工作路径 */
 
     struct {

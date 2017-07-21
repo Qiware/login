@@ -1,4 +1,4 @@
-<MONITOR ID="33000"> <!-- ID: 结点ID -->
+<MONITOR GID="33" ID="33000"> <!-- ID: 结点ID -->
     <LOG LEVEL="debug" PATH="../log" /> <!-- 日志配置 -->
     <REDIS ADDR="10.130.212.59:19001" USR="beehive" PASSWD="" /> <!-- REDIS配置 -->
     <FRWDER ADDR="127.0.0.1:28889"> <!-- RTMQ代理 -->

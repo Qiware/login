@@ -45,6 +45,7 @@ type MsgSvrConfRtmqProxyXmlData struct {
 type MsgSvrConfXmlData struct {
 	Name   xml.Name                   `xml:"MSGSVR"`  // 根结点名
 	Id     uint32                     `xml:"ID,attr"` // 结点ID
+	Gid    uint32                     `xml:"GID,attr"` // 分组ID
 	Redis  MsgSvrRedisConf            `xml:"REDIS"`   // REDIS配置
 	Cipher string                     `xml:"CIPHER"`  // 私密密钥
 	Log    MsgSvrConfLogXmlData       `xml:"LOG"`     // 日志配置
@@ -85,9 +86,15 @@ func (conf *MsgSvrConf) parse() (err error) {
 
 	/* > 解析配置文件 */
 	/* 结点ID */
-	conf.NodeId = node.Id
-	if 0 == conf.NodeId {
+	conf.Id = node.Id
+	if 0 == conf.Id {
 		return errors.New("Get node id failed!")
+	}
+
+	/* 分组ID */
+	conf.Gid = node.Gid
+	if 0 == conf.Gid {
+		return errors.New("Get gid failed!")
 	}
 
 	/* Redis地址(IP+PORT) */
@@ -114,7 +121,8 @@ func (conf *MsgSvrConf) parse() (err error) {
 	}
 
 	/* FRWDER配置 */
-	conf.Frwder.NodeId = conf.NodeId
+	conf.Frwder.Id = conf.Id
+	conf.Frwder.Gid = conf.Gid
 
 	/* 鉴权信息 */
 	conf.Frwder.Usr = node.Frwder.Auth.Usr

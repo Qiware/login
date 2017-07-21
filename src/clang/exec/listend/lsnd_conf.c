@@ -95,10 +95,19 @@ static int lsnd_conf_load_comm(xml_tree_t *xml, lsnd_conf_t *conf, log_cycle_t *
     xml_node_t *node, *fix;
 
     /* > 加载结点ID */
+    node = xml_query(xml, ".LISTEND.GID");
+    if (NULL == node
+        || 0 == node->value.len) {
+        log_error(log, "Get node gid failed!");
+        return -1;
+    }
+
+    conf->gid = str_to_num(node->value.str);
+
+    /* > 加载结点ID */
     node = xml_query(xml, ".LISTEND.ID");
     if (NULL == node
-        || 0 == node->value.len)
-    {
+        || 0 == node->value.len) {
         log_error(log, "Get node id failed!");
         return -1;
     }
@@ -108,8 +117,7 @@ static int lsnd_conf_load_comm(xml_tree_t *xml, lsnd_conf_t *conf, log_cycle_t *
     /* > 加载工作路径 */
     node = xml_query(xml, ".LISTEND.WORKDIR");
     if (NULL == node
-        || 0 == node->value.len)
-    {
+        || 0 == node->value.len) {
         log_error(log, "Get work directory failed!");
         return -1;
     }
@@ -380,10 +388,11 @@ static int lsnd_conf_load_frwder(xml_tree_t *xml, lsnd_conf_t *lcf, log_cycle_t 
 
     /* > 设置结点ID */
     conf->nid = lcf->nid;
+    conf->gid = lcf->gid;
     snprintf(conf->path, sizeof(conf->path), "%s", lcf->wdir);
 
     /* > 服务端IP */
-    node = xml_search(xml, parent, "SERVER.IP");
+    node = xml_search(xml, parent, "SERVER.ADDR");
     if (NULL == node
         || 0 == node->value.len)
     {
@@ -392,16 +401,6 @@ static int lsnd_conf_load_frwder(xml_tree_t *xml, lsnd_conf_t *lcf, log_cycle_t 
     }
 
     snprintf(conf->ipaddr, sizeof(conf->ipaddr), "%s", node->value.str);
-
-    node = xml_search(xml, parent, "SERVER.PORT");
-    if (NULL == node
-        || 0 == node->value.len)
-    {
-        log_error(log, "Didn't find SERVER.PORT!");
-        return -1;
-    }
-
-    conf->port = str_to_num(node->value.str);
 
     /* > 鉴权信息 */
     node = xml_search(xml, parent, "AUTH.USR");

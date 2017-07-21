@@ -97,23 +97,17 @@ int uri_get_protocol(const char *uri)
 
     if (!strncmp(uri, URI_WWW_STR, URI_WWW_STR_LEN)) {
         return  URI_HTTP_PROTOCOL;
-    }
-    else if (!strncmp(uri, URI_HTTP_STR, URI_HTTP_STR_LEN)) {
+    } else if (!strncmp(uri, URI_HTTP_STR, URI_HTTP_STR_LEN)) {
         return URI_HTTP_PROTOCOL;
-    }
-    else if (!strncmp(uri, URI_HTTPS_STR, URI_HTTPS_STR_LEN)) {
+    } else if (!strncmp(uri, URI_HTTPS_STR, URI_HTTPS_STR_LEN)) {
         return URI_HTTPS_PROTOCOL;
-    }
-    else if (!strncmp(uri, URI_FTP_STR, URI_FTP_STR_LEN)) {
+    } else if (!strncmp(uri, URI_FTP_STR, URI_FTP_STR_LEN)) {
         return URI_FTP_PROTOCOL;
-    }
-    else if (!strncmp(uri, URI_THUNDER_STR, URI_THUNDER_STR_LEN)) {
+    } else if (!strncmp(uri, URI_THUNDER_STR, URI_THUNDER_STR_LEN)) {
         return URI_THUNDER_PROTOCOL;
-    }
-    else if (!strncmp(uri, URI_ITEM_STR, URI_ITEM_STR_LEN)) {
+    } else if (!strncmp(uri, URI_ITEM_STR, URI_ITEM_STR_LEN)) {
         return URI_ITEM_PROTOCOL;
-    }
-    else if (!strncmp(uri, URI_ED2K_STR, URI_ED2K_STR_LEN)) {
+    } else if (!strncmp(uri, URI_ED2K_STR, URI_ED2K_STR_LEN)) {
         return URI_ED2K_PROTOCOL;
     }
 
@@ -121,8 +115,7 @@ int uri_get_protocol(const char *uri)
         if (isalpha(*p)) {
             ++p;
             continue;
-        }
-        else if ('.' == *p) {
+        } else if ('.' == *p) {
             return URI_HTTP_PROTOCOL; /* 如：baidu.com */
         }
 
@@ -156,8 +149,7 @@ int uri_get_host(const char *uri, char *host, int size)
         ++p;
     }
 
-    switch (*p)
-    {
+    switch (*p) {
         case ':':
         {
             if ('/' == *(p+1)) {
@@ -167,8 +159,7 @@ int uri_get_host(const char *uri, char *host, int size)
                     break;
                 }
                 return -1;
-            }
-            else if (isdigit(*(p+1))) {
+            } else if (isdigit(*(p+1))) {
                 ++p;
                 goto GET_HOST;
             }
@@ -190,8 +181,7 @@ int uri_get_host(const char *uri, char *host, int size)
     }
 
     while (isalpha(*p) || isdigit(*p)
-        || '.' == *p || '-' == *p || '_' == *p)
-    {
+        || '.' == *p || '-' == *p || '_' == *p) {
         ++p;
     }
 
@@ -228,20 +218,17 @@ int uri_get_port(const char *uri)
 
     while (isalpha(*p) || isdigit(*p) || '.' == *p) { ++p; }
 
-    switch (*p)
-    {
+    switch (*p) {
         case ':':
         {
             if ('/' == *(p+1)) {
                 if ('/' == *(p+2)) {
                     p += 3;
                     break;
-                }
-                else {
+                } else {
                     return -1;
                 }
-            }
-            else if (isdigit(*(p+1))) {
+            } else if (isdigit(*(p+1))) {
                 ++p;
                 goto GET_PORT;
             }
@@ -382,8 +369,7 @@ bool uri_is_valid(const char *uri)
     }
 
     for (; '\0' != *uri; ++uri) {
-        switch (*uri)
-        {
+        switch (*uri) {
             case ' ':
             case '\n':
             case '\r':
@@ -452,8 +438,7 @@ int href_to_uri(const char *ori_href, const char *site, uri_field_t *field)
 
         if (isalpha(*href)) {
             snprintf(uri, sizeof(uri), "%s%s:%d/%s", URI_HTTP_STR, field->host, field->port, href);
-        }
-        else {
+        } else {
             snprintf(uri, sizeof(uri), "%s%s:%d%s", URI_HTTP_STR, field->host, field->port, href);
         }
 
@@ -493,8 +478,7 @@ int href_to_uri(const char *ori_href, const char *site, uri_field_t *field)
         snprintf(uri, sizeof(uri), "%s%s", p2, p);
 
         return uri_reslove(uri, field);
-    }
-    else if (href_is_loc(href)) { /* 本级目录 */
+    } else if (href_is_loc(href)) { /* 本级目录 */
         p = href + 2;
     HREF_IS_LOCAL_PATH:
         p2 = site + strlen(site) - 1;
