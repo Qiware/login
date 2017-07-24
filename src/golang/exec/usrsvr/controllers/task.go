@@ -53,12 +53,17 @@ func (ctx *UsrSvrCntx) listend_update() {
 	types, err := redis.Ints(rds.Do("ZRANGEBYSCORE",
 		comm.AE_KEY_LSND_TYPE_ZSET, ctm, "+inf"))
 	if nil != err {
+		/* 清理所有数据 */
+		ctx.listend.Lock()
+		defer ctx.listend.Unlock()
+		ctx.listend.types = make(map[int]*UsrSvrLsndList)
 		ctx.log.Error("Get listend type list failed! errmsg:%s", err.Error())
 		return
 	}
 
 	ctx.listend.Lock()
 	defer ctx.listend.Unlock()
+	ctx.listend.types = make(map[int]*UsrSvrLsndList)
 
 	num := len(types)
 	for idx := 0; idx < num; idx += 1 {

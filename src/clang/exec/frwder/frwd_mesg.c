@@ -36,13 +36,13 @@ int frwd_set_reg(frwd_cntx_t *frwd)
 
     FRWD_REG_REQ_CB(frwd, CMD_UNKNOWN, frwd_mesg_from_fw_def_hdl, frwd);
 
-#define FRWD_REG_RSP_CB(frwd, type, proc, args) \
+#define FRWD_REG_ACK_CB(frwd, type, proc, args) \
     if (rtmq_register((frwd)->backend, type, (rtmq_reg_cb_t)proc, (void *)args)) { \
         log_error((frwd)->log, "Register type [%d] failed!", type); \
         return FRWD_ERR; \
     }
 
-    FRWD_REG_RSP_CB(frwd, CMD_UNKNOWN, frwd_mesg_from_bc_def_hdl, frwd);
+    FRWD_REG_ACK_CB(frwd, CMD_UNKNOWN, frwd_mesg_from_bc_def_hdl, frwd);
 
     return FRWD_OK;
 }
