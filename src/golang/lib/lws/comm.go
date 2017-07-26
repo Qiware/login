@@ -88,7 +88,8 @@ func (ctx *LwsCntx) ConnPoolDel(cid uint32) int {
  **作    者: # Qifeng.zou # 2017.02.06 23:19:44 #
  ******************************************************************************/
 func conn_handler(ctx *LwsCntx, w http.ResponseWriter, r *http.Request) {
-	conn, err := upgrader.Upgrade(w, r, nil)
+	//conn, err := upgrader.Upgrade(w, r, nil)
+	conn, err := websocket.Upgrade(w, r, nil, upgrader.ReadBufferSize, upgrader.WriteBufferSize)
 	if nil != err {
 		ctx.log.Error("Upgrade websocket failed! errmsg:%s", err.Error())
 		return
