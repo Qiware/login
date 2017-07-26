@@ -13,7 +13,7 @@
 ###############################################################################
 include ./make/func.mak
 
-export VERSION=v.1.2 # 版本号
+export VERSION=v.1.3 # 版本号
 
 # 根目录
 export PROJ = ${PWD}
